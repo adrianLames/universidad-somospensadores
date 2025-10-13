@@ -1,0 +1,110 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 50%, var(--color3) 100%);
+  padding: 20px;
+}
+
+.login-form {
+  background: var(--bg-white);
+  padding: 3rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 450px;
+  border-top: 5px solid var(--color4);
+}
+
+.login-form h1 {
+  color: var(--color1);
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.login-form h2 {
+  color: var(--color2);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color1);
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e1e5e9;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color4);
+  box-shadow: 0 0 0 3px rgba(0, 187, 195, 0.1);
+}
+
+.login-form button {
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, var(--color2) 0%, var(--color3) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.login-form button:hover {
+  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.login-form button:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.error {
+  color: #e74c3c;
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #ffeaea;
+  border-radius: var(--border-radius);
+  border-left: 4px solid #e74c3c;
+}
+
+.demo-credentials {
+  margin-top: 2rem;
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: var(--border-radius);
+}
+
+.demo-credentials p {
+  margin-bottom: 0.5rem;
+}

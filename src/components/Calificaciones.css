@@ -1,0 +1,92 @@
+.calificaciones {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 1rem;
+}
+
+.calificaciones h2 {
+  color: #12518c;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #00bbc3;
+  font-size: 1.8rem;
+}
+
+.calificaciones-list {
+  margin-top: 1rem;
+}
+
+.calificaciones-list table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.calificaciones-list th {
+  background: linear-gradient(135deg, #12518c 0%, #00659b 100%);
+  color: white;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+}
+
+.calificaciones-list td {
+  padding: 1rem;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.calificaciones-list tr:hover {
+  background: #f8f9fa;
+}
+
+.nota {
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  display: inline-block;
+  min-width: 60px;
+  text-align: center;
+}
+
+.nota.aprobado {
+  background: #d5f4e6;
+  color: #27ae60;
+  border: 1px solid #2ecc71;
+}
+
+.nota.reprobado {
+  background: #fadbd8;
+  color: #c0392b;
+  border: 1px solid #e74c3c;
+}
+
+.estado {
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .calificaciones {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .calificaciones-list {
+    overflow-x: auto;
+  }
+  
+  .calificaciones-list table {
+    min-width: 600px;
+  }
+}
