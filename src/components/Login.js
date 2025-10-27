@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { API_BASE } from '../config/api';
 import './Login.css';
+import RegistroPublico from './RegistroPublico';
 
 const Login = ({ onLogin }) => {
   const [credentials, setCredentials] = useState({
@@ -16,6 +17,12 @@ const Login = ({ onLogin }) => {
       [e.target.name]: e.target.value
     });
   };
+  // Integración con el componente de registro público
+
+  const [showRegister, setShowRegister] = useState(false);
+  if (showRegister) {
+  return <RegistroPublico onSwitchToLogin={() => setShowRegister(false)} />;
+}
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,6 +90,14 @@ const Login = ({ onLogin }) => {
           <p>Email: admin@universidad.edu</p>
           <p>Contraseña: admin123</p>
         </div>
+
+
+
+
+// Y en tu formulario de login, agrega:
+<div className="register-link">
+  <p>¿No tienes cuenta? <button onClick={() => setShowRegister(true)}>Regístrate aquí</button></p>
+</div>
       </div>
     </div>
   );
