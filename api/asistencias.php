@@ -19,19 +19,33 @@ switch($method) {
             $stmt->bind_param("i", $estudiante_id);
             $stmt->execute();
             $result = $stmt->get_result();
-        } else if($docente_id) {
-            $sql = "SELECT a.*, c.codigo as curso_codigo, c.nombre as curso_nombre,
-                           u.nombres as estudiante_nombres, u.apellidos as estudiante_apellidos
-                    FROM asistencias a 
-                    INNER JOIN cursos c ON a.curso_id = c.id 
-                    INNER JOIN usuarios u ON a.estudiante_id = u.id 
-                    INNER JOIN asignacion_docentes ad ON c.id = ad.curso_id 
-                    WHERE ad.docente_id = ? 
-                    ORDER BY a.fecha DESC";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $docente_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
+                } else if($docente_id) {
+                        // Obtener semestre y año actuales
+                        $fecha_actual = date('Y-m-d');
+                        $anio_actual = date('Y');
+                        $mes_actual = date('n');
+                        $semestre_actual = ($mes_actual >= 1 && $mes_actual <= 6) ? '2025-1' : '2025-2';
+                        // Consulta filtrando por semestre y año de la asignación docente y matrícula activa
+                        $sql = "SELECT a.*, c.codigo as curso_codigo, c.nombre as curso_nombre,
+                                                     u.nombres as estudiante_nombres, u.apellidos as estudiante_apellidos,
+                                                     ad.semestre, ad.anio
+                                        FROM asistencias a 
+                                        INNER JOIN cursos c ON a.curso_id = c.id 
+                                        INNER JOIN usuarios u ON a.estudiante_id = u.id 
+                                        INNER JOIN asignacion_docentes ad ON c.id = ad.curso_id 
+                                        INNER JOIN matriculas m ON m.estudiante_id = a.estudiante_id AND m.curso_id = a.curso_id
+                                        WHERE ad.docente_id = ?
+                                            AND ad.semestre = ?
+                                            AND ad.anio = ?
+                                            AND m.semestre = ad.semestre
+                                            AND m.anio = ad.anio
+                                            AND m.estado = 'activa'
+                                            AND a.curso_id = ad.curso_id
+                                        ORDER BY a.fecha DESC";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("isi", $docente_id, $semestre_actual, $anio_actual);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
         } else if($curso_id) {
             $sql = "SELECT a.*, u.nombres as estudiante_nombres, u.apellidos as estudiante_apellidos
                     FROM asistencias a 

@@ -89,9 +89,29 @@ switch($method) {
         }
         break;
         
-    default:
-        http_response_code(405);
-        echo json_encode(["error" => "Método no permitido"]);
+        // Permitir actualizar el prerequisito de un curso con PATCH
+        if ($method === 'PATCH') {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $curso_id = isset($data['curso_id']) ? intval($data['curso_id']) : null;
+            $prerequisito_id = isset($data['prerequisito_id']) ? intval($data['prerequisito_id']) : null;
+            if ($curso_id && $prerequisito_id) {
+                $sql = "UPDATE cursos SET prerequisito_id=? WHERE id=?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ii", $prerequisito_id, $curso_id);
+                if ($stmt->execute()) {
+                    echo json_encode(["message" => "Prerequisito actualizado exitosamente"]);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(["error" => "Error al actualizar prerequisito: " . $stmt->error]);
+                }
+            } else {
+                http_response_code(400);
+                echo json_encode(["error" => "Faltan datos curso_id o prerequisito_id"]);
+            }
+        } else {
+            http_response_code(405);
+            echo json_encode(["error" => "Método no permitido"]);
+        }
 }
 
 $conn->close();

@@ -1,0 +1,42 @@
+/* Estilos básicos para el componente ProfesorMaterias */
+.profesor-materias {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profesor-materias h1,
+.profesor-materias h2 {
+    color: #333;
+}
+
+.profesor-materias ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.profesor-materias ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.profesor-materias select {
+    margin: 10px 0;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.profesor-materias button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.profesor-materias button:hover {
+    background-color: #0056b3;
+}

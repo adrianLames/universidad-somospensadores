@@ -4,7 +4,9 @@ import './Matriculas.css';
 
 const Matriculas = ({ user }) => {
   const [matriculas, setMatriculas] = useState([]);
+  const [noAprobadas, setNoAprobadas] = useState([]);
   const [cursos, setCursos] = useState([]);
+  const [prerequisitos, setPrerequisitos] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentMatricula, setCurrentMatricula] = useState({
     curso_id: '',
@@ -12,19 +14,50 @@ const Matriculas = ({ user }) => {
     anio: new Date().getFullYear()
   });
   const [loading, setLoading] = useState(false);
+  const [selectedCurso, setSelectedCurso] = useState(null);
 
   useEffect(() => {
     fetchMatriculas();
     fetchCursos();
+    fetchNoAprobadas();
   }, []);
+
+  // Obtener materias matriculadas sin aprobar
+  const fetchNoAprobadas = async () => {
+    try {
+      // Traer todas las matrículas activas
+      const response = await fetch(`${API_BASE}/matriculas.php?estudiante_id=${user.id}`);
+      const matriculasData = await response.json();
+      // Traer todas las calificaciones aprobadas
+      const califResponse = await fetch(`${API_BASE}/calificaciones.php?estudiante_id=${user.id}`);
+      const califData = await califResponse.json();
+      // IDs de cursos aprobados
+      const cursosAprobados = new Set(
+        califData.filter(c => c.estado === 'aprobado').map(c => c.curso_id)
+      );
+      // Filtrar las matrículas activas que no están aprobadas
+      const noAprobadasList = matriculasData.filter(m => m.estado === 'activa' && !cursosAprobados.has(m.curso_id));
+      setNoAprobadas(noAprobadasList);
+    } catch (error) {
+      setNoAprobadas([]);
+    }
+  };
 
   const fetchMatriculas = async () => {
     try {
       const response = await fetch(`${API_BASE}/matriculas.php?estudiante_id=${user.id}`);
       const data = await response.json();
-      setMatriculas(data);
+
+      // Validar que la respuesta sea un array
+      if (Array.isArray(data)) {
+        setMatriculas(data);
+      } else {
+        setMatriculas([]); // Si no es un array, inicializar como vacío
+        console.error('La respuesta del backend no es un array:', data);
+      }
     } catch (error) {
       console.error('Error fetching matriculas:', error);
+      setMatriculas([]); // Inicializar como vacío en caso de error
     }
   };
 
@@ -32,7 +65,20 @@ const Matriculas = ({ user }) => {
     try {
       const response = await fetch(`${API_BASE}/cursos.php`);
       const data = await response.json();
-      setCursos(data);
+
+      // Obtener profesores asignados para cada curso
+      const cursosConProfesores = await Promise.all(
+        data.map(async (curso) => {
+          const profesorResponse = await fetch(`${API_BASE}/asignacion_docentes.php?curso_id=${curso.id}`);
+          const profesorData = await profesorResponse.json();
+          return {
+            ...curso,
+            profesor: profesorData.data.length > 0 ? profesorData.data[0] : null
+          };
+        })
+      );
+
+      setCursos(cursosConProfesores);
     } catch (error) {
       console.error('Error fetching cursos:', error);
     }
@@ -115,6 +161,13 @@ const Matriculas = ({ user }) => {
     return semestres;
   };
 
+  const handleCursoSelect = (cursoId) => {
+    setSelectedCurso(cursoId);
+    fetch(`/api/verificar_prerequisitos.php?curso_id=${cursoId}&estudiante_id=${user.id}`)
+      .then(response => response.json())
+      .then(data => setPrerequisitos(data.data));
+  };
+
   return (
     <div className="matriculas">
       <h2>🎓 Gestión de Matrículas</h2>
@@ -191,6 +244,18 @@ const Matriculas = ({ user }) => {
       )}
 
       <div className="matriculas-list">
+        <div className="no-aprobadas">
+          <h3>Materias matriculadas sin aprobar</h3>
+          {noAprobadas.length > 0 ? (
+            <ul>
+              {noAprobadas.map(m => (
+                <li key={m.id}>{m.curso_nombre} ({m.semestre} - {m.anio})</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No tienes materias matriculadas sin aprobar.</p>
+          )}
+        </div>
         {matriculas.length === 0 ? (
           <div className="no-data">
             <p>No hay matrículas registradas</p>
@@ -232,6 +297,33 @@ const Matriculas = ({ user }) => {
           </table>
         )}
       </div>
+
+      <div className="cursos-list">
+        <h2>Lista de Cursos</h2>
+        <ul>
+          {cursos.map(curso => (
+            <li key={curso.id} onClick={() => handleCursoSelect(curso.id)}>
+              {curso.nombre}
+            </li>
+          ))}
+        </ul>
+      </div>
+      {selectedCurso && (
+        <div className="prerequisitos">
+          <h2>Prerequisitos</h2>
+          {prerequisitos.length > 0 ? (
+            <ul>
+              {prerequisitos.map(prerequisito => (
+                <li key={prerequisito.id}>
+                  {prerequisito.nombre} - {prerequisito.aprobado ? 'Aprobado' : 'No aprobado'}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Este curso no tiene prerequisitos.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

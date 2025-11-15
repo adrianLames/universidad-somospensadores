@@ -132,33 +132,73 @@ function createDatabaseAndTables($conn) {
     // Insertar datos iniciales si las tablas están vacías
     $result = $conn->query("SELECT COUNT(*) as count FROM usuarios");
     $row = $result->fetch_assoc();
-    
+
     if ($row['count'] == 0) {
         // Insertar usuario admin por defecto
         $password_hash = password_hash('admin123', PASSWORD_DEFAULT);
         $conn->query("INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, password_hash) 
                      VALUES ('admin', '1000000000', 'Administrador', 'Sistema', 'admin@universidad.edu', '$password_hash')");
-        
+
         // Insertar programas de ejemplo
         $conn->query("INSERT INTO programas (codigo, nombre, descripcion, duracion_semestres, creditos_totales) VALUES 
                      ('ING-SIS', 'Ingeniería de Sistemas', 'Programa de ingeniería de sistemas con enfoque en desarrollo de software', 10, 160),
                      ('ADM-EMP', 'Administración de Empresas', 'Programa de administración y gestión empresarial', 8, 140),
                      ('CON-PUB', 'Contaduría Pública', 'Programa de contaduría y finanzas', 9, 150)");
-        
+
         // Insertar cursos de ejemplo
         $conn->query("INSERT INTO cursos (codigo, nombre, descripcion, creditos, programa_id) VALUES 
                      ('PROG1', 'Programación Básica', 'Introducción a la programación', 4, 1),
                      ('BASE1', 'Bases de Datos', 'Fundamentos de bases de datos', 4, 1),
                      ('MATE1', 'Matemáticas Básicas', 'Matemáticas fundamentales', 3, 1),
                      ('ADM1', 'Introducción a la Administración', 'Conceptos básicos de administración', 3, 2)");
-        
+
         // Insertar salones de ejemplo
         $conn->query("INSERT INTO salones (codigo, edificio, capacidad, tipo) VALUES 
                      ('A101', 'Edificio A', 40, 'aula'),
                      ('A102', 'Edificio A', 35, 'aula'),
                      ('L201', 'Edificio B', 25, 'laboratorio'),
                      ('AUD1', 'Edificio Central', 100, 'auditorio')");
-        
+
+        // Insertar la materia "Matemática Básica" si no existe
+        $result = $conn->query("SELECT COUNT(*) as count FROM cursos WHERE codigo = 'MATBAS'");
+        $row = $result->fetch_assoc();
+
+        if ($row['count'] == 0) {
+            $conn->query("INSERT INTO cursos (codigo, nombre, descripcion, creditos, programa_id) VALUES 
+                     ('MATBAS', 'Matemática Básica', 'Curso introductorio de matemáticas', 3, 1)");
+
+            // Actualizar "Cálculo 1" para que tenga como prerequisito "Matemática Básica"
+            $conn->query("UPDATE cursos SET prerequisito_id = (SELECT id FROM cursos WHERE codigo = 'MATBAS') WHERE codigo = 'MAT101'");
+        }
+
+        // Activar la materia "Matemática Básica" si no está activa
+        $conn->query("UPDATE cursos SET activo = 1 WHERE codigo = 'MATBAS'");
+
+        // Insertar datos iniciales de asignación de docentes
+
+        $conn->query("INSERT INTO asignacion_docentes (docente_id, curso_id, semestre, anio) VALUES 
+                     (1, 1, '2025-1', 2025),
+                     (2, 2, '2025-1', 2025),
+                     (3, 3, '2025-1', 2025),
+                     (4, 4, '2025-1', 2025)");
+
+        // Insertar asignaciones de docentes para 2025-2 (semestre actual)
+        $conn->query("INSERT INTO asignacion_docentes (docente_id, curso_id, semestre, anio)
+            SELECT docente_id, curso_id, '2025-2', 2025 FROM asignacion_docentes WHERE semestre = '2025-1' AND anio = 2025");
+
+        // Insertar estudiantes de ejemplo
+        $password_hash_est = password_hash('estudiante123', PASSWORD_DEFAULT);
+        $conn->query("INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, password_hash) VALUES
+            ('estudiante', '2000000001', 'Juan', 'Pérez', 'juan.perez@universidad.edu', '$password_hash_est'),
+            ('estudiante', '2000000002', 'Ana', 'García', 'ana.garcia@universidad.edu', '$password_hash_est')");
+
+        // Insertar matrículas activas para 2025-2 (para los cursos y estudiantes de ejemplo)
+        $conn->query("INSERT INTO matriculas (estudiante_id, curso_id, semestre, anio, estado) VALUES
+            (2, 1, '2025-2', 2025, 'activa'),
+            (2, 2, '2025-2', 2025, 'activa'),
+            (3, 1, '2025-2', 2025, 'activa'),
+            (3, 3, '2025-2', 2025, 'activa')");
+
         echo json_encode(["message" => "Base de datos y datos iniciales creados exitosamente"]);
     } else {
         echo json_encode(["message" => "Base de datos ya existe y contiene datos"]);
@@ -166,6 +206,10 @@ function createDatabaseAndTables($conn) {
 }
 
 try {
+    $conn = new mysqli("localhost", "root", "", "universidad_somospensadores");
+    if ($conn->connect_error) {
+        die("Error de conexión: " . $conn->connect_error);
+    }
     createDatabaseAndTables($conn);
 } catch (Exception $e) {
     http_response_code(500);

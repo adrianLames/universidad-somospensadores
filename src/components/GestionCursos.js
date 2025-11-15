@@ -5,6 +5,7 @@ import './GestionCursos.css';
 const GestionCursos = ({ user }) => {
   const [cursos, setCursos] = useState([]);
   const [programas, setProgramas] = useState([]);
+  const [prerequisitos, setPrerequisitos] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentCurso, setCurrentCurso] = useState({
     id: null,
@@ -15,6 +16,7 @@ const GestionCursos = ({ user }) => {
     programa_id: ''
   });
   const [loading, setLoading] = useState(false);
+  const [selectedCurso, setSelectedCurso] = useState(null);
 
   useEffect(() => {
     fetchCursos();
@@ -38,6 +40,16 @@ const GestionCursos = ({ user }) => {
       setProgramas(data);
     } catch (error) {
       console.error('Error fetching programas:', error);
+    }
+  };
+
+  const fetchPrerequisitos = async (cursoId) => {
+    try {
+      const response = await fetch(`${API_BASE}/prerequisitos.php?curso_id=${cursoId}`);
+      const data = await response.json();
+      setPrerequisitos(data);
+    } catch (error) {
+      console.error('Error fetching prerequisitos:', error);
     }
   };
 
@@ -111,6 +123,11 @@ const GestionCursos = ({ user }) => {
         alert('Error de conexión');
       }
     }
+  };
+
+  const handleCursoSelect = (cursoId) => {
+    setSelectedCurso(cursoId);
+    fetchPrerequisitos(cursoId);
   };
 
   return (
@@ -232,6 +249,21 @@ const GestionCursos = ({ user }) => {
           </table>
         )}
       </div>
+
+      {selectedCurso && (
+        <div className="prerequisitos">
+          <h2>Prerequisitos</h2>
+          {prerequisitos.length > 0 ? (
+            <ul>
+              {prerequisitos.map(prerequisito => (
+                <li key={prerequisito.id}>{prerequisito.nombre}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>Este curso no tiene prerequisitos.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

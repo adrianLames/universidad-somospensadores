@@ -9,6 +9,8 @@ import Matriculas from './components/Matriculas';
 import Asistencias from './components/Asistencias';
 import Calificaciones from './components/Calificaciones';
 import Horarios from './components/Horarios';
+import ProfesorMaterias from './components/ProfesorMaterias';
+import Pensum from './components/Pensum';
 import { API_BASE } from './config/api';
 import './App.css';
 
@@ -75,6 +77,8 @@ function App() {
             <Route path="/asistencias" element={<Asistencias user={user} />} />
             <Route path="/calificaciones" element={<Calificaciones user={user} />} />
             <Route path="/horarios" element={<Horarios user={user} />} />
+            <Route path="/asignacion-profesores" element={<ProfesorMaterias profesorId={user.id} />} />
+            <Route path="/pensum" element={<Pensum user={user} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         )}

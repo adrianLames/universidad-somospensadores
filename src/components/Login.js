@@ -94,7 +94,7 @@ const Login = ({ onLogin }) => {
 
 
 
-// Y en tu formulario de login, agrega:
+
 <div className="register-link">
   <p>¿No tienes cuenta? <button onClick={() => setShowRegister(true)}>Regístrate aquí</button></p>
 </div>

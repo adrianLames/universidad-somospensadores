@@ -1,4 +1,4 @@
-<?php
+code $PROFILE<?php
 include 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];

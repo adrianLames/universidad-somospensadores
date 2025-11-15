@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './GestionUsuarios.css';
+import { API_BASE } from '../config/api';
 
 const RegistroPublico = ({ onSuccess }) => {
   const [form, setForm] = useState({
@@ -27,7 +28,7 @@ const RegistroPublico = ({ onSuccess }) => {
     setError('');
     setSuccess(false);
     try {
-      const res = await fetch('/api/usuarios.php', {
+      const res = await fetch(`${API_BASE}/usuarios.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, tipo: 'estudiante', activo: 0 })

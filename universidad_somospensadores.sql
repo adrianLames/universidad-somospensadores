@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-10-2025 a las 18:00:37
+-- Tiempo de generación: 15-11-2025 a las 22:09:24
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -61,7 +61,9 @@ CREATE TABLE `asignacion_docentes` (
 --
 
 INSERT INTO `asignacion_docentes` (`id`, `docente_id`, `curso_id`, `semestre`, `anio`, `fecha_asignacion`) VALUES
-(1, 3, 1, '2025-2', '2025', '2025-10-13 15:57:34');
+(1, 3, 1, '2025-2', '2025', '2025-10-13 15:57:34'),
+(2, 3, 5, '2025-1', '2025', '2025-11-15 19:21:39'),
+(3, 3, 6, '2025-1', '2025', '2025-11-15 19:44:35');
 
 -- --------------------------------------------------------
 
@@ -96,6 +98,14 @@ CREATE TABLE `calificaciones` (
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `calificaciones`
+--
+
+INSERT INTO `calificaciones` (`id`, `estudiante_id`, `curso_id`, `semestre`, `anio`, `nota_final`, `estado`, `fecha_registro`) VALUES
+(1, 2, 1, '2025-1', '2025', 4.0, 'aprobado', '2025-11-15 17:17:26'),
+(2, 2, 5, '2025-1', '2025', 3.0, 'aprobado', '2025-11-15 19:22:22');
+
 -- --------------------------------------------------------
 
 --
@@ -121,8 +131,9 @@ CREATE TABLE `cursos` (
 INSERT INTO `cursos` (`id`, `codigo`, `nombre`, `descripcion`, `creditos`, `programa_id`, `prerequisito_id`, `activo`, `fecha_creacion`) VALUES
 (1, 'PROG1', 'Programación Básica', 'Introducción a la programación', 4, 1, NULL, 1, '2025-10-13 15:27:10'),
 (2, 'BASE1', 'Bases de Datos', 'Fundamentos de bases de datos', 4, 1, NULL, 1, '2025-10-13 15:27:10'),
-(3, 'MATE1', 'Matemáticas Básicas', 'Matemáticas fundamentales', 3, 1, NULL, 1, '2025-10-13 15:27:10'),
-(4, 'ADM1', 'Introducción a la Administración', 'Conceptos básicos de administración', 3, 2, NULL, 1, '2025-10-13 15:27:10');
+(4, 'ADM1', 'Introducción a la Administración', 'Conceptos básicos de administración', 3, 2, NULL, 1, '2025-10-13 15:27:10'),
+(5, 'MATBAS', 'Matemática Básica', 'Curso introductorio de matemáticas', 3, 1, NULL, 1, '2025-11-15 16:35:14'),
+(6, 'CALCU', 'Cálculo 1', 'Matemáticas como suma, resta, multiplicación y división, o un procedimiento más complejo para obtener un resultado a partir de variables. \n', 4, 1, NULL, 1, '2025-11-15 19:38:45');
 
 -- --------------------------------------------------------
 
@@ -218,6 +229,15 @@ CREATE TABLE `matriculas` (
   `fecha_matricula` timestamp NOT NULL DEFAULT current_timestamp(),
   `estado` enum('activa','completada','cancelada') DEFAULT 'activa'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `matriculas`
+--
+
+INSERT INTO `matriculas` (`id`, `estudiante_id`, `curso_id`, `semestre`, `anio`, `fecha_matricula`, `estado`) VALUES
+(1, 2, 5, '2025-1', '2025', '2025-11-15 17:05:17', 'cancelada'),
+(2, 2, 6, '2025-2', '2025', '2025-11-15 19:45:10', 'activa'),
+(3, 2, 6, '2025-1', '2025', '2025-11-15 19:52:34', 'cancelada');
 
 -- --------------------------------------------------------
 
@@ -316,8 +336,8 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `tipo`, `identificacion`, `nombres`, `apellidos`, `email`, `telefono`, `fecha_nacimiento`, `direccion`, `password_hash`, `activo`, `fecha_creacion`) VALUES
 (1, 'admin', '1000000000', 'Administrador', 'Sistema', 'admin@universidad.edu', NULL, NULL, NULL, '$2y$10$728rAcxmaLW5vPXbAekgBu5nREFdcqSaZDkjtCbTGe/Y5n3fXDnJy', 1, '2025-10-13 15:27:10'),
-(2, 'estudiante', '2', 'jal', 'fahjsdjh', 'jal.es@correounivalle', '31100', '2025-10-14', '', '$2y$10$TXVRd19bTvPL8wjIdV/vceBW/TrhjpuELULkdk.xZY.iUKmi/wmje', 1, '2025-10-13 15:28:47'),
-(3, 'docente', '235', 'anjelo', 'lo', 'anjelo.doc@gmail.com', '1344', '2025-10-15', '', '$2y$10$NavLTEkPaW/Zsyga0NIzrudt8t1Cxjdr5qx1zbJhoF9LCTainNV82', 1, '2025-10-13 15:31:33');
+(2, 'estudiante', '2', 'jal', 'fahjsdjh', 'jal.es@correounivalle.co', '31100', '2025-10-14', '', '$2y$10$kgrieOP0kEXkd4un6rn5D.b4cVDKiJh7S0BA6a7YRdB9kWXf5UtJ2', 1, '2025-10-13 15:28:47'),
+(3, 'docente', '235', 'anjelo', 'lo', 'anjelo.doc@gmail.com', '1344', '2025-10-15', '', '$2y$10$GnK5wVKQFdoYn78w8W7/4ud/EKugTR159MZxlJRryVyqniMjLwfNa', 1, '2025-10-13 15:31:33');
 
 --
 -- Índices para tablas volcadas
@@ -439,7 +459,7 @@ ALTER TABLE `asignaciones`
 -- AUTO_INCREMENT de la tabla `asignacion_docentes`
 --
 ALTER TABLE `asignacion_docentes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `asistencias`
@@ -451,13 +471,13 @@ ALTER TABLE `asistencias`
 -- AUTO_INCREMENT de la tabla `calificaciones`
 --
 ALTER TABLE `calificaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `docentes`
@@ -481,7 +501,7 @@ ALTER TABLE `materias`
 -- AUTO_INCREMENT de la tabla `matriculas`
 --
 ALTER TABLE `matriculas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `programas`

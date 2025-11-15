@@ -42,6 +42,7 @@ const Dashboard = ({ user, onLogout }) => {
             <>
               <li><Link to="/asistencias">✅ Control de Asistencias</Link></li>
               <li><Link to="/calificaciones">📊 Registro de Calificaciones</Link></li>
+              <li><Link to="/asignacion-profesores">📘 Asignación de Profesores</Link></li>
             </>
           )}
           {user.tipo === 'estudiante' && (
@@ -49,6 +50,7 @@ const Dashboard = ({ user, onLogout }) => {
               <li><Link to="/matriculas">🎓 Matrículas</Link></li>
               <li><Link to="/calificaciones">📈 Ver Calificaciones</Link></li>
               <li><Link to="/asistencias">📅 Ver Asistencias</Link></li>
+              <li><Link to="/pensum">🗂️ Pensum / Malla Curricular</Link></li>
             </>
           )}
         </ul>
