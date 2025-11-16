@@ -1,39 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import './ProfesorMaterias.css';
+import BackHomeButton from './BackHomeButton';
 import { API_BASE } from '../config/api';
 
 const ProfesorMaterias = ({ profesorId }) => {
     const [cursos, setCursos] = useState([]);
     const [asignaciones, setAsignaciones] = useState([]);
     const [selectedCurso, setSelectedCurso] = useState('');
+    const [editingAsignacion, setEditingAsignacion] = useState(null);
+    const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null, curso_nombre: '' });
+    const [docentes, setDocentes] = useState([]);
+    const [selectedProfesor, setSelectedProfesor] = useState(profesorId || '');
 
     useEffect(() => {
         fetchCursos();
-        fetchAsignaciones();
-    }, [profesorId]);
+        fetchDocentes();
+    }, []);
+
+    useEffect(() => {
+        if (selectedProfesor) fetchAsignaciones();
+        else setAsignaciones([]);
+    }, [selectedProfesor]);
 
     const fetchCursos = async () => {
         try {
-            const response = await fetch(`${API_BASE}/asignacion_docentes.php`);
+            const response = await fetch(`${API_BASE}/cursos.php`);
             const data = await response.json();
-            if (data.success && Array.isArray(data.data)) {
-                setCursos(data.data);
-            } else {
-                setCursos([]);
-            }
+            setCursos(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching cursos:', error);
             setCursos([]);
         }
     };
 
+    const fetchDocentes = async () => {
+        try {
+            const res = await fetch(`${API_BASE}/usuarios.php?tipo=docente`);
+            const d = await res.json();
+            // backend puede devolver {success: true, data: [...]}
+            setDocentes(Array.isArray(d) ? d : (d.data || []));
+        } catch (err) {
+            console.error('Error fetching docentes:', err);
+            setDocentes([]);
+        }
+    };
+
     const fetchAsignaciones = async () => {
         try {
-            const response = await fetch(`${API_BASE}/asignacion_docentes.php?docente_id=${profesorId}`);
+            const id = selectedProfesor || profesorId;
+            const response = await fetch(`${API_BASE}/asignacion_docentes.php?docente_id=${id}`);
             const data = await response.json();
-            setAsignaciones(data.data);
+            const lista = Array.isArray(data) ? data : (data.data || []);
+            setAsignaciones(lista);
         } catch (error) {
             console.error('Error fetching asignaciones:', error);
+            setAsignaciones([]);
         }
     };
 
@@ -44,13 +65,14 @@ const ProfesorMaterias = ({ profesorId }) => {
         }
 
         try {
+            const docenteParaAsignar = selectedProfesor || profesorId;
             const response = await fetch(`${API_BASE}/asignacion_docentes.php`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    docente_id: profesorId,
+                    docente_id: docenteParaAsignar,
                     curso_id: selectedCurso,
                     semestre: '2025-1',
                     anio: 2025
@@ -71,18 +93,123 @@ const ProfesorMaterias = ({ profesorId }) => {
         }
     };
 
+    const startEdit = (asig) => {
+        setEditingAsignacion({...asig});
+    };
+
+    const saveEdit = async () => {
+        if (!editingAsignacion) return;
+        try {
+            const res = await fetch(`${API_BASE}/asignacion_docentes.php?id=${editingAsignacion.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ curso_id: editingAsignacion.curso_id, semestre: editingAsignacion.semestre, anio: editingAsignacion.anio })
+            });
+            if (res.ok) {
+                alert('Asignación actualizada');
+                fetchAsignaciones();
+                setEditingAsignacion(null);
+            } else {
+                const j = await res.json();
+                alert(j.message || 'Error actualizando');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error de conexión');
+        }
+    };
+
+    const openConfirmDelete = (asig) => {
+        setConfirmDelete({ open: true, id: asig.id, curso_nombre: asig.curso_nombre });
+    };
+
+    const closeConfirm = () => setConfirmDelete({ open: false, id: null, curso_nombre: '' });
+
+    const confirmDeleteAsignacion = async () => {
+        if (!confirmDelete.id) return closeConfirm();
+        try {
+            const res = await fetch(`${API_BASE}/asignacion_docentes.php?id=${confirmDelete.id}`, { method: 'DELETE' });
+            const json = await res.json();
+            if (res.ok) {
+                alert('Asignación eliminada');
+                fetchAsignaciones();
+            } else {
+                alert(json.message || 'Error eliminando');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error de conexión');
+        } finally {
+            closeConfirm();
+        }
+    };
+
     return (
         <div className="profesor-materias">
-            <h1>Materias Asignadas</h1>
-            <ul>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem'}}>
+                    <h1>Materias Asignadas</h1>
+                    <BackHomeButton label="Inicio" />
+                </div>
+            {/* If componente usado sin prop `profesorId`, permitir elegir docente */}
+            {!profesorId && (
+                <div className="choose-profesor">
+                    <label>Profesor:</label>
+                    <select value={selectedProfesor} onChange={(e) => setSelectedProfesor(e.target.value)}>
+                        <option value="">-- Selecciona un profesor --</option>
+                        {docentes.map(d => (
+                            <option key={d.id} value={d.id}>{d.nombres} {d.apellidos}</option>
+                        ))}
+                    </select>
+                </div>
+            )}
+
+            <ul className="profesor-asignaciones">
                 {asignaciones && asignaciones.length > 0 ? (
                     asignaciones.map(asignacion => (
-                        <li key={asignacion.id}>{asignacion.curso_nombre} (Semestre: {asignacion.semestre}, Año: {asignacion.anio})</li>
+                        <li key={asignacion.id} className="asignacion-item">
+                            {editingAsignacion && editingAsignacion.id === asignacion.id ? (
+                                <div className="asignacion-edit">
+                                    <select value={editingAsignacion.curso_id} onChange={(e) => setEditingAsignacion(prev => ({...prev, curso_id: e.target.value}))}>
+                                        {cursos.map(c => (
+                                            <option key={c.id} value={c.id}>{c.nombre}</option>
+                                        ))}
+                                    </select>
+                                    <input type="text" value={editingAsignacion.semestre} onChange={(e) => setEditingAsignacion(prev => ({...prev, semestre: e.target.value}))} />
+                                    <input type="number" value={editingAsignacion.anio} onChange={(e) => setEditingAsignacion(prev => ({...prev, anio: e.target.value}))} />
+                                    <button className="edit-btn" onClick={saveEdit}>Guardar</button>
+                                    <button className="cancel-btn" onClick={() => setEditingAsignacion(null)}>Cancelar</button>
+                                </div>
+                            ) : (
+                                <div className="asignacion-view">
+                                    <div>
+                                        <strong>{asignacion.curso_nombre}</strong>
+                                        <div className="meta">{asignacion.semestre} • {asignacion.anio}</div>
+                                    </div>
+                                    <div className="actions">
+                                        <button className="edit-btn" onClick={() => startEdit(asignacion)}>Editar</button>
+                                        <button className="delete-btn" onClick={() => openConfirmDelete(asignacion)}>Eliminar</button>
+                                    </div>
+                                </div>
+                            )}
+                        </li>
                     ))
                 ) : (
-                    <li>No tienes materias asignadas.</li>
+                    <li>{(selectedProfesor || profesorId) ? 'No hay materias asignadas para este profesor.' : 'Selecciona un profesor para ver sus materias.'}</li>
                 )}
             </ul>
+
+            {confirmDelete.open && (
+                <div className="confirm-modal">
+                    <div className="confirm-content">
+                        <h3>Eliminar asignación</h3>
+                        <p>¿Seguro que quieres eliminar la asignación de <strong>{confirmDelete.curso_nombre}</strong>?</p>
+                        <div className="confirm-actions">
+                            <button className="confirm-btn cancel" onClick={closeConfirm}>Cancelar</button>
+                            <button className="confirm-btn danger" onClick={confirmDeleteAsignacion}>Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <h2>Asignar Nueva Materia</h2>
             <select

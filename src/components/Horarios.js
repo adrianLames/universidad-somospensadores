@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './Horarios.css';
+import BackHomeButton from './BackHomeButton';
 
 const Horarios = ({ user }) => {
   const [horarios, setHorarios] = useState([]);
@@ -131,7 +132,10 @@ const Horarios = ({ user }) => {
 
   return (
     <div className="horarios">
-      <h2>🕐 Asignación de Horarios</h2>
+      <div className="page-header">
+        <h2>🕐 Asignación de Horarios</h2>
+        <BackHomeButton className="small-btn right" label="Inicio" />
+      </div>
       
       <button 
         className="btn-primary"

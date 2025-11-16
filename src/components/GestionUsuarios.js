@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './GestionUsuarios.css';
+import BackHomeButton from './BackHomeButton';
 
 const GestionUsuarios = ({ user }) => {
   const [usuarios, setUsuarios] = useState([]);
@@ -19,10 +20,19 @@ const GestionUsuarios = ({ user }) => {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [asignacionesPorDocente, setAsignacionesPorDocente] = useState({});
+  const [openDocentes, setOpenDocentes] = useState({});
+  const [cursosDisponibles, setCursosDisponibles] = useState([]);
+  const [newAsignacion, setNewAsignacion] = useState({ curso_id: '', semestre: '2025-1', anio: new Date().getFullYear() });
+  const [editingAsignacionId, setEditingAsignacionId] = useState(null);
+  const [editingAsignacionData, setEditingAsignacionData] = useState({ curso_id: '', semestre: '', anio: '' });
+  
 
   useEffect(() => {
     fetchUsuarios();
   }, []);
+
+  
 
   // Cerrar el formulario con la tecla ESC
   useEffect(() => {
@@ -43,6 +53,115 @@ const GestionUsuarios = ({ user }) => {
       setUsuarios(data);
     } catch (error) {
       console.error('Error fetching usuarios:', error);
+    }
+  };
+
+  const loadAsignacionesForDocente = async (docenteId, force = false) => {
+    if (!docenteId) return;
+    // si ya está cargado y no se fuerza, no recargar
+    if (asignacionesPorDocente[docenteId] && !force) return;
+    try {
+      const res = await fetch(`${API_BASE}/asignacion_docentes.php?docente_id=${docenteId}`);
+      const json = await res.json();
+      const lista = Array.isArray(json) ? json : (json.data || []);
+      setAsignacionesPorDocente(prev => ({ ...prev, [docenteId]: lista }));
+    } catch (err) {
+      console.error('Error cargando asignaciones del docente', docenteId, err);
+      setAsignacionesPorDocente(prev => ({ ...prev, [docenteId]: [] }));
+    }
+  };
+
+  const toggleDocenteOpen = (docenteId) => {
+    setOpenDocentes(prev => {
+      const next = { ...prev, [docenteId]: !prev[docenteId] };
+      if (!prev[docenteId]) loadAsignacionesForDocente(docenteId);
+      return next;
+    });
+  };
+
+  // fetch cursos disponibles
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/cursos.php`);
+        const j = await res.json();
+        const lista = Array.isArray(j) ? j : (j.data || j);
+        setCursosDisponibles(lista);
+      } catch (err) {
+        console.error('Error fetching cursosDisponibles', err);
+        setCursosDisponibles([]);
+      }
+    })();
+  }, []);
+
+  const addAsignacionForDocente = async (docenteId) => {
+    if (!docenteId || !newAsignacion.curso_id) return alert('Seleccione un curso');
+    try {
+      const res = await fetch(`${API_BASE}/asignacion_docentes.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ docente_id: docenteId, curso_id: newAsignacion.curso_id, semestre: newAsignacion.semestre, anio: parseInt(newAsignacion.anio, 10) })
+      });
+      const j = await res.json();
+      if (res.ok) {
+        // recargar asignaciones forzando
+        await loadAsignacionesForDocente(docenteId, true);
+        // reset form
+        setNewAsignacion({ curso_id: '', semestre: '2025-1', anio: new Date().getFullYear() });
+      } else {
+        alert(j.message || 'Error agregando asignación');
+      }
+    } catch (err) {
+      console.error('Error agregando asignacion', err);
+      alert('Error de conexión');
+    }
+  };
+
+  const deleteAsignacionForDocente = async (asignacionId, docenteId) => {
+    if (!asignacionId) return;
+    if (!window.confirm('¿Eliminar esta asignación?')) return;
+    try {
+      const res = await fetch(`${API_BASE}/asignacion_docentes.php?id=${asignacionId}`, { method: 'DELETE' });
+      const j = await res.json();
+      if (res.ok) {
+        await loadAsignacionesForDocente(docenteId, true);
+      } else {
+        alert(j.message || 'Error eliminando asignación');
+      }
+    } catch (err) {
+      console.error('Error eliminando asignacion', err);
+      alert('Error de conexión');
+    }
+  };
+
+  const startEditingAsignacion = (asig) => {
+    setEditingAsignacionId(asig.id);
+    setEditingAsignacionData({ curso_id: asig.curso_id, semestre: asig.semestre, anio: asig.anio });
+  };
+
+  const cancelEditingAsignacion = () => {
+    setEditingAsignacionId(null);
+    setEditingAsignacionData({ curso_id: '', semestre: '', anio: '' });
+  };
+
+  const updateAsignacionForDocente = async (asignacionId, docenteId) => {
+    if (!asignacionId) return;
+    try {
+      const res = await fetch(`${API_BASE}/asignacion_docentes.php?id=${asignacionId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ curso_id: editingAsignacionData.curso_id, semestre: editingAsignacionData.semestre, anio: parseInt(editingAsignacionData.anio, 10) })
+      });
+      const j = await res.json();
+      if (res.ok) {
+        await loadAsignacionesForDocente(docenteId, true);
+        cancelEditingAsignacion();
+      } else {
+        alert(j.message || 'Error actualizando asignación');
+      }
+    } catch (err) {
+      console.error('Error actualizando asignacion', err);
+      alert('Error de conexión');
     }
   };
 
@@ -134,6 +253,10 @@ const GestionUsuarios = ({ user }) => {
   const editUsuario = (usuario) => {
     setCurrentUsuario({...usuario, password: ''});
     setShowForm(true);
+    // Si es docente, cargar sus asignaciones para mostrarlas en el modal de edición
+    if (usuario.tipo === 'docente') {
+      loadAsignacionesForDocente(usuario.id);
+    }
   };
 
   const deleteUsuario = async (id) => {
@@ -176,6 +299,7 @@ const GestionUsuarios = ({ user }) => {
     <div className="gestion-usuarios">
       <div className="header-section">
         <h2>👥 Gestión de Usuarios</h2>
+        <BackHomeButton />
         <p className="admin-info">Administrador: {user?.nombres || 'Sistema'}</p>
       </div>
       
@@ -332,6 +456,55 @@ const GestionUsuarios = ({ user }) => {
                 </button>
               </div>
             </form>
+            {currentUsuario.tipo === 'docente' && currentUsuario.id && (
+              <div className="modal-section docente-modal-asignaciones">
+                <h4>Materias asignadas</h4>
+                {asignacionesPorDocente[currentUsuario.id] ? (
+                  asignacionesPorDocente[currentUsuario.id].length > 0 ? (
+                    <ul>
+                      {asignacionesPorDocente[currentUsuario.id].map(a => (
+                        <li key={a.id} className="asignacion-item-row">
+                          {editingAsignacionId === a.id ? (
+                            <div className="asignacion-edit-row">
+                              <select value={editingAsignacionData.curso_id} onChange={(e) => setEditingAsignacionData(prev => ({...prev, curso_id: e.target.value}))}>
+                                <option value="">Seleccionar curso</option>
+                                {cursosDisponibles.map(c => (
+                                  <option key={c.id} value={c.id}>{c.nombre}</option>
+                                ))}
+                              </select>
+                              <input type="text" value={editingAsignacionData.semestre} onChange={(e) => setEditingAsignacionData(prev => ({...prev, semestre: e.target.value}))} />
+                              <input type="number" value={editingAsignacionData.anio} onChange={(e) => setEditingAsignacionData(prev => ({...prev, anio: e.target.value}))} />
+                              <div className="asignacion-actions">
+                                <button className="edit-btn" onClick={() => updateAsignacionForDocente(a.id, currentUsuario.id)}>Guardar</button>
+                                <button className="cancel-btn" onClick={cancelEditingAsignacion}>Cancelar</button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="asignacion-view-row">
+                              <div className="asignacion-info">
+                                <span className="curso-nombre">{a.curso_nombre}</span>
+                                <span className="curso-meta">{a.semestre} • {a.anio}</span>
+                              </div>
+                              <div className="asignacion-actions">
+                                <button className="edit-btn" onClick={() => startEditingAsignacion(a)}>Editar</button>
+                                <button className="delete-btn" onClick={() => deleteAsignacionForDocente(a.id, currentUsuario.id)}>Eliminar</button>
+                              </div>
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>Este docente no tiene materias asignadas.</p>
+                  )
+                ) : (
+                  <p>Cargando asignaciones...</p>
+                )}
+
+                {/* Formulario de agregar asignación removido por petición del usuario */}
+              </div>
+            )}
+            {/* Asignaciones de docentes movidas al módulo ProfesorMaterias */}
           </div>
         </div>
       )}
@@ -361,7 +534,8 @@ const GestionUsuarios = ({ user }) => {
               </thead>
               <tbody>
                 {usuarios.map(usuario => (
-                  <tr key={usuario.id}>
+                  <React.Fragment key={usuario.id}>
+                  <tr>
                     <td><strong>{usuario.identificacion}</strong></td>
                     <td>{usuario.nombres} {usuario.apellidos}</td>
                     <td>{usuario.email}</td>
@@ -387,9 +561,33 @@ const GestionUsuarios = ({ user }) => {
                         >
                           🗑️ Eliminar
                         </button>
+                        {/* botón 'Ver materias' eliminado a petición del usuario */}
                       </div>
                     </td>
                   </tr>
+                  {usuario.tipo === 'docente' && openDocentes[usuario.id] && (
+                    <tr className="docente-asignaciones-row" key={`asig-${usuario.id}`}>
+                      <td colSpan="5">
+                        <div className="docente-asignaciones">
+                          <h4>Materias asignadas</h4>
+                          {asignacionesPorDocente[usuario.id] ? (
+                            asignacionesPorDocente[usuario.id].length > 0 ? (
+                              <ul>
+                                {asignacionesPorDocente[usuario.id].map(a => (
+                                  <li key={a.id}><strong>{a.curso_nombre}</strong> — {a.semestre} • {a.anio}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p>No hay materias asignadas a este docente.</p>
+                            )
+                          ) : (
+                            <p>Cargando asignaciones...</p>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

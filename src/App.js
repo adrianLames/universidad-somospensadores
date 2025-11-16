@@ -11,6 +11,7 @@ import Calificaciones from './components/Calificaciones';
 import Horarios from './components/Horarios';
 import ProfesorMaterias from './components/ProfesorMaterias';
 import Pensum from './components/Pensum';
+import VincularProfesorMateria from './components/VincularProfesorMateria';
 import { API_BASE } from './config/api';
 import './App.css';
 
@@ -78,6 +79,7 @@ function App() {
             <Route path="/calificaciones" element={<Calificaciones user={user} />} />
             <Route path="/horarios" element={<Horarios user={user} />} />
             <Route path="/asignacion-profesores" element={<ProfesorMaterias profesorId={user.id} />} />
+            <Route path="/vincular-profesor-materia" element={<VincularProfesorMateria />} />
             <Route path="/pensum" element={<Pensum user={user} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

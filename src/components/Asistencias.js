@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './Asistencias.css';
+import BackHomeButton from './BackHomeButton';
 
 const Asistencias = ({ user }) => {
   const [asistencias, setAsistencias] = useState([]);
@@ -126,7 +127,10 @@ const Asistencias = ({ user }) => {
 
   return (
     <div className="asistencias">
-      <h2>✅ {user.tipo === 'docente' ? 'Control de Asistencias' : 'Mis Asistencias'}</h2>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem'}}>
+        <h2>✅ {user.tipo === 'docente' ? 'Control de Asistencias' : 'Mis Asistencias'}</h2>
+        <BackHomeButton label="Inicio" />
+      </div>
       
       {user.tipo === 'docente' && (
         <button 

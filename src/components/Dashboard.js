@@ -36,6 +36,7 @@ const Dashboard = ({ user, onLogout }) => {
               <li><Link to="/programas">📚 Gestión de Programas</Link></li>
               <li><Link to="/cursos">📖 Gestión de Cursos</Link></li>
               <li><Link to="/horarios">🕐 Asignación de Horarios</Link></li>
+              <li><Link to="/vincular-profesor-materia">🔗 Vincular Profesor - Materia</Link></li>
             </>
           )}
           {user.tipo === 'docente' && (
@@ -76,6 +77,10 @@ const Dashboard = ({ user, onLogout }) => {
                 <div className="feature-card">
                   <h3>📖 Cursos</h3>
                   <p>Administra la oferta académica de cursos</p>
+                </div>
+                <div className="feature-card">
+                  <h3>🔗 Vincular Profesores</h3>
+                  <p>Vincula docentes con las materias que impartirán</p>
                 </div>
                 <div className="feature-card">
                   <h3>🕐 Horarios</h3>

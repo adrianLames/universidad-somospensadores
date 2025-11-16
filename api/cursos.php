@@ -1,4 +1,5 @@
 <?php
+include_once __DIR__ . '/cors.php';
 include 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];

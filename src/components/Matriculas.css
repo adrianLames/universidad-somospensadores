@@ -85,3 +85,9 @@
     min-width: 600px;
   }
 }
+
+/* Ajustes para BackHomeButton en Matriculas */
+.matriculas .back-home-btn {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.95rem;
+}

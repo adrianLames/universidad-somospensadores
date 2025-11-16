@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AsignacionProfesores.css';
+import BackHomeButton from './BackHomeButton';
+import { apiRequest } from '../config/api';
 
 const AsignacionProfesores = () => {
     const [profesores, setProfesores] = useState([]);
@@ -20,8 +22,7 @@ const AsignacionProfesores = () => {
 
     const fetchProfesores = async () => {
         try {
-            const response = await fetch('/api/usuarios.php?tipo=docente');
-            const data = await response.json();
+            const data = await apiRequest('usuarios.php?tipo=docente');
             setProfesores(data);
         } catch (error) {
             console.error('Error fetching profesores:', error);
@@ -30,8 +31,7 @@ const AsignacionProfesores = () => {
 
     const fetchCursos = async () => {
         try {
-            const response = await fetch('/api/cursos.php');
-            const data = await response.json();
+            const data = await apiRequest('cursos.php');
             setCursos(data);
         } catch (error) {
             console.error('Error fetching cursos:', error);
@@ -40,8 +40,7 @@ const AsignacionProfesores = () => {
 
     const fetchAsignaciones = async () => {
         try {
-            const response = await fetch('/api/asignacion_docentes.php');
-            const data = await response.json();
+            const data = await apiRequest('asignacion_docentes.php');
             setAsignaciones(data);
         } catch (error) {
             console.error('Error fetching asignaciones:', error);
@@ -52,15 +51,11 @@ const AsignacionProfesores = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('/api/asignacion_docentes.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
+            try {
+                await apiRequest('asignacion_docentes.php', {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
                 alert('Asignación creada exitosamente');
                 fetchAsignaciones();
                 setFormData({
@@ -69,9 +64,9 @@ const AsignacionProfesores = () => {
                     semestre: '',
                     anio: new Date().getFullYear()
                 });
-            } else {
-                const errorData = await response.json();
-                alert(errorData.message || 'Error al crear la asignación');
+            } catch (error) {
+                console.error('Error creating asignacion:', error);
+                alert(error?.message || 'Error al crear la asignación');
             }
         } catch (error) {
             console.error('Error creating asignacion:', error);
@@ -81,16 +76,14 @@ const AsignacionProfesores = () => {
 
     const actualizarPrerequisito = async () => {
         try {
-            const response = await fetch('http://localhost/universidad-somospensadores/api/cursos.php', {
+            const data = await apiRequest('cursos.php', {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     curso_id: 'ID_DE_CALCU',
                     prerequisito_id: 'ID_DE_MATBAS'
                 })
             });
 
-            const data = await response.json();
             console.log(data);
         } catch (error) {
             console.error('Error updating prerequisito:', error);
@@ -99,27 +92,24 @@ const AsignacionProfesores = () => {
 
     const duplicarAsignaciones = async () => {
         try {
-            const response = await fetch('/api/asignacion_docentes.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    query: `
-                        INSERT INTO asignacion_docentes (docente_id, curso_id, semestre, anio)
-                        SELECT docente_id, curso_id, '2025-2', 2025
-                        FROM asignacion_docentes
-                        WHERE semestre = '2025-1' AND anio = 2025;
-                    `
-                })
-            });
+            try {
+                await apiRequest('asignacion_docentes.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        query: `
+                            INSERT INTO asignacion_docentes (docente_id, curso_id, semestre, anio)
+                            SELECT docente_id, curso_id, '2025-2', 2025
+                            FROM asignacion_docentes
+                            WHERE semestre = '2025-1' AND anio = 2025;
+                        `
+                    })
+                });
 
-            if (response.ok) {
                 alert('Asignaciones duplicadas exitosamente');
                 fetchAsignaciones();
-            } else {
-                const errorData = await response.json();
-                alert(errorData.message || 'Error al duplicar las asignaciones');
+            } catch (error) {
+                console.error('Error duplicating asignaciones:', error);
+                alert(error?.message || 'Error al duplicar las asignaciones');
             }
         } catch (error) {
             console.error('Error duplicating asignaciones:', error);
@@ -129,7 +119,10 @@ const AsignacionProfesores = () => {
 
     return (
         <div className="asignacion-profesores">
-            <h1>Asignación de Profesores</h1>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <h1>Asignación de Profesores</h1>
+                    <BackHomeButton label="Inicio" />
+                </div>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label>Profesor:</label>

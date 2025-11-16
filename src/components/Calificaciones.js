@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './Calificaciones.css';
+import BackHomeButton from './BackHomeButton';
 
 const Calificaciones = ({ user }) => {
   const [calificaciones, setCalificaciones] = useState([]);
@@ -15,6 +16,7 @@ const Calificaciones = ({ user }) => {
     nota_final: ''
   });
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     if (user.tipo === 'docente') {
@@ -70,21 +72,32 @@ const Calificaciones = ({ user }) => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/calificaciones.php`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(currentCalificacion),
-      });
+      let response;
+      if (editingId) {
+        // Update existing calificación
+        response = await fetch(`${API_BASE}/calificaciones.php?id=${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nota_final: parseFloat(currentCalificacion.nota_final) })
+        });
+      } else {
+        // Create new calificación
+        response = await fetch(`${API_BASE}/calificaciones.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentCalificacion),
+        });
+      }
 
       if (response.ok) {
-        await fetchCalificacionesDocente();
+        if (user.tipo === 'docente') await fetchCalificacionesDocente();
+        else await fetchCalificacionesEstudiante();
         resetForm();
-        alert('Calificación registrada exitosamente');
+        setEditingId(null);
+        alert(editingId ? 'Calificación actualizada exitosamente' : 'Calificación registrada exitosamente');
       } else {
         const errorData = await response.json();
-        alert(errorData.error || 'Error al registrar la calificación');
+        alert(errorData.error || 'Error al guardar la calificación');
       }
     } catch (error) {
       console.error('Error saving calificacion:', error);
@@ -104,6 +117,7 @@ const Calificaciones = ({ user }) => {
     });
     setShowForm(false);
     setEstudiantes([]);
+    setEditingId(null);
   };
 
   const handleCursoChange = (cursoId) => {
@@ -143,14 +157,50 @@ const Calificaciones = ({ user }) => {
     }
   };
 
+  const startEditCalificacion = (calificacion) => {
+    // Prefill form and open modal in edit mode
+    setEditingId(calificacion.id);
+    setCurrentCalificacion({
+      estudiante_id: calificacion.estudiante_id || '',
+      curso_id: calificacion.curso_id || '',
+      semestre: calificacion.semestre || '',
+      anio: calificacion.anio || new Date().getFullYear(),
+      nota_final: calificacion.nota_final || ''
+    });
+    // load estudiantes for the curso to keep select consistent
+    if (calificacion.curso_id) fetchEstudiantesPorCurso(calificacion.curso_id);
+    setShowForm(true);
+  };
+
+  const deleteCalificacion = async (id) => {
+    if (!window.confirm('¿Eliminar esta calificación?')) return;
+    try {
+      const res = await fetch(`${API_BASE}/calificaciones.php?id=${id}`, { method: 'DELETE' });
+      const j = await res.json();
+      if (res.ok) {
+        if (user.tipo === 'docente') await fetchCalificacionesDocente();
+        else await fetchCalificacionesEstudiante();
+        alert(j.message || 'Calificación eliminada');
+      } else {
+        alert(j.error || 'Error eliminando calificación');
+      }
+    } catch (err) {
+      console.error('Error eliminando calificacion', err);
+      alert('Error de conexión');
+    }
+  }
+
   return (
     <div className="calificaciones">
-      <h2>📊 {user.tipo === 'docente' ? 'Registro de Calificaciones' : 'Mis Calificaciones'}</h2>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem'}}>
+        <h2>📊 {user.tipo === 'docente' ? 'Registro de Calificaciones' : 'Mis Calificaciones'}</h2>
+        <BackHomeButton label="Inicio" />
+      </div>
       
       {user.tipo === 'docente' && (
         <button 
           className="btn-primary"
-          onClick={() => setShowForm(true)}
+          onClick={() => { setShowForm(true); setEditingId(null); resetForm(); }}
         >
           ➕ Registrar Calificación
         </button>
@@ -159,68 +209,75 @@ const Calificaciones = ({ user }) => {
       {showForm && (
         <div className="modal">
           <div className="modal-content">
-            <h3>➕ Registrar Calificación</h3>
+            <h3>{editingId ? '✏️ Editar Calificación' : '➕ Registrar Calificación'}</h3>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label>Curso:</label>
-                <select
-                  value={currentCalificacion.curso_id}
-                  onChange={(e) => handleCursoChange(e.target.value)}
-                  required
-                  disabled={loading}
-                >
-                  <option value="">Seleccionar curso</option>
-                  {cursos.map(curso => (
-                    <option key={curso.id} value={curso.id}>
-                      {curso.codigo} - {curso.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Estudiante:</label>
-                <select
-                  value={currentCalificacion.estudiante_id}
-                  onChange={(e) => setCurrentCalificacion({...currentCalificacion, estudiante_id: e.target.value})}
-                  required
-                  disabled={loading || !currentCalificacion.curso_id}
-                >
-                  <option value="">Seleccionar estudiante</option>
-                  {estudiantes.map(estudiante => (
-                    <option key={estudiante.id} value={estudiante.id}>
-                      {estudiante.nombres} {estudiante.apellidos}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Semestre:</label>
-                <select
-                  value={currentCalificacion.semestre}
-                  onChange={(e) => setCurrentCalificacion({...currentCalificacion, semestre: e.target.value})}
-                  required
-                  disabled={loading}
-                >
-                  <option value="">Seleccionar semestre</option>
-                  {getSemestres().map(semestre => (
-                    <option key={semestre} value={semestre}>
-                      {semestre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Año:</label>
-                <input
-                  type="number"
-                  value={currentCalificacion.anio}
-                  onChange={(e) => setCurrentCalificacion({...currentCalificacion, anio: e.target.value})}
-                  required
-                  min="2020"
-                  max="2030"
-                  disabled={loading}
-                />
-              </div>
+              {/* If editing, only allow changing the nota_final. Otherwise show full form to create */}
+              {!editingId ? (
+                <>
+                <div className="form-group">
+                  <label>Curso:</label>
+                  <select
+                    value={currentCalificacion.curso_id}
+                    onChange={(e) => handleCursoChange(e.target.value)}
+                    required
+                    disabled={loading}
+                  >
+                    <option value="">Seleccionar curso</option>
+                    {cursos.map(curso => (
+                      <option key={curso.id} value={curso.id}>
+                        {curso.codigo} - {curso.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Estudiante:</label>
+                  <select
+                    value={currentCalificacion.estudiante_id}
+                    onChange={(e) => setCurrentCalificacion({...currentCalificacion, estudiante_id: e.target.value})}
+                    required
+                    disabled={loading || !currentCalificacion.curso_id}
+                  >
+                    <option value="">Seleccionar estudiante</option>
+                    {estudiantes.map(estudiante => (
+                      <option key={estudiante.id} value={estudiante.id}>
+                        {estudiante.nombres} {estudiante.apellidos}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Semestre:</label>
+                  <select
+                    value={currentCalificacion.semestre}
+                    onChange={(e) => setCurrentCalificacion({...currentCalificacion, semestre: e.target.value})}
+                    required
+                    disabled={loading}
+                  >
+                    <option value="">Seleccionar semestre</option>
+                    {getSemestres().map(semestre => (
+                      <option key={semestre} value={semestre}>
+                        {semestre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Año:</label>
+                  <input
+                    type="number"
+                    value={currentCalificacion.anio}
+                    onChange={(e) => setCurrentCalificacion({...currentCalificacion, anio: e.target.value})}
+                    required
+                    min="2020"
+                    max="2030"
+                    disabled={loading}
+                  />
+                </div>
+                </>
+              ) : null}
+
               <div className="form-group">
                 <label>Nota Final (0.0 - 5.0):</label>
                 <input
@@ -242,6 +299,7 @@ const Calificaciones = ({ user }) => {
                   ❌ Cancelar
                 </button>
               </div>
+              </div>
             </form>
           </div>
         </div>
@@ -262,6 +320,7 @@ const Calificaciones = ({ user }) => {
                 <th>Año</th>
                 <th>Nota Final</th>
                 <th>Estado</th>
+                {user.tipo === 'docente' && <th>Acciones</th>}
               </tr>
             </thead>
             <tbody>
@@ -286,6 +345,12 @@ const Calificaciones = ({ user }) => {
                       {calificacion.estado.toUpperCase()}
                     </span>
                   </td>
+                  {user.tipo === 'docente' && (
+                    <td>
+                      <button className="btn-edit" onClick={() => startEditCalificacion(calificacion)}>Editar</button>
+                      <button className="btn-delete" onClick={() => deleteCalificacion(calificacion.id)}>Eliminar</button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

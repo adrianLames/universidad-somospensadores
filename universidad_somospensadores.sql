@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-11-2025 a las 22:09:24
+-- Tiempo de generación: 16-11-2025 a las 04:17:08
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,26 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `universidad_somospensadores`
 --
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `asignaciones`
---
-
-CREATE TABLE `asignaciones` (
-  `id` int(11) NOT NULL,
-  `docente_id` int(11) NOT NULL,
-  `materia_id` int(11) NOT NULL,
-  `grupo` varchar(10) NOT NULL,
-  `horario` text NOT NULL,
-  `periodo` varchar(20) NOT NULL,
-  `aula` varchar(20) DEFAULT NULL,
-  `cupos` int(11) DEFAULT 30,
-  `estado` enum('activa','inactiva') DEFAULT 'activa',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -62,8 +42,9 @@ CREATE TABLE `asignacion_docentes` (
 
 INSERT INTO `asignacion_docentes` (`id`, `docente_id`, `curso_id`, `semestre`, `anio`, `fecha_asignacion`) VALUES
 (1, 3, 1, '2025-2', '2025', '2025-10-13 15:57:34'),
-(2, 3, 5, '2025-1', '2025', '2025-11-15 19:21:39'),
-(3, 3, 6, '2025-1', '2025', '2025-11-15 19:44:35');
+(15, 3, 2, '2025-1', '2025', '2025-11-16 02:40:36'),
+(16, 3, 6, '1', '2025', '2025-11-16 02:41:00'),
+(21, 4, 6, '2025-1', '2025', '2025-11-16 03:03:31');
 
 -- --------------------------------------------------------
 
@@ -104,7 +85,8 @@ CREATE TABLE `calificaciones` (
 
 INSERT INTO `calificaciones` (`id`, `estudiante_id`, `curso_id`, `semestre`, `anio`, `nota_final`, `estado`, `fecha_registro`) VALUES
 (1, 2, 1, '2025-1', '2025', 4.0, 'aprobado', '2025-11-15 17:17:26'),
-(2, 2, 5, '2025-1', '2025', 3.0, 'aprobado', '2025-11-15 19:22:22');
+(2, 2, 5, '2025-1', '2025', 3.0, 'aprobado', '2025-11-15 19:22:22'),
+(3, 2, 1, '2026-1', '2025', 5.0, 'aprobado', '2025-11-16 00:43:40');
 
 -- --------------------------------------------------------
 
@@ -134,34 +116,6 @@ INSERT INTO `cursos` (`id`, `codigo`, `nombre`, `descripcion`, `creditos`, `prog
 (4, 'ADM1', 'Introducción a la Administración', 'Conceptos básicos de administración', 3, 2, NULL, 1, '2025-10-13 15:27:10'),
 (5, 'MATBAS', 'Matemática Básica', 'Curso introductorio de matemáticas', 3, 1, NULL, 1, '2025-11-15 16:35:14'),
 (6, 'CALCU', 'Cálculo 1', 'Matemáticas como suma, resta, multiplicación y división, o un procedimiento más complejo para obtener un resultado a partir de variables. \n', 4, 1, NULL, 1, '2025-11-15 19:38:45');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `docentes`
---
-
-CREATE TABLE `docentes` (
-  `id` int(11) NOT NULL,
-  `codigo_docente` varchar(20) NOT NULL,
-  `nombre` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `telefono` varchar(20) DEFAULT NULL,
-  `especialidad` varchar(255) DEFAULT NULL,
-  `estado` enum('activo','inactivo') DEFAULT 'activo',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `docentes`
---
-
-INSERT INTO `docentes` (`id`, `codigo_docente`, `nombre`, `email`, `telefono`, `especialidad`, `estado`, `created_at`, `updated_at`) VALUES
-(1, 'DOC001', 'Dr. Juan Pérez', 'juan.perez@universidad.edu', '3001234567', 'Matemáticas', 'activo', '2025-10-13 15:46:03', '2025-10-13 15:46:03'),
-(2, 'DOC002', 'Dra. María García', 'maria.garcia@universidad.edu', '3002345678', 'Física', 'activo', '2025-10-13 15:46:03', '2025-10-13 15:46:03'),
-(3, 'DOC003', 'Lic. Carlos López', 'carlos.lopez@universidad.edu', '3003456789', 'Programación', 'activo', '2025-10-13 15:46:03', '2025-10-13 15:46:03'),
-(4, 'DOC004', 'Mg. Ana Martínez', 'ana.martinez@universidad.edu', '3004567890', 'Base de Datos', 'activo', '2025-10-13 15:46:03', '2025-10-13 15:46:03');
 
 -- --------------------------------------------------------
 
@@ -337,19 +291,12 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `tipo`, `identificacion`, `nombres`, `apellidos`, `email`, `telefono`, `fecha_nacimiento`, `direccion`, `password_hash`, `activo`, `fecha_creacion`) VALUES
 (1, 'admin', '1000000000', 'Administrador', 'Sistema', 'admin@universidad.edu', NULL, NULL, NULL, '$2y$10$728rAcxmaLW5vPXbAekgBu5nREFdcqSaZDkjtCbTGe/Y5n3fXDnJy', 1, '2025-10-13 15:27:10'),
 (2, 'estudiante', '2', 'jal', 'fahjsdjh', 'jal.es@correounivalle.co', '31100', '2025-10-14', '', '$2y$10$kgrieOP0kEXkd4un6rn5D.b4cVDKiJh7S0BA6a7YRdB9kWXf5UtJ2', 1, '2025-10-13 15:28:47'),
-(3, 'docente', '235', 'anjelo', 'lo', 'anjelo.doc@gmail.com', '1344', '2025-10-15', '', '$2y$10$GnK5wVKQFdoYn78w8W7/4ud/EKugTR159MZxlJRryVyqniMjLwfNa', 1, '2025-10-13 15:31:33');
+(3, 'docente', '235', 'anjelo', 'lo', 'anjelo.doc@gmail.com', '1344', '2025-10-15', '', '$2y$10$GnK5wVKQFdoYn78w8W7/4ud/EKugTR159MZxlJRryVyqniMjLwfNa', 1, '2025-10-13 15:31:33'),
+(4, 'docente', '789', 'Andres David', 'Villa Romero', 'andres@universidad.edu', '3147060060', '2001-08-16', '', '$2y$10$U2gK2a/DTYvr0nZr2qJrXuaHwPRKVf00Gbm5i0rcX8KrSAImxQaEa', 1, '2025-11-16 02:42:03');
 
 --
 -- Índices para tablas volcadas
 --
-
---
--- Indices de la tabla `asignaciones`
---
-ALTER TABLE `asignaciones`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_asignacion` (`docente_id`,`materia_id`,`grupo`,`periodo`),
-  ADD KEY `materia_id` (`materia_id`);
 
 --
 -- Indices de la tabla `asignacion_docentes`
@@ -383,14 +330,6 @@ ALTER TABLE `cursos`
   ADD UNIQUE KEY `codigo` (`codigo`),
   ADD KEY `programa_id` (`programa_id`),
   ADD KEY `prerequisito_id` (`prerequisito_id`);
-
---
--- Indices de la tabla `docentes`
---
-ALTER TABLE `docentes`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `codigo_docente` (`codigo_docente`),
-  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indices de la tabla `horarios`
@@ -450,16 +389,10 @@ ALTER TABLE `usuarios`
 --
 
 --
--- AUTO_INCREMENT de la tabla `asignaciones`
---
-ALTER TABLE `asignaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `asignacion_docentes`
 --
 ALTER TABLE `asignacion_docentes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `asistencias`
@@ -471,19 +404,13 @@ ALTER TABLE `asistencias`
 -- AUTO_INCREMENT de la tabla `calificaciones`
 --
 ALTER TABLE `calificaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT de la tabla `docentes`
---
-ALTER TABLE `docentes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `horarios`
@@ -525,18 +452,11 @@ ALTER TABLE `seguimiento_academico`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
 --
-
---
--- Filtros para la tabla `asignaciones`
---
-ALTER TABLE `asignaciones`
-  ADD CONSTRAINT `asignaciones_ibfk_1` FOREIGN KEY (`docente_id`) REFERENCES `docentes` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `asignaciones_ibfk_2` FOREIGN KEY (`materia_id`) REFERENCES `materias` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `asignacion_docentes`

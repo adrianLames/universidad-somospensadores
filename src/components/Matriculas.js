@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './Matriculas.css';
+import BackHomeButton from './BackHomeButton';
 
 const Matriculas = ({ user }) => {
   const [matriculas, setMatriculas] = useState([]);
@@ -163,14 +164,24 @@ const Matriculas = ({ user }) => {
 
   const handleCursoSelect = (cursoId) => {
     setSelectedCurso(cursoId);
-    fetch(`/api/verificar_prerequisitos.php?curso_id=${cursoId}&estudiante_id=${user.id}`)
-      .then(response => response.json())
-      .then(data => setPrerequisitos(data.data));
+    (async () => {
+      try {
+        const data = await fetch(`${API_BASE}/verificar_prerequisitos.php?curso_id=${cursoId}&estudiante_id=${user.id}`)
+          .then(r => r.json());
+        setPrerequisitos(data.data);
+      } catch (err) {
+        console.error('Error verificando prerequisitos:', err);
+        setPrerequisitos([]);
+      }
+    })();
   };
 
   return (
     <div className="matriculas">
-      <h2>🎓 Gestión de Matrículas</h2>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <h2>🎓 Gestión de Matrículas</h2>
+        <BackHomeButton label="Inicio" />
+      </div>
       
       {user.tipo === 'estudiante' && (
         <button 

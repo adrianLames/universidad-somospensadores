@@ -1,0 +1,59 @@
+
+.back-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(90deg, #12518c 0%, #00bbc3 100%);
+  border: none;
+  color: white;
+  padding: 0.6rem 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(18,81,140,0.18);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.back-home-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(18,81,140,0.22);
+}
+
+/* Variant for light backgrounds (if you need the old white style) */
+.back-home-btn.light {
+  background: linear-gradient(90deg, #f3f6f7, #ffffff);
+  color: #0b3a57;
+  border: 1px solid #d7e9ea;
+  box-shadow: 0 6px 18px rgba(3,45,60,0.04);
+}
+
+/* Small variant for headers */
+.back-home-btn.small-btn {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(3,45,60,0.12);
+}
+
+/* Right alignment helper and header container */
+.back-home-btn.right { margin-left: 1rem; }
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-header h2 { margin: 0; font-size: 1.6rem; color: #0b3a57; }
+
+@media (max-width: 720px) {
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .back-home-btn.right { margin-left: 0; margin-top: 0.5rem; }
+}
+
+/* Ensure good contrast on small screens */
+@media (max-width: 600px) {
+  .back-home-btn { padding: 0.5rem 0.8rem; font-size: 0.95rem; }
+}

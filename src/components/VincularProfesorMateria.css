@@ -1,0 +1,61 @@
+/* Estilos básicos para VincularProfesorMateria */
+.vincular-profesor-materia {
+  max-width: 720px;
+  margin: 20px auto;
+  padding: 18px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.vincular-profesor-materia h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.vincular-profesor-materia .form-group {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.vincular-profesor-materia label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.vincular-profesor-materia select,
+.vincular-profesor-materia input[type="text"],
+.vincular-profesor-materia input[type="number"] {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.vincular-profesor-materia button {
+  background: #2f80ed;
+  color: #fff;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.vincular-profesor-materia button:hover {
+  background: #1c63c9;
+}
+
+.vincular-profesor-materia .mensaje-vinculacion {
+  margin-top: 12px;
+  padding: 8px 10px;
+  background: #f1f8ff;
+  border-left: 4px solid #2f80ed;
+}
+
+@media (max-width: 600px) {
+  .vincular-profesor-materia { padding: 12px; margin: 12px; }
+}

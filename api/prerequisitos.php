@@ -1,7 +1,6 @@
 <?php
-
-require_once 'config.php';
-
+include_once __DIR__ . '/cors.php';
+include 'config.php';
 header('Content-Type: application/json');
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -28,5 +27,7 @@ if ($method === 'GET') {
 } else {
     echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
 }
+
+$conn->close();
 
 ?>
