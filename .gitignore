@@ -21,18 +21,3 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Archivos de prueba y temporales - NO SUBIR A GIT
-test_*.json
-test_*.php
-verificar_*.php
-verificar_*.sql
-check_*.sql
-flush_*.php
-reparar_*.sql
-script_*.sql
-corregir_*.sql
-recrear_*.sql
-*_backup*.sql
-ejecutar_ahora.sql
-usuarios_backup_*

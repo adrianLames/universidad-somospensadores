@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-11-2025 a las 22:14:56
+-- Tiempo de generación: 17-11-2025 a las 22:46:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -398,7 +398,7 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `tipo`, `identificacion`, `nombres`, `apellidos`, `email`, `telefono`, `fecha_nacimiento`, `direccion`, `facultad`, `programa_id`, `password_hash`, `activo`, `fecha_creacion`) VALUES
 (1, 'admin', '1000000000', 'Administrador', 'Sistema', 'admin@universidad.edu', NULL, NULL, NULL, NULL, NULL, '$2y$10$728rAcxmaLW5vPXbAekgBu5nREFdcqSaZDkjtCbTGe/Y5n3fXDnJy', 1, '2025-10-13 15:27:10'),
-(2, 'estudiante', '2', 'jal', 'fahjsdjh', 'jal.es@correounivalle.co', '31100', '2025-10-14', '', NULL, NULL, '$2y$10$kgrieOP0kEXkd4un6rn5D.b4cVDKiJh7S0BA6a7YRdB9kWXf5UtJ2', 1, '2025-10-13 15:28:47'),
+(2, '', '2', 'jal', 'fahjsdjh', 'jal.es@correounivalle.co', '31100', '2025-10-14', '', 'Ingeniería', 1, '$2y$10$kgrieOP0kEXkd4un6rn5D.b4cVDKiJh7S0BA6a7YRdB9kWXf5UtJ2', 1, '2025-10-13 15:28:47'),
 (3, 'docente', '235', 'anjelo', 'lo', 'anjelo.doc@gmail.com', '1344', '2025-10-15', '', NULL, NULL, '$2y$10$GnK5wVKQFdoYn78w8W7/4ud/EKugTR159MZxlJRryVyqniMjLwfNa', 1, '2025-10-13 15:31:33'),
 (4, 'docente', '789', 'Andres David', 'Villa Romero', 'andres@universidad.edu', '3147060060', '2001-08-16', '', NULL, NULL, '$2y$10$U2gK2a/DTYvr0nZr2qJrXuaHwPRKVf00Gbm5i0rcX8KrSAImxQaEa', 1, '2025-11-16 02:42:03'),
 (5, 'estudiante', '52645', 'fabianm', 'gsuhudfg', 'fabian@correo.edu.co', '32594784', '2015-06-12', '', NULL, NULL, '$2y$10$wFNPh5wS4vazUvKM3Dj6sO9lqTJ20AC.3WjGKm0rO73wRjx2e.jaS', 1, '2025-11-16 03:57:01'),
@@ -407,7 +407,7 @@ INSERT INTO `usuarios` (`id`, `tipo`, `identificacion`, `nombres`, `apellidos`, 
 (8, 'estudiante', '123', 'degu', '132', 'sda@correo.edu', '115', '2003-02-02', '', NULL, NULL, '$2y$10$8AAt35yDalEW84kjARuxL.EWETn2DISnOW0srigcmB7foJq4CmbVa', 1, '2025-11-16 04:43:57'),
 (9, 'admin', '84', 'sdaud', 'sdad', 'admin2@correo.co', '1234', '2003-02-02', '', NULL, NULL, '$2y$10$GYlb0wftF..3nkp3YJZgQe7vREh0TUZ5LgWtOY7.YwM02TfJWzrwO', 1, '2025-11-16 20:32:43'),
 (11, 'estudiante', '1223', 'adrian', 'lames', 'adrian@correo.co', '123', '0000-00-00', '', NULL, NULL, '$2y$10$UcaOu1wvoJZVlceU4ywNeeJdJqzsmxcMtUO2gyPRcTm.76BREojrq', 1, '2025-11-16 20:46:34'),
-(19, 'estudiante', '589489', 'jaider', 'u', 'hjajderi.u@correosomso.edu.co', '321341', '2025-11-26', '', 'Ciencias Económicas', 3, '$2y$10$icHy5Mw3GTm2hMUTsIaSqOSud51sdiPqzO9QMQJVDXvxcecD1Lfju', 1, '2025-11-17 21:01:04'),
+(19, '', '589489', 'jaider', 'u', 'hjajderi.u@correosomso.edu.co', '321341', '2025-11-26', '', 'Ciencias Administrativas', 2, '$2y$10$icHy5Mw3GTm2hMUTsIaSqOSud51sdiPqzO9QMQJVDXvxcecD1Lfju', 1, '2025-11-17 21:01:04'),
 (23, 'estudiante', '1323', 'nat', 'u', 'nat@correo.co', '12321', '2025-11-12', '', 'Ciencias Económicas', 3, '$2y$10$4cRcRFN7eUMuX8MzcRnG7OrMGae2qzcQ04lihHaR3kjjZI9MMCy/O', 1, '2025-11-17 21:05:50'),
 (24, 'admin', '1342', 'jaider', 'estrada', 'jaider.estrada@correo.admin.co', '4324234', '2003-02-20', '', 'Ingeniería', 1, '$2y$10$u..wgKQBo6l3pRowdAMQwOVQtl8.LlDp4t5IVeDdsGGZf3xebps5a', 1, '2025-11-17 21:06:39'),
 (26, 'docente', 'DOC123456', 'Juan', 'Profesor', 'juan.profesor@test.com', '3001234567', '1980-01-01', 'Calle 123', 'Ingeniería', 1, '$2y$10$SCxkjfmwpOwW8n5rWPs5bOT8pQ/mI5Yhb6INx3B4PRUh2Vj/ua20G', 1, '2025-11-17 21:08:22'),
