@@ -1,0 +1,327 @@
+/* App.css - Con la paleta de colores especificada */
+:root {
+  --color1: #12518c;
+  --color2: #00659b;
+  --color3: #0087b0;
+  --color4: #00bbc3;
+  --color5: #00ffc9;
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --bg-light: #f8f9fa;
+  --bg-white: #ffffff;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%);
+  min-height: 100vh;
+}
+
+.App {
+  min-height: 100vh;
+}
+
+/* Loading Screen */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%);
+  color: white;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid var(--color5);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos generales para componentes */
+.gestion-cursos, .gestion-usuarios, .gestion-programas,
+.matriculas, .asistencias, .calificaciones, .horarios {
+  background: var(--bg-white);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  margin: 1rem;
+}
+
+.gestion-cursos h2, .gestion-usuarios h2, .gestion-programas h2,
+.matriculas h2, .asistencias h2, .calificaciones h2, .horarios h2 {
+  color: var(--color1);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color4);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color2) 0%, var(--color3) 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: var(--bg-white);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--color4);
+}
+
+.modal-content h3 {
+  color: var(--color1);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color1);
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e1e5e9;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color4);
+  box-shadow: 0 0 0 3px rgba(0, 187, 195, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+}
+
+.form-actions button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.form-actions button[type="submit"] {
+  background: var(--color2);
+  color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+  background: var(--color1);
+}
+
+.form-actions button[type="button"] {
+  background: #95a5a6;
+  color: white;
+}
+
+.form-actions button[type="button"]:hover {
+  background: #7f8c8d;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+th {
+  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%);
+  color: white;
+  font-weight: 600;
+}
+
+tr:hover {
+  background: #f8f9fa;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.action-buttons button:first-child {
+  background: var(--color4);
+  color: white;
+}
+
+.action-buttons button:first-child:hover {
+  background: var(--color3);
+}
+
+.action-buttons button:last-child {
+  background: #e74c3c;
+  color: white;
+}
+
+.action-buttons button:last-child:hover {
+  background: #c0392b;
+}
+
+/* Estados para diferentes tipos de usuarios */
+.user-role.admin {
+  background: #e74c3c;
+}
+
+.user-role.docente {
+  background: #3498db;
+}
+
+.user-role.estudiante {
+  background: #2ecc71;
+}
+
+.estado.aprobado {
+  background: #2ecc71;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+
+.estado.reprobado {
+  background: #e74c3c;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+
+.estado.en_proceso {
+  background: #f39c12;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+
+.estado.presente {
+  background: #2ecc71;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+
+.estado.ausente {
+  background: #e74c3c;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+
+.estado.justificado {
+  background: #3498db;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gestion-cursos, .gestion-usuarios, .gestion-programas,
+  .matriculas, .asistencias, .calificaciones, .horarios {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+  
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,59 @@
+.pensum-container {
+  padding: 2rem;
+}
+.pensum-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.pensum-curso {
+  min-width: 180px;
+  min-height: 90px;
+  border-radius: 8px;
+  color: #fff;
+  padding: 1rem;
+  box-shadow: 0 2px 8px #0001;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+.pensum-curso.aprobado {
+  border: 2px solid #27ae60;
+}
+.pensum-curso.cursando {
+  border: 2px solid #f1c40f;
+}
+.pensum-curso.pendiente {
+  border: 2px solid #e74c3c;
+}
+.pensum-estado {
+  margin-top: 0.5rem;
+  font-size: 0.9em;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.pensum-prerequisito {
+  margin-top: 0.5rem;
+  font-size: 0.85em;
+  color: #fffbe6;
+  background: #34495e;
+  border-radius: 4px;
+  padding: 2px 6px;
+  display: inline-block;
+}
+.leyenda {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.leyenda span {
+  display: inline-block;
+  padding: 0.3em 1em;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 0.95em;
+}
