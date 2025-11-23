@@ -6,6 +6,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch($method) {
     case 'GET':
+<<<<<<< HEAD
         // Obtener todas las facultades desde la tabla facultades
         $sql = "SELECT id, nombre FROM facultades ORDER BY nombre";
         $result = $conn->query($sql);
@@ -89,6 +90,18 @@ switch($method) {
             echo json_encode(["error" => "Error al eliminar la facultad"]);
         }
         break;
+=======
+        // Obtener todas las facultades únicas de la tabla programas
+        $sql = "SELECT DISTINCT facultad FROM programas WHERE facultad IS NOT NULL AND facultad != '' AND activo = 1 ORDER BY facultad";
+        $result = $conn->query($sql);
+        $facultades = [];
+        while($row = $result->fetch_assoc()) {
+            $facultades[] = $row['facultad'];
+        }
+        echo json_encode($facultades);
+        break;
+        
+>>>>>>> 0463b860943076551cf7381e33b9111f296f599d
     default:
         http_response_code(405);
         echo json_encode(["error" => "Método no permitido"]);

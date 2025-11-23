@@ -8,6 +8,7 @@ switch($method) {
     case 'GET':
         $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : '';
         $curso_id = isset($_GET['curso_id']) ? $_GET['curso_id'] : '';
+<<<<<<< HEAD
         $all = isset($_GET['all']) && $_GET['all'] == '1';
         $activoParam = isset($_GET['activo']) ? $_GET['activo'] : null; // can be '0' or '1'
 
@@ -76,6 +77,31 @@ switch($method) {
             } else {
                 $result = $conn->query($sql);
             }
+=======
+        
+        if($tipo) {
+            $sql = "SELECT u.*, p.nombre as programa_nombre FROM usuarios u 
+                    LEFT JOIN programas p ON u.programa_id = p.id 
+                    WHERE u.tipo = ? AND u.activo = 1";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("s", $tipo);
+            $stmt->execute();
+            $result = $stmt->get_result();
+        } else if($curso_id) {
+            $sql = "SELECT u.*, p.nombre as programa_nombre FROM usuarios u 
+                    LEFT JOIN programas p ON u.programa_id = p.id 
+                    INNER JOIN matriculas m ON u.id = m.estudiante_id 
+                    WHERE m.curso_id = ? AND u.activo = 1 AND u.tipo = 'estudiante'";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $curso_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+        } else {
+            $sql = "SELECT u.*, p.nombre as programa_nombre FROM usuarios u 
+                    LEFT JOIN programas p ON u.programa_id = p.id 
+                    WHERE u.activo = 1";
+            $result = $conn->query($sql);
+>>>>>>> 0463b860943076551cf7381e33b9111f296f599d
         }
         
         $usuarios = [];
@@ -90,10 +116,17 @@ switch($method) {
         $data = json_decode(file_get_contents("php://input"), true);
         $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
         
+<<<<<<< HEAD
         $sql = "INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, telefono, fecha_nacimiento, direccion, facultad_id, programa_id, password_hash) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sssssssssis", 
+=======
+        $sql = "INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, telefono, fecha_nacimiento, direccion, facultad, programa_id, password_hash) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssssssssss", 
+>>>>>>> 0463b860943076551cf7381e33b9111f296f599d
             $data['tipo'],
             $data['identificacion'],
             $data['nombres'],
@@ -102,7 +135,11 @@ switch($method) {
             $data['telefono'],
             $data['fecha_nacimiento'],
             $data['direccion'],
+<<<<<<< HEAD
             $data['facultad_id'],
+=======
+            $data['facultad'],
+>>>>>>> 0463b860943076551cf7381e33b9111f296f599d
             $data['programa_id'],
             $password_hash
         );
@@ -159,10 +196,16 @@ switch($method) {
 
         if(isset($data['password']) && !empty($data['password'])) {
             $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
+<<<<<<< HEAD
             $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, password_hash=?, activo=? WHERE id=?";
             $stmt = $conn->prepare($sql);
             // Usamos 's' para la mayoría y MySQL hará las conversiones necesarias; pasamos valores como strings
             $stmt->bind_param("ssssssssssssi",
+=======
+            $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad=?, programa_id=?, password_hash=? WHERE id=?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssssssssi", 
+>>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 $data['tipo'],
                 $data['identificacion'],
                 $data['nombres'],
@@ -171,16 +214,27 @@ switch($method) {
                 $data['telefono'],
                 $data['fecha_nacimiento'],
                 $data['direccion'],
+<<<<<<< HEAD
                 $facultad_id,
                 $programa_id,
+=======
+                $data['facultad'],
+                $data['programa_id'],
+>>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 $password_hash,
                 $activo,
                 $id
             );
         } else {
+<<<<<<< HEAD
             $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, activo=? WHERE id=?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ssssssssssii",
+=======
+            $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad=?, programa_id=? WHERE id=?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssssssssi", 
+>>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 $data['tipo'],
                 $data['identificacion'],
                 $data['nombres'],
@@ -189,9 +243,14 @@ switch($method) {
                 $data['telefono'],
                 $data['fecha_nacimiento'],
                 $data['direccion'],
+<<<<<<< HEAD
                 $facultad_id,
                 $programa_id,
                 $activo,
+=======
+                $data['facultad'],
+                $data['programa_id'],
+>>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 $id
             );
         }

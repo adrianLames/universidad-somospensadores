@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { API_BASE } from '../config/api';
+import { API_BASE, getFacultades, getProgramas, getProgramasByFacultad, getEstudiantes, getDocentesEspecificos, getAdministradores } from '../config/api';
 import './GestionUsuarios.css';
 import BackHomeButton from './BackHomeButton';
 
 const GestionUsuarios = ({ user }) => {
   const [usuarios, setUsuarios] = useState([]);
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [docentes, setDocentes] = useState([]);
+  const [admins, setAdmins] = useState([]);
+  const [activeTab, setActiveTab] = useState('estudiantes');
   const [showForm, setShowForm] = useState(false);
   const [currentUsuario, setCurrentUsuario] = useState({
     id: null,
@@ -16,10 +20,15 @@ const GestionUsuarios = ({ user }) => {
     telefono: '',
     fecha_nacimiento: '',
     direccion: '',
+    facultad: '',
+    programa_id: '',
     password: ''
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [facultades, setFacultades] = useState([]);
+  const [programas, setProgramas] = useState([]);
+  const [programasFiltrados, setProgramasFiltrados] = useState([]);
   const [asignacionesPorDocente, setAsignacionesPorDocente] = useState({});
   const [openDocentes, setOpenDocentes] = useState({});
   const [cursosDisponibles, setCursosDisponibles] = useState([]);
@@ -30,7 +39,15 @@ const GestionUsuarios = ({ user }) => {
 
   useEffect(() => {
     fetchUsuarios();
+    fetchFacultades();
+    fetchProgramas();
+    fetchUsuariosEspecificos();
   }, []);
+
+  useEffect(() => {
+    // Actualizar datos cuando cambie la pestaña
+    fetchUsuariosEspecificos();
+  }, [activeTab]);
 
   
 
@@ -51,8 +68,74 @@ const GestionUsuarios = ({ user }) => {
       const response = await fetch(`${API_BASE}/usuarios.php`);
       const data = await response.json();
       setUsuarios(data);
+      
+      // Separar usuarios por tipo
+      setEstudiantes(data.filter(u => u.tipo === 'estudiante'));
+      setDocentes(data.filter(u => u.tipo === 'docente'));
+      setAdmins(data.filter(u => u.tipo === 'admin'));
     } catch (error) {
       console.error('Error fetching usuarios:', error);
+    }
+  };
+
+  const fetchUsuariosEspecificos = async () => {
+    try {
+      // Cargar datos desde las nuevas tablas específicas
+      const [estudiantesData, docentesData, adminsData] = await Promise.all([
+        getEstudiantes(),
+        getDocentesEspecificos(), 
+        getAdministradores()
+      ]);
+      
+      setEstudiantes(estudiantesData);
+      setDocentes(docentesData);
+      setAdmins(adminsData);
+      
+      // Actualizar también el array general para mantener compatibilidad
+      const todosUsuarios = [
+        ...estudiantesData.map(e => ({...e, tipo: 'estudiante'})),
+        ...docentesData.map(d => ({...d, tipo: 'docente'})),
+        ...adminsData.map(a => ({...a, tipo: 'admin'}))
+      ];
+      setUsuarios(todosUsuarios);
+      
+    } catch (error) {
+      console.error('Error fetching usuarios específicos:', error);
+    }
+  };
+
+  const fetchFacultades = async () => {
+    try {
+      const facultadesData = await getFacultades();
+      setFacultades(facultadesData);
+    } catch (error) {
+      console.error('Error fetching facultades:', error);
+    }
+  };
+
+  const fetchProgramas = async () => {
+    try {
+      const programasData = await getProgramas();
+      setProgramas(programasData);
+    } catch (error) {
+      console.error('Error fetching programas:', error);
+    }
+  };
+
+  // Manejar cambio de facultad para filtrar programas
+  const handleFacultadChange = async (facultad) => {
+    setCurrentUsuario(prev => ({ ...prev, facultad, programa_id: '' }));
+    
+    if (facultad) {
+      try {
+        const programasFiltrados = await getProgramasByFacultad(facultad);
+        setProgramasFiltrados(programasFiltrados);
+      } catch (error) {
+        console.error('Error fetching programas by facultad:', error);
+        setProgramasFiltrados([]);
+      }
+    } else {
+      setProgramasFiltrados([]);
     }
   };
 
@@ -165,6 +248,27 @@ const GestionUsuarios = ({ user }) => {
     }
   };
 
+  // Validar email duplicado en tiempo real
+  const validateEmailUnique = async (email) => {
+    if (!email || email === '') return true;
+    
+    try {
+      const response = await fetch(`${API_BASE}/usuarios.php`);
+      const usuarios = await response.json();
+      
+      // Verificar si el email existe en otro usuario
+      const emailExists = usuarios.some(usuario => 
+        usuario.email.toLowerCase() === email.toLowerCase() && 
+        usuario.id !== (currentUsuario.usuario_id || currentUsuario.id)
+      );
+      
+      return !emailExists;
+    } catch (error) {
+      console.error('Error validating email:', error);
+      return true; // En caso de error, permitir continuar
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
     
@@ -204,10 +308,29 @@ const GestionUsuarios = ({ user }) => {
     setLoading(true);
 
     try {
-      const method = currentUsuario.id ? 'PUT' : 'POST';
-      const url = currentUsuario.id 
-        ? `${API_BASE}/usuarios.php?id=${currentUsuario.id}`
-        : `${API_BASE}/usuarios.php`;
+      // Determinar el endpoint según el tipo de usuario
+      let endpoint = '';
+      let idParam = '';
+      
+      if (currentUsuario.tipo === 'estudiante') {
+        endpoint = 'estudiantes.php';
+        idParam = currentUsuario.id; // ID de la tabla estudiantes
+      } else if (currentUsuario.tipo === 'docente') {
+        endpoint = 'docentes.php'; 
+        idParam = currentUsuario.id; // ID de la tabla docentes
+      } else if (currentUsuario.tipo === 'admin') {
+        endpoint = 'administradores.php';
+        idParam = currentUsuario.id; // ID de la tabla administradores
+      } else {
+        // Fallback al endpoint general para casos legacy
+        endpoint = 'usuarios.php';
+        idParam = currentUsuario.usuario_id || currentUsuario.id;
+      }
+
+      const method = idParam ? 'PUT' : 'POST';
+      const url = idParam 
+        ? `${API_BASE}/${endpoint}?id=${idParam}`
+        : `${API_BASE}/${endpoint}`;
       
       const response = await fetch(url, {
         method,
@@ -218,9 +341,16 @@ const GestionUsuarios = ({ user }) => {
       });
 
       if (response.ok) {
-        await fetchUsuarios();
+        const result = await response.json();
+        await fetchUsuariosEspecificos();
         resetForm();
-        alert('✅ Usuario guardado exitosamente');
+        
+        // Mostrar código generado si es un nuevo usuario
+        if (result.codigo) {
+          alert(`✅ Usuario creado exitosamente\nCódigo asignado: ${result.codigo}`);
+        } else {
+          alert('✅ Usuario actualizado exitosamente');
+        }
       } else {
         const errorData = await response.json();
         alert(`❌ ${errorData.error || 'Error al guardar el usuario'}`);
@@ -236,7 +366,7 @@ const GestionUsuarios = ({ user }) => {
   const resetForm = () => {
     setCurrentUsuario({
       id: null,
-      tipo: 'estudiante',
+      tipo: activeTab === 'estudiantes' ? 'estudiante' : activeTab === 'docentes' ? 'docente' : 'admin',
       identificacion: '',
       nombres: '',
       apellidos: '',
@@ -244,15 +374,24 @@ const GestionUsuarios = ({ user }) => {
       telefono: '',
       fecha_nacimiento: '',
       direccion: '',
+      facultad: '',
+      programa_id: '',
       password: ''
     });
     setErrors({});
     setShowForm(false);
+    setProgramasFiltrados([]);
   };
 
   const editUsuario = (usuario) => {
     setCurrentUsuario({...usuario, password: ''});
     setShowForm(true);
+    
+    // Si tiene facultad, cargar programas de esa facultad
+    if (usuario.facultad) {
+      handleFacultadChange(usuario.facultad);
+    }
+    
     // Si es docente, cargar sus asignaciones para mostrarlas en el modal de edición
     if (usuario.tipo === 'docente') {
       loadAsignacionesForDocente(usuario.id);
@@ -281,6 +420,11 @@ const GestionUsuarios = ({ user }) => {
   };
 
   const handleInputChange = (field, value) => {
+    if (field === 'facultad') {
+      handleFacultadChange(value);
+      return;
+    }
+    
     setCurrentUsuario(prev => ({
       ...prev,
       [field]: value
@@ -386,19 +530,38 @@ const GestionUsuarios = ({ user }) => {
               </div>
 
               <div className="form-row">
-                <div className="form-group">
+                <div className="form-group full-width">
                   <label>Email:</label>
                   <input
                     type="email"
                     value={currentUsuario.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
+                    onBlur={async (e) => {
+                      const email = e.target.value;
+                      if (email && !/\S+@\S+\.\S+/.test(email)) {
+                        setErrors(prev => ({...prev, email: 'El email no es válido'}));
+                      } else if (email) {
+                        const isUnique = await validateEmailUnique(email);
+                        if (!isUnique) {
+                          setErrors(prev => ({...prev, email: 'Este email ya está registrado'}));
+                        } else {
+                          setErrors(prev => {
+                            const newErrors = {...prev};
+                            delete newErrors.email;
+                            return newErrors;
+                          });
+                        }
+                      }
+                    }}
                     required
                     disabled={loading}
                     className={errors.email ? 'error' : ''}
                   />
                   {errors.email && <span className="error-message">{errors.email}</span>}
                 </div>
+              </div>
 
+              <div className="form-row">
                 <div className="form-group">
                   <label>Teléfono:</label>
                   <input
@@ -408,9 +571,7 @@ const GestionUsuarios = ({ user }) => {
                     disabled={loading}
                   />
                 </div>
-              </div>
 
-              <div className="form-row">
                 <div className="form-group">
                   <label>Fecha de Nacimiento:</label>
                   <input
@@ -420,7 +581,45 @@ const GestionUsuarios = ({ user }) => {
                     disabled={loading}
                   />
                 </div>
+              </div>
 
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Facultad:</label>
+                  <select
+                    value={currentUsuario.facultad}
+                    onChange={(e) => handleInputChange('facultad', e.target.value)}
+                    disabled={loading}
+                  >
+                    <option value="">Selecciona una facultad</option>
+                    {facultades.map(facultad => (
+                      <option key={facultad} value={facultad}>
+                        {facultad}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Programa:</label>
+                  <select
+                    value={currentUsuario.programa_id}
+                    onChange={(e) => handleInputChange('programa_id', e.target.value)}
+                    disabled={loading || !currentUsuario.facultad}
+                  >
+                    <option value="">
+                      {currentUsuario.facultad ? 'Selecciona un programa' : 'Primero selecciona una facultad'}
+                    </option>
+                    {programasFiltrados.map(programa => (
+                      <option key={programa.id} value={programa.id}>
+                        {programa.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-row">
                 <div className="form-group full-width">
                   <label>Contraseña:</label>
                   <input
@@ -521,76 +720,233 @@ const GestionUsuarios = ({ user }) => {
             </button>
           </div>
         ) : (
-          <div className="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Identificación</th>
-                  <th>Nombre Completo</th>
-                  <th>Email</th>
-                  <th>Tipo</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {usuarios.map(usuario => (
-                  <React.Fragment key={usuario.id}>
-                  <tr>
-                    <td><strong>{usuario.identificacion}</strong></td>
-                    <td>{usuario.nombres} {usuario.apellidos}</td>
-                    <td>{usuario.email}</td>
-                    <td>
-                      <span className={`user-role ${usuario.tipo}`}>
-                        {usuario.tipo === 'estudiante' && '🎓 '}
-                        {usuario.tipo === 'docente' && '👨‍🏫 '}
-                        {usuario.tipo === 'admin' && '⚙️ '}
-                        {usuario.tipo.toUpperCase()}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="action-buttons">
-                        <button 
-                          className="btn-edit"
-                          onClick={() => editUsuario(usuario)}
-                        >
-                          ✏️ Editar
-                        </button>
-                        <button 
-                          className="btn-delete"
-                          onClick={() => deleteUsuario(usuario.id)}
-                        >
-                          🗑️ Eliminar
-                        </button>
-                        {/* botón 'Ver materias' eliminado a petición del usuario */}
-                      </div>
-                    </td>
-                  </tr>
-                  {usuario.tipo === 'docente' && openDocentes[usuario.id] && (
-                    <tr className="docente-asignaciones-row" key={`asig-${usuario.id}`}>
-                      <td colSpan="5">
-                        <div className="docente-asignaciones">
-                          <h4>Materias asignadas</h4>
-                          {asignacionesPorDocente[usuario.id] ? (
-                            asignacionesPorDocente[usuario.id].length > 0 ? (
-                              <ul>
-                                {asignacionesPorDocente[usuario.id].map(a => (
-                                  <li key={a.id}><strong>{a.curso_nombre}</strong> — {a.semestre} • {a.anio}</li>
-                                ))}
-                              </ul>
-                            ) : (
-                              <p>No hay materias asignadas a este docente.</p>
-                            )
-                          ) : (
-                            <p>Cargando asignaciones...</p>
-                          )}
-                        </div>
-                      </td>
+          <div className="usuarios-tabs-container">
+            {/* Navegación de pestañas */}
+            <div className="tabs-navigation">
+              <button 
+                className={`tab-button ${activeTab === 'estudiantes' ? 'active' : ''}`}
+                onClick={() => setActiveTab('estudiantes')}
+              >
+                🎓 Estudiantes ({estudiantes.length})
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'docentes' ? 'active' : ''}`}
+                onClick={() => setActiveTab('docentes')}
+              >
+                👨‍🏫 Docentes ({docentes.length})
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'admins' ? 'active' : ''}`}
+                onClick={() => setActiveTab('admins')}
+              >
+                ⚙️ Administradores ({admins.length})
+              </button>
+            </div>
+
+            {/* Botón agregar según la pestaña activa */}
+            <div className="tab-actions">
+              <button 
+                className="btn-primary"
+                onClick={() => {
+                  setCurrentUsuario(prev => ({
+                    ...prev,
+                    tipo: activeTab === 'estudiantes' ? 'estudiante' : activeTab === 'docentes' ? 'docente' : 'admin'
+                  }));
+                  setShowForm(true);
+                }}
+              >
+                ➕ Agregar {activeTab === 'estudiantes' ? 'Estudiante' : activeTab === 'docentes' ? 'Docente' : 'Administrador'}
+              </button>
+            </div>
+
+            {/* Tabla de estudiantes */}
+            {activeTab === 'estudiantes' && (
+              <div className="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Identificación</th>
+                      <th>Nombre Completo</th>
+                      <th>Email</th>
+                      <th>Facultad</th>
+                      <th>Programa</th>
+                      <th>Acciones</th>
                     </tr>
-                  )}
-                  </React.Fragment>
-                ))}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {estudiantes.map(usuario => (
+                      <tr key={usuario.id}>
+                        <td><strong>{usuario.identificacion}</strong></td>
+                        <td>{usuario.nombres} {usuario.apellidos}</td>
+                        <td>{usuario.email}</td>
+                        <td>
+                          {usuario.facultad ? (
+                            <span className="facultad-badge">{usuario.facultad}</span>
+                          ) : (
+                            <span className="no-facultad">Sin asignar</span>
+                          )}
+                        </td>
+                        <td>
+                          {usuario.programa_nombre ? (
+                            <span className="programa-badge">{usuario.programa_nombre}</span>
+                          ) : (
+                            <span className="no-programa">Sin asignar</span>
+                          )}
+                        </td>
+                        <td>
+                          <div className="action-buttons">
+                            <button 
+                              className="btn-edit"
+                              onClick={() => editUsuario(usuario)}
+                            >
+                              ✏️ Editar
+                            </button>
+                            <button 
+                              className="btn-delete"
+                              onClick={() => deleteUsuario(usuario.id)}
+                            >
+                              🗑️ Eliminar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Tabla de docentes */}
+            {activeTab === 'docentes' && (
+              <div className="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Identificación</th>
+                      <th>Nombre Completo</th>
+                      <th>Email</th>
+                      <th>Facultad</th>
+                      <th>Especialización</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {docentes.map(usuario => (
+                      <React.Fragment key={usuario.id}>
+                        <tr>
+                          <td><strong>{usuario.identificacion}</strong></td>
+                          <td>{usuario.nombres} {usuario.apellidos}</td>
+                          <td>{usuario.email}</td>
+                          <td>
+                            {usuario.facultad ? (
+                              <span className="facultad-badge">{usuario.facultad}</span>
+                            ) : (
+                              <span className="no-facultad">Sin asignar</span>
+                            )}
+                          </td>
+                          <td>
+                            {usuario.programa_nombre ? (
+                              <span className="programa-badge">{usuario.programa_nombre}</span>
+                            ) : (
+                              <span className="no-programa">Sin especialización</span>
+                            )}
+                          </td>
+                          <td>
+                            <div className="action-buttons">
+                              <button 
+                                className="btn-edit"
+                                onClick={() => editUsuario(usuario)}
+                              >
+                                ✏️ Editar
+                              </button>
+                              <button 
+                                className="btn-delete"
+                                onClick={() => deleteUsuario(usuario.id)}
+                              >
+                                🗑️ Eliminar
+                              </button>
+                              <button 
+                                className="btn-view"
+                                onClick={() => toggleDocenteOpen(usuario.id)}
+                              >
+                                {openDocentes[usuario.id] ? '👁️ Ocultar' : '👁️ Ver Materias'}
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        {openDocentes[usuario.id] && (
+                          <tr className="docente-asignaciones-row">
+                            <td colSpan="6">
+                              <div className="docente-asignaciones">
+                                <h4>Materias asignadas</h4>
+                                {asignacionesPorDocente[usuario.id] ? (
+                                  asignacionesPorDocente[usuario.id].length > 0 ? (
+                                    <ul>
+                                      {asignacionesPorDocente[usuario.id].map(a => (
+                                        <li key={a.id}><strong>{a.curso_nombre}</strong> — {a.semestre} • {a.anio}</li>
+                                      ))}
+                                    </ul>
+                                  ) : (
+                                    <p>No hay materias asignadas a este docente.</p>
+                                  )
+                                ) : (
+                                  <p>Cargando asignaciones...</p>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Tabla de administradores */}
+            {activeTab === 'admins' && (
+              <div className="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Identificación</th>
+                      <th>Nombre Completo</th>
+                      <th>Email</th>
+                      <th>Teléfono</th>
+                      <th>Fecha Creación</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {admins.map(usuario => (
+                      <tr key={usuario.id}>
+                        <td><strong>{usuario.identificacion}</strong></td>
+                        <td>{usuario.nombres} {usuario.apellidos}</td>
+                        <td>{usuario.email}</td>
+                        <td>{usuario.telefono || 'N/A'}</td>
+                        <td>{new Date(usuario.fecha_creacion).toLocaleDateString()}</td>
+                        <td>
+                          <div className="action-buttons">
+                            <button 
+                              className="btn-edit"
+                              onClick={() => editUsuario(usuario)}
+                            >
+                              ✏️ Editar
+                            </button>
+                            <button 
+                              className="btn-delete"
+                              onClick={() => deleteUsuario(usuario.id)}
+                            >
+                              🗑️ Eliminar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </div>
