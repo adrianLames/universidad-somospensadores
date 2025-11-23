@@ -1,0 +1,238 @@
+/* Fondo profesional */
+.salones-bg {
+  min-height: 100vh;
+  background: #f7f8fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 40px;
+}
+
+/* Panel principal moderno */
+.salones-panel {
+  max-width: 1200px;
+  margin: 0 auto 32px auto;
+  padding: 2.5rem 2rem;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(44,62,145,0.10);
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  position: relative;
+}
+.salones-panel h2 {
+  margin-top: 0;
+  margin-bottom: 0.7rem;
+  font-size: 2.2rem;
+  color: #222;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+.salones-panel p {
+  color: #444;
+  font-size: 1.15rem;
+  margin-bottom: 2.2rem;
+}
+
+/* Tarjetas resumen */
+.salones-resumen-cards {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+.resumen-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.07);
+  padding: 1.2rem 2rem;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: 1.1rem;
+  border: 1px solid #ececec;
+}
+.resumen-icon {
+  font-size: 2.2rem;
+  margin: 0.5rem 0;
+}
+.resumen-value {
+  font-size: 2.1rem;
+  font-weight: bold;
+  color: #1565c0;
+}
+
+/* Barra de búsqueda y botones de acción */
+.salones-actions {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.salones-search {
+  flex: 1;
+  padding: 0.7rem 1.2rem;
+  border-radius: 10px;
+  border: 1.5px solid #bdbdbd;
+  font-size: 1.08rem;
+  background: #f7f7fa;
+  transition: border 0.2s;
+}
+.salones-search:focus {
+  border: 1.5px solid #1565c0;
+  outline: none;
+}
+
+.btn-primary {
+  background: #1565c0;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.08rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #1565c022;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover {
+  background: #12518c;
+  box-shadow: 0 4px 16px #1565c044;
+}
+.btn-secondary {
+  background: #bdbdbd;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.08rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+/* Formulario nuevo salón */
+.nuevo-salon-form {
+  background: #f7f7fa;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #1565c022;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #ececec;
+  max-width: 500px;
+}
+.nuevo-salon-form .form-group {
+  margin-bottom: 1.1rem;
+}
+.nuevo-salon-form label {
+  font-weight: bold;
+  color: #1565c0;
+  margin-bottom: 0.3rem;
+  display: block;
+  font-size: 1.05rem;
+}
+.nuevo-salon-form input,
+.nuevo-salon-form select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #bdbdbd;
+  font-size: 1.05rem;
+  margin-bottom: 0.9rem;
+  background: #fff;
+  transition: border 0.2s;
+}
+.nuevo-salon-form input:focus,
+.nuevo-salon-form select:focus {
+  border: 1.5px solid #1565c0;
+  outline: none;
+}
+
+/* Tabla moderna */
+.salones-list {
+  margin-top: 1.5rem;
+}
+.salones-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.10);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+.salones-table th {
+  background: linear-gradient(90deg, #1565c0 80%, #29b6f6 100%);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: bold;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  border-right: 1px solid #fff;
+  letter-spacing: 0.5px;
+}
+.salones-table td {
+  padding: 0.8rem 0.3rem;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  min-width: 120px;
+  vertical-align: middle;
+  background: #f8fafc;
+  font-size: 1.05rem;
+}
+.salones-table tr:hover {
+  background: #e3f2fd;
+}
+
+/* Etiquetas */
+.tag {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-right: 0.3rem;
+  margin-bottom: 2px;
+  background: #e3f2fd;
+  color: #1565c0;
+}
+.tag-disponible {
+  background: #1565c0;
+  color: #fff;
+}
+.tag-ocupado {
+  background: #009688;
+  color: #fff;
+}
+.tag-mantenimiento {
+  background: #ef5350;
+  color: #fff;
+}
+.tag-recurso {
+  background: #f7f7fa;
+  color: #222;
+  border: 1px solid #ececec;
+  font-size: 0.93rem;
+  margin-right: 0.2rem;
+}
+
+/* Botones de icono */
+.btn-icon {
+  background: none;
+  border: none;
+  color: #1565c0;
+  font-size: 1.3rem;
+  cursor: pointer;
+  margin: 0 4px;
+  transition: color 0.2s;
+}
+.btn-icon:hover {
+  color: #ef5350;
+}
+
+.icon-capacidad {
+  margin-right: 4px;
+}

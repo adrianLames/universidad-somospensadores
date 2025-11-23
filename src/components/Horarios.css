@@ -1,9 +1,142 @@
+.tabla-horarios .bloque-horario {
+  height: 100%;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.10);
+  padding: 0.7rem 0.7rem;
+  margin: 3px 0;
+  border: 2px solid #90caf9;
+  font-size: 1.05rem;
+  transition: box-shadow 0.2s;
+}
+.tabla-horarios td[rowspan] {
+  vertical-align: middle;
+  height: 100%;
+}
+.tabla-horarios td[rowspan] {
+  vertical-align: middle;
+}
+/* Estilos para la tabla de horarios */
+.tabla-horarios {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.tabla-horarios th {
+  background: linear-gradient(90deg, #ffa726 80%, #ffd54f 100%);
+  color: #fff;
+  font-size: 1.13rem;
+  font-weight: bold;
+  padding: 0.8rem 0.5rem;
+  text-align: center;
+  border-right: 1px solid #fff;
+  letter-spacing: 0.5px;
+}
+.tabla-horarios th:first-child {
+  background: #29b6f6;
+  color: #fff;
+  border-top-left-radius: 10px;
+}
+.tabla-horarios th:last-child {
+  border-top-right-radius: 10px;
+}
+.tabla-horarios td {
+  padding: 0.7rem 0.3rem;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  min-width: 120px;
+  vertical-align: top;
+  background: #fcfcfc;
+}
+.tabla-horarios .grid-time {
+  background: #29b6f6;
+  color: #fff;
+  font-weight: bold;
+  border-right: 1px solid #fff;
+}
+.tabla-horarios .grid-cell {
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  border-left: 1px solid #e0e0e0;
+  transition: background 0.2s;
+}
+.tabla-horarios .grid-cell:hover {
+  background: #f5f5fa;
+}
+.tabla-horarios .bloque-horario strong {
+  font-size: 1.1rem;
+  color: #2c3e91;
+}
+.tabla-horarios .bloque-horario span {
+  font-size: 0.98rem;
+  color: #333;
+}
+.tabla-horarios .btn-delete {
+  background: #ef5350;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.35rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  box-shadow: 0 1px 4px rgba(44,62,145,0.07);
+  transition: background 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tabla-horarios .btn-delete:hover {
+  background: #c62828;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.15);
+}
+
 .horarios {
   background: white;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin: 1rem;
+}
+
+.resumen-card {
+  background: #f7f7fa;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.07);
+  padding: 1rem 1.5rem;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  font-size: 1.1rem;
+  border: 1px solid #e0e0e0;
+}
+
+.btn-primary {
+  background: #2c3e91;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-primary:hover {
+  background: #12518c;
 }
 
 .horarios h2 {
@@ -14,34 +147,104 @@
   font-size: 1.8rem;
 }
 
-.horarios-list {
+
+.horarios-grid {
+  margin-top: 2rem;
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  background: #fff;
+}
+
+.grid-header {
+  display: flex;
+  background: #2c3e91;
+}
+.grid-time {
+  width: 90px;
+  background: #4fc3f7;
+  color: #222;
+  font-weight: bold;
+  text-align: center;
+  border-right: 1px solid #e0e0e0;
+  padding: 8px 0;
+}
+.grid-day {
+  flex: 1;
+  background: #f9a825;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  border-right: 1px solid #e0e0e0;
+  padding: 8px 0;
+}
+.grid-row {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+}
+.grid-cell {
+  flex: 1;
+  min-height: 48px;
+  border-right: 1px solid #e0e0e0;
+  background: #fff;
+  position: relative;
+  padding: 2px;
+}
+.bloque-horario {
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 1em;
+  color: #1565c0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  margin-bottom: 2px;
+}
+.btn-delete {
+  background: #e57373;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.9em;
+  cursor: pointer;
+  margin-top: 2px;
+}
+.grid-row.pausa {
+  background: #e0f7fa;
+  text-align: center;
+  font-weight: bold;
+  color: #0097a7;
+}
+.grid-row.pausa .grid-time,
+.grid-row.pausa .grid-cell {
+  background: #e0f7fa;
+  border: none;
+}
+.no-data {
+  text-align: center;
+  color: #888;
   margin-top: 1rem;
 }
 
-.horarios-list table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.horarios-list th {
-  background: linear-gradient(135deg, #12518c 0%, #00659b 100%);
-  color: white;
-  font-weight: 600;
-  padding: 1rem;
-  text-align: left;
-}
-
-.horarios-list td {
-  padding: 1rem;
-  border-bottom: 1px solid #ecf0f1;
-}
-
-.horarios-list tr:hover {
-  background: #f8f9fa;
+@media (max-width: 900px) {
+  .grid-time {
+    width: 60px;
+    font-size: 0.9em;
+  }
+  .grid-day {
+    font-size: 0.9em;
+    padding: 6px 0;
+  }
+  .grid-cell {
+    min-height: 36px;
+    font-size: 0.9em;
+  }
 }
 
 @media (max-width: 768px) {
@@ -57,4 +260,45 @@
   .horarios-list table {
     min-width: 700px;
   }
+}
+
+/* --- Mejoras visuales y organización --- */
+
+/* Panel de asignación moderno */
+.panel-form {
+  background: linear-gradient(120deg, #f7f7fa 80%, #e3f2fd 100%);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(44,62,145,0.10);
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e0e0e0;
+}
+.form-group label {
+  font-weight: bold;
+  color: #2c3e91;
+  margin-bottom: 0.3rem;
+  display: block;
+  font-size: 1.05rem;
+}
+.form-group select,
+.form-group input[type="time"] {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #bdbdbd;
+  font-size: 1.05rem;
+  margin-bottom: 0.9rem;
+  background: #f7f7fa;
+  transition: border 0.2s;
+}
+.form-group select:focus,
+.form-group input[type="time"]:focus {
+  border: 1.5px solid #2c3e91;
+  outline: none;
+}
+.form-actions {
+  margin-top: 1.2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
 }

@@ -54,8 +54,14 @@ switch ($method) {
             }
             echo json_encode($matriculas);
         } else {
-            http_response_code(400);
-            echo json_encode(["success" => false, "message" => "Falta estudiante_id"]);
+            // Si no se pasa estudiante_id, devolver todas las matrículas activas
+            $query = "SELECT m.*, c.nombre as curso_nombre, c.codigo as curso_codigo FROM matriculas m INNER JOIN cursos c ON m.curso_id = c.id WHERE m.estado = 'activa'";
+            $result = $conn->query($query);
+            $matriculas = [];
+            while ($row = $result->fetch_assoc()) {
+                $matriculas[] = $row;
+            }
+            echo json_encode($matriculas);
         }
         break;
 

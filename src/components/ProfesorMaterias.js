@@ -48,7 +48,8 @@ const ProfesorMaterias = ({ profesorId }) => {
     const fetchAsignaciones = async () => {
         try {
             const id = selectedProfesor || profesorId;
-            const response = await fetch(`${API_BASE}/asignacion_docentes.php?docente_id=${id}`);
+            // Usar usuario_id en vez de docente_id
+            const response = await fetch(`${API_BASE}/asignacion_docentes.php?usuario_id=${id}`);
             const data = await response.json();
             const lista = Array.isArray(data) ? data : (data.data || []);
             setAsignaciones(lista);
@@ -65,14 +66,14 @@ const ProfesorMaterias = ({ profesorId }) => {
         }
 
         try {
-            const docenteParaAsignar = selectedProfesor || profesorId;
+            const usuarioParaAsignar = selectedProfesor || profesorId;
             const response = await fetch(`${API_BASE}/asignacion_docentes.php`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    docente_id: docenteParaAsignar,
+                    usuario_id: usuarioParaAsignar,
                     curso_id: selectedCurso,
                     semestre: '2025-1',
                     anio: 2025
@@ -151,6 +152,8 @@ const ProfesorMaterias = ({ profesorId }) => {
                     <BackHomeButton label="Inicio" />
                 </div>
             {/* If componente usado sin prop `profesorId`, permitir elegir docente */}
+
+            {/* Solo mostrar selector de profesor si no hay profesorId (admin) */}
             {!profesorId && (
                 <div className="choose-profesor">
                     <label>Profesor:</label>
@@ -167,7 +170,8 @@ const ProfesorMaterias = ({ profesorId }) => {
                 {asignaciones && asignaciones.length > 0 ? (
                     asignaciones.map(asignacion => (
                         <li key={asignacion.id} className="asignacion-item">
-                            {editingAsignacion && editingAsignacion.id === asignacion.id ? (
+                            {/* Solo permitir editar/eliminar si no es modo profesor */}
+                            {(!profesorId && editingAsignacion && editingAsignacion.id === asignacion.id) ? (
                                 <div className="asignacion-edit">
                                     <select value={editingAsignacion.curso_id} onChange={(e) => setEditingAsignacion(prev => ({...prev, curso_id: e.target.value}))}>
                                         {cursos.map(c => (
@@ -182,13 +186,16 @@ const ProfesorMaterias = ({ profesorId }) => {
                             ) : (
                                 <div className="asignacion-view">
                                     <div>
-                                        <strong>{asignacion.curso_nombre}</strong>
+                                        <strong>{asignacion.materia || asignacion.curso_nombre}</strong>
                                         <div className="meta">{asignacion.semestre} • {asignacion.anio}</div>
                                     </div>
-                                    <div className="actions">
-                                        <button className="edit-btn" onClick={() => startEdit(asignacion)}>Editar</button>
-                                        <button className="delete-btn" onClick={() => openConfirmDelete(asignacion)}>Eliminar</button>
-                                    </div>
+                                    {/* Solo mostrar acciones si no es modo profesor */}
+                                    {!profesorId && (
+                                        <div className="actions">
+                                            <button className="edit-btn" onClick={() => startEdit(asignacion)}>Editar</button>
+                                            <button className="delete-btn" onClick={() => openConfirmDelete(asignacion)}>Eliminar</button>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </li>
@@ -198,7 +205,9 @@ const ProfesorMaterias = ({ profesorId }) => {
                 )}
             </ul>
 
-            {confirmDelete.open && (
+
+            {/* Solo permitir eliminar si no es modo profesor */}
+            {!profesorId && confirmDelete.open && (
                 <div className="confirm-modal">
                     <div className="confirm-content">
                         <h3>Eliminar asignación</h3>
@@ -211,17 +220,22 @@ const ProfesorMaterias = ({ profesorId }) => {
                 </div>
             )}
 
-            <h2>Asignar Nueva Materia</h2>
-            <select
-                value={selectedCurso}
-                onChange={(e) => setSelectedCurso(e.target.value)}
-            >
-                <option value="">Seleccionar curso</option>
-                {cursos.map(curso => (
-                    <option key={curso.id} value={curso.id}>{curso.nombre}</option>
-                ))}
-            </select>
-            <button onClick={handleAsignar}>Asignar</button>
+            {/* Solo permitir asignar si no es modo profesor */}
+            {!profesorId && (
+                <>
+                <h2>Asignar Nueva Materia</h2>
+                <select
+                    value={selectedCurso}
+                    onChange={(e) => setSelectedCurso(e.target.value)}
+                >
+                    <option value="">Seleccionar curso</option>
+                    {cursos.map(curso => (
+                        <option key={curso.id} value={curso.id}>{curso.nombre}</option>
+                    ))}
+                </select>
+                <button onClick={handleAsignar}>Asignar</button>
+                </>
+            )}
         </div>
     );
 };

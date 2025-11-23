@@ -94,20 +94,20 @@
 .welcome-section {
   text-align: center;
   padding: 3rem 2rem;
-  background: var(--bg-white);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
-  border-top: 4px solid var(--color4);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(44,62,145,0.10);
+  border-top: 4px solid #00bbc3;
 }
 
 .welcome-section h2 {
-  color: var(--color1);
+  color: #12518c;
   margin-bottom: 1rem;
   font-size: 2rem;
 }
 
 .welcome-section p {
-  color: var(--color2);
+  color: #2c3e91;
   font-size: 1.1rem;
   margin-bottom: 1rem;
 }
@@ -120,21 +120,22 @@
 }
 
 .feature-card {
-  background: var(--bg-light);
+  background: #f7f7fa;
   padding: 1.5rem;
-  border-radius: var(--border-radius);
-  border-left: 4px solid var(--color4);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.07);
+  border-left: 4px solid #00bbc3;
   transition: all 0.3s ease;
   position: relative;
 }
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 16px rgba(44,62,145,0.15);
 }
 
 .feature-card h3 {
-  color: var(--color1);
+  color: #12518c;
   margin-bottom: 0.5rem;
 }
 
@@ -151,7 +152,7 @@
 .back-home-btn.small-btn { font-size: 0.82rem; padding: 0.3rem 0.5rem; }
 
 .feature-card p {
-  color: var(--color2);
+  color: #2c3e91;
   font-size: 0.9rem;
 }
 

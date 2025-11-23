@@ -1,3 +1,64 @@
+/* Panel principal moderno */
+.pensum {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(44,62,145,0.10);
+  margin: 1.5rem;
+}
+.pensum h2 {
+  color: #12518c;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #00bbc3;
+  font-size: 1.8rem;
+}
+.pensum-list table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.pensum-list th {
+  background: linear-gradient(90deg, #12518c 80%, #00659b 100%);
+  color: #fff;
+  font-size: 1.13rem;
+  font-weight: bold;
+  padding: 0.8rem 0.5rem;
+  text-align: center;
+  border-right: 1px solid #fff;
+  letter-spacing: 0.5px;
+}
+.pensum-list td {
+  padding: 0.7rem 0.3rem;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  min-width: 120px;
+  vertical-align: top;
+  background: #fcfcfc;
+}
+.pensum-list tr:hover {
+  background: #f5f5fa;
+}
+.btn-primary {
+  background: #2c3e91;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-primary:hover {
+  background: #12518c;
+}
+
 .pensum-container {
   padding: 2rem;
 }

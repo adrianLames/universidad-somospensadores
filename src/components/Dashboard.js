@@ -28,34 +28,7 @@ const Dashboard = ({ user, onLogout }) => {
         </div>
       </header>
 
-      <nav className="dashboard-nav">
-        <ul>
-          {user.tipo === 'admin' && (
-            <>
-              <li><Link to="/usuarios">👥 Gestión de Usuarios</Link></li>
-              <li><Link to="/programas">📚 Gestión de Programas</Link></li>
-              <li><Link to="/cursos">📖 Gestión de Cursos</Link></li>
-              <li><Link to="/horarios">🕐 Asignación de Horarios</Link></li>
-              <li><Link to="/vincular-profesor-materia">🔗 Vincular Profesor - Materia</Link></li>
-            </>
-          )}
-          {user.tipo === 'docente' && (
-            <>
-              <li><Link to="/asistencias">✅ Control de Asistencias</Link></li>
-              <li><Link to="/calificaciones">📊 Registro de Calificaciones</Link></li>
-              <li><Link to="/asignacion-profesores">📘 Asignación de Profesores</Link></li>
-            </>
-          )}
-          {user.tipo === 'estudiante' && (
-            <>
-              <li><Link to="/matriculas">🎓 Matrículas</Link></li>
-              <li><Link to="/calificaciones">📈 Ver Calificaciones</Link></li>
-              <li><Link to="/asistencias">📅 Ver Asistencias</Link></li>
-              <li><Link to="/pensum">🗂️ Pensum / Malla Curricular</Link></li>
-            </>
-          )}
-        </ul>
-      </nav>
+
 
       <main className="dashboard-main">
         <div className="welcome-section">
@@ -66,54 +39,86 @@ const Dashboard = ({ user, onLogout }) => {
           <div className="feature-cards">
             {user.tipo === 'admin' && (
               <>
-                <div className="feature-card">
-                  <h3>👥 Gestión de Usuarios</h3>
-                  <p>Administra estudiantes, docentes y administradores</p>
-                </div>
-                <div className="feature-card">
+                <Link to="/usuarios" className="feature-card">
+                  <h3>👥 Nueva Gestión de Usuarios</h3>
+                  <p>Administra estudiantes, docentes y administradores con la nueva interfaz</p>
+                </Link>
+                <Link to="/facultades" className="feature-card">
+                  <h3>🏛️ Facultades Académicas</h3>
+                  <p>Crea, edita y elimina facultades académicas</p>
+                </Link>
+                <Link to="/programas" className="feature-card">
                   <h3>📚 Programas Académicos</h3>
                   <p>Gestiona programas y planes de estudio</p>
-                </div>
-                <div className="feature-card">
+                </Link>
+                <Link to="/cursos" className="feature-card">
                   <h3>📖 Cursos</h3>
                   <p>Administra la oferta académica de cursos</p>
-                </div>
-                <div className="feature-card">
+                </Link>
+                <Link to="/vincular-profesor-materia" className="feature-card">
                   <h3>🔗 Vincular Profesores</h3>
                   <p>Vincula docentes con las materias que impartirán</p>
-                </div>
-                <div className="feature-card">
+                </Link>
+                <Link to="/horarios" className="feature-card">
                   <h3>🕐 Horarios</h3>
                   <p>Asigna horarios a cursos y docentes</p>
-                </div>
+                </Link>
+                <Link to="/salones" className="feature-card">
+                  <h3>🏫 Salones</h3>
+                  <p>Administra aulas y espacios universitarios</p>
+                </Link>
+                <Link to="/admin-mapa-salones" className="feature-card">
+                  <h3>🗺️ Mapa de Salones (Tabla)</h3>
+                  <p>Gestiona salones y coordenadas en vista tabular</p>
+                </Link>
+                <Link to="/admin-mapa-salones-visual" className="feature-card">
+                  <h3>🗺️ Mapa de Salones (Visual)</h3>
+                  <p>Gestiona salones de forma visual e interactiva en el mapa</p>
+                </Link>
+                <Link to="/metricas" className="feature-card">
+                  <h3>📊 Métricas</h3>
+                  <p>Visualiza estadísticas y datos globales del sistema</p>
+                </Link>
               </>
             )}
             {user.tipo === 'docente' && (
               <>
-                <div className="feature-card">
+                <Link to="/asistencias" className="feature-card">
                   <h3>✅ Asistencias</h3>
                   <p>Registra y controla la asistencia de estudiantes</p>
-                </div>
-                <div className="feature-card">
+                </Link>
+                <Link to="/calificaciones" className="feature-card">
                   <h3>📊 Calificaciones</h3>
                   <p>Ingresa y gestiona las calificaciones</p>
-                </div>
+                </Link>
+                <Link to="/asignacion-profesores" className="feature-card">
+                  <h3>📘 Asignación de Profesores</h3>
+                  <p>Consulta y gestiona los cursos asignados</p>
+                </Link>
               </>
             )}
             {user.tipo === 'estudiante' && (
               <>
-                <div className="feature-card">
+                <Link to="/matriculas" className="feature-card">
                   <h3>🎓 Matrículas</h3>
                   <p>Realiza tu matrícula en los cursos</p>
-                </div>
-                <div className="feature-card">
+                </Link>
+                <Link to="/calificaciones" className="feature-card">
                   <h3>📈 Calificaciones</h3>
                   <p>Consulta tu rendimiento académico</p>
-                </div>
-                <div className="feature-card">
+                </Link>
+                <Link to="/asistencias" className="feature-card">
                   <h3>📅 Asistencias</h3>
                   <p>Revisa tu registro de asistencias</p>
-                </div>
+                </Link>
+                <Link to="/mapa-salones" className="feature-card">
+                  <h3>📍 Mapa de Salones</h3>
+                  <p>Visualiza los salones, horarios y profesores en el campus</p>
+                </Link>
+                <Link to="/pensum" className="feature-card">
+                  <h3>🗂️ Pensum / Malla Curricular</h3>
+                  <p>Consulta tu plan de estudios y materias pendientes</p>
+                </Link>
               </>
             )}
           </div>

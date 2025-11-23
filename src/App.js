@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import GestionCursos from './components/GestionCursos';
-import GestionUsuarios from './components/GestionUsuarios';
+import NuevaGestionUsuarios from './components/NuevaGestionUsuarios';
 import GestionProgramas from './components/GestionProgramas';
+import GestionFacultades from './components/GestionFacultades';
 import Matriculas from './components/Matriculas';
 import Asistencias from './components/Asistencias';
 import Calificaciones from './components/Calificaciones';
@@ -12,6 +13,13 @@ import Horarios from './components/Horarios';
 import ProfesorMaterias from './components/ProfesorMaterias';
 import Pensum from './components/Pensum';
 import VincularProfesorMateria from './components/VincularProfesorMateria';
+import Salones from './components/Salones';
+import Metricas from './components/Metricas';
+import MapaSalonesLeaflet from './components/MapaSalonesLeaflet';
+import AdminMapaSalones from './components/AdminMapaSalones';
+import AdminMapaSalonesVisual from './components/AdminMapaSalonesVisual';
+
+import EditarUsuarios from './components/EditarUsuarios';
 import { API_BASE } from './config/api';
 import './App.css';
 
@@ -72,7 +80,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard user={user} onLogout={handleLogout} />} />
             <Route path="/cursos" element={<GestionCursos user={user} />} />
-            <Route path="/usuarios" element={<GestionUsuarios user={user} />} />
+            <Route path="/usuarios" element={<NuevaGestionUsuarios user={user} />} />
+            <Route path="/facultades" element={<GestionFacultades />} />
             <Route path="/programas" element={<GestionProgramas user={user} />} />
             <Route path="/matriculas" element={<Matriculas user={user} />} />
             <Route path="/asistencias" element={<Asistencias user={user} />} />
@@ -81,6 +90,12 @@ function App() {
             <Route path="/asignacion-profesores" element={<ProfesorMaterias profesorId={user.id} />} />
             <Route path="/vincular-profesor-materia" element={<VincularProfesorMateria />} />
             <Route path="/pensum" element={<Pensum user={user} />} />
+            <Route path="/editar-usuarios" element={<EditarUsuarios />} />
+            <Route path="/salones" element={<Salones />} />
+            <Route path="/admin-mapa-salones" element={<AdminMapaSalones user={user} />} />
+            <Route path="/admin-mapa-salones-visual" element={<AdminMapaSalonesVisual user={user} />} />
+            <Route path="/mapa-salones" element={<MapaSalonesLeaflet />} />
+            <Route path="/metricas" element={<Metricas />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         )}

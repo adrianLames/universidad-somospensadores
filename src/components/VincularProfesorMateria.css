@@ -1,61 +1,154 @@
-/* Estilos básicos para VincularProfesorMateria */
-.vincular-profesor-materia {
-  max-width: 720px;
-  margin: 20px auto;
-  padding: 18px;
+/* Fondo general claro */
+.vincular-profesor-materia-bg {
+  min-height: 100vh;
+  background: #f7f9fb;
+  padding: 0;
+}
+
+/* Tarjeta principal */
+.vincular-profesor-materia-card {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(44,62,145,0.10);
+  padding: 2.5rem 2rem;
+  max-width: 900px;
+  margin: 2rem auto 2rem auto;
 }
-
-.vincular-profesor-materia h2 {
-  margin-top: 0;
-  margin-bottom: 12px;
-  font-size: 1.25rem;
-}
-
-.vincular-profesor-materia .form-group {
-  margin-bottom: 12px;
+.vincular-profesor-materia-card h2 {
+  font-size: 1.35rem;
+  color: #1565c0;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.vincular-profesor-materia-card p {
+  color: #444;
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
 }
 
-.vincular-profesor-materia label {
-  margin-bottom: 6px;
+/* Inputs y selects suaves */
+.vincular-profesor-materia-card .form-group label {
   font-weight: 600;
+  color: #222;
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+}
+.vincular-profesor-materia-card .form-group input,
+.vincular-profesor-materia-card .form-group select {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  font-size: 1.05rem;
+  background: #f7f7fa;
+  margin-bottom: 1rem;
+  transition: border 0.2s;
+}
+.vincular-profesor-materia-card .form-group input:focus,
+.vincular-profesor-materia-card .form-group select:focus {
+  border: 1.5px solid #1565c0;
+  outline: none;
 }
 
-.vincular-profesor-materia select,
-.vincular-profesor-materia input[type="text"],
-.vincular-profesor-materia input[type="number"] {
-  padding: 8px 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.95rem;
-}
-
-.vincular-profesor-materia button {
-  background: #2f80ed;
+.vincular-profesor-materia-card .btn-primary {
+  background: #1565c0;
   color: #fff;
-  padding: 10px 14px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.08rem;
+  font-weight: bold;
   cursor: pointer;
+  box-shadow: 0 2px 8px #1565c022;
+  transition: background 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.vincular-profesor-materia-card .btn-primary:hover {
+  background: #12518c;
+  box-shadow: 0 4px 16px #1565c044;
+}
+
+/* Tabla minimalista */
+.vincular-profesor-materia-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.10);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+.vincular-profesor-materia-table th {
+  background: #f7f9fb;
+  color: #222;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+.vincular-profesor-materia-table td {
+  padding: 0.8rem 0.3rem;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
+  background: #fff;
+  font-size: 1.02rem;
+}
+.vincular-profesor-materia-table tr:hover {
+  background: #f2f6fa;
+}
+
+.vincular-profesor-materia-table .tag {
+  background: #f7f7fa;
+  color: #1565c0;
+  border-radius: 8px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  margin-right: 0.3rem;
+  margin-bottom: 2px;
+  border: 1px solid #e0e0e0;
+  display: inline-block;
 }
 
-.vincular-profesor-materia button:hover {
-  background: #1c63c9;
+/* Botones de acción minimalistas */
+.vincular-profesor-materia-table .btn-icon {
+  background: none;
+  border: none;
+  color: #1565c0;
+  font-size: 1.25rem;
+  cursor: pointer;
+  margin: 0 4px;
+  transition: color 0.2s;
+}
+.vincular-profesor-materia-table .btn-icon:hover {
+  color: #ef5350;
 }
 
-.vincular-profesor-materia .mensaje-vinculacion {
-  margin-top: 12px;
-  padding: 8px 10px;
-  background: #f1f8ff;
-  border-left: 4px solid #2f80ed;
+/* Tarjeta secundaria para la tabla */
+.vincular-profesor-materia-list-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(44,62,145,0.10);
+  padding: 2rem 1.5rem;
+  max-width: 900px;
+  margin: 2rem auto 2rem auto;
 }
-
-@media (max-width: 600px) {
-  .vincular-profesor-materia { padding: 12px; margin: 12px; }
+.vincular-profesor-materia-list-card h3 {
+  font-size: 1.1rem;
+  color: #222;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.vincular-profesor-materia-list-card p {
+  color: #666;
+  font-size: 0.98rem;
+  margin-bottom: 1.2rem;
 }

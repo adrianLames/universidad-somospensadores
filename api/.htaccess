@@ -1,0 +1,12 @@
+<IfModule mod_headers.c>
+  # Establecer cabeceras CORS a nivel Apache para cubrir preflight (dev)
+  # Usamos '*' para permitir peticiones desde el dev server; esto evita que
+  # Apache responda OPTIONS sin cabeceras y cause bloqueos CORS en el navegador.
+  Header always set Access-Control-Allow-Origin "*"
+  Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE"
+  Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+</IfModule>
+
+# No interceptar las peticiones OPTIONS aquí: dejar que PHP (ej. cors.php) las maneje
+# Si el servidor web responde a OPTIONS antes de PHP, las cabeceras dinámicas de
+# `api/cors.php` no se incluirán y provocarán errores CORS en el navegador.

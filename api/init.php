@@ -59,8 +59,23 @@ function createDatabaseAndTables($conn) {
         tipo ENUM('aula', 'laboratorio', 'auditorio') DEFAULT 'aula',
         equipamiento TEXT,
         activo BOOLEAN DEFAULT TRUE,
+        latitud DOUBLE DEFAULT 3.022922,
+        longitud DOUBLE DEFAULT -76.482656,
+        visible TINYINT DEFAULT 1,
         fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
+    
+    // Agregar columnas faltantes si no existen (para migración)
+    $result = $conn->query("SHOW COLUMNS FROM salones LIKE 'latitud'");
+    if ($result->num_rows == 0) {
+        $conn->query("ALTER TABLE salones ADD COLUMN latitud DOUBLE DEFAULT 3.022922 AFTER activo");
+        $conn->query("ALTER TABLE salones ADD COLUMN longitud DOUBLE DEFAULT -76.482656 AFTER latitud");
+        $conn->query("ALTER TABLE salones ADD COLUMN visible TINYINT DEFAULT 1 AFTER longitud");
+    }
+
+    // Agregar índices para salones (solo si las columnas existen)
+    $conn->query("ALTER TABLE salones ADD INDEX IF NOT EXISTS idx_visible (visible)");
+    $conn->query("ALTER TABLE salones ADD INDEX IF NOT EXISTS idx_latitud_longitud (latitud, longitud)");
 
     // Tabla de matrículas
     $conn->query("CREATE TABLE IF NOT EXISTS matriculas (

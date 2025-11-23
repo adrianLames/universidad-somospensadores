@@ -1,9 +1,10 @@
+/* Panel principal moderno */
 .matriculas {
   background: white;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(44,62,145,0.10);
+  margin: 1.5rem;
 }
 
 .matriculas h2 {
@@ -14,80 +15,53 @@
   font-size: 1.8rem;
 }
 
-.matriculas-list {
-  margin-top: 1rem;
-}
-
 .matriculas-list table {
   width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(44,62,145,0.07);
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
 .matriculas-list th {
-  background: linear-gradient(135deg, #12518c 0%, #00659b 100%);
-  color: white;
-  font-weight: 600;
-  padding: 1rem;
-  text-align: left;
+  background: linear-gradient(90deg, #12518c 80%, #00659b 100%);
+  color: #fff;
+  font-size: 1.13rem;
+  font-weight: bold;
+  padding: 0.8rem 0.5rem;
+  text-align: center;
+  border-right: 1px solid #fff;
+  letter-spacing: 0.5px;
 }
 
 .matriculas-list td {
-  padding: 1rem;
-  border-bottom: 1px solid #ecf0f1;
+  padding: 0.7rem 0.3rem;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  min-width: 120px;
+  vertical-align: top;
+  background: #fcfcfc;
 }
 
 .matriculas-list tr:hover {
-  background: #f8f9fa;
+  background: #f5f5fa;
 }
 
-.estado.activa {
-  background: #2ecc71;
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: 600;
+.btn-primary {
+  background: #2c3e91;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.estado.completada {
-  background: #3498db;
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.estado.cancelada {
-  background: #e74c3c;
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-@media (max-width: 768px) {
-  .matriculas {
-    margin: 0.5rem;
-    padding: 1rem;
-  }
-  
-  .matriculas-list {
-    overflow-x: auto;
-  }
-  
-  .matriculas-list table {
-    min-width: 600px;
-  }
-}
-
-/* Ajustes para BackHomeButton en Matriculas */
-.matriculas .back-home-btn {
-  padding: 0.45rem 0.75rem;
-  font-size: 0.95rem;
+.btn-primary:hover {
+  background: #12518c;
 }

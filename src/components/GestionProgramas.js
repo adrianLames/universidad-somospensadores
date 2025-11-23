@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './GestionProgramas.css';
@@ -5,6 +6,8 @@ import BackHomeButton from './BackHomeButton';
 
 const GestionProgramas = ({ user }) => {
   const [programas, setProgramas] = useState([]);
+  const [facultades, setFacultades] = useState([]);
+  const [filtroActivo, setFiltroActivo] = useState('todos'); // 'todos', 'activos', 'inactivos'
   const [showForm, setShowForm] = useState(false);
   const [currentPrograma, setCurrentPrograma] = useState({
     id: null,
@@ -12,17 +15,30 @@ const GestionProgramas = ({ user }) => {
     nombre: '',
     descripcion: '',
     duracion_semestres: '',
-    creditos_totales: ''
+    creditos_totales: '',
+    facultad_id: '',
+    activo: true
   });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    fetchFacultades();
     fetchProgramas();
   }, []);
 
+  const fetchFacultades = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/facultades.php`);
+      const data = await res.json();
+      setFacultades(Array.isArray(data) ? data : []);
+    } catch {
+      setFacultades([]);
+    }
+  };
+
   const fetchProgramas = async () => {
     try {
-      const response = await fetch(`${API_BASE}/programas.php`);
+      const response = await fetch(`${API_BASE}/programas.php?all=1`); // Cambia la API para devolver todos
       const data = await response.json();
       setProgramas(data);
     } catch (error) {
@@ -71,13 +87,19 @@ const GestionProgramas = ({ user }) => {
       nombre: '',
       descripcion: '',
       duracion_semestres: '',
-      creditos_totales: ''
+      creditos_totales: '',
+      facultad_id: '',
+      activo: true
     });
     setShowForm(false);
   };
 
   const editPrograma = (programa) => {
-    setCurrentPrograma(programa);
+    setCurrentPrograma({
+      ...programa,
+      facultad_id: programa.facultad_id ? String(programa.facultad_id) : '',
+      activo: programa.activo === undefined ? true : Boolean(Number(programa.activo))
+    });
     setShowForm(true);
   };
 
@@ -142,6 +164,20 @@ const GestionProgramas = ({ user }) => {
                 />
               </div>
               <div className="form-group">
+                <label>Facultad:</label>
+                <select
+                  value={currentPrograma.facultad_id}
+                  onChange={e => setCurrentPrograma({...currentPrograma, facultad_id: e.target.value})}
+                  required
+                  disabled={loading}
+                >
+                  <option value="">Selecciona una facultad</option>
+                  {facultades.map(f => (
+                    <option key={f.id} value={f.id}>{f.nombre}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
                 <label>Descripción:</label>
                 <textarea
                   value={currentPrograma.descripcion}
@@ -172,6 +208,17 @@ const GestionProgramas = ({ user }) => {
                   disabled={loading}
                 />
               </div>
+              <div className="form-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={!!currentPrograma.activo}
+                    onChange={e => setCurrentPrograma({...currentPrograma, activo: e.target.checked})}
+                    disabled={loading}
+                  />
+                  {' '}Activo
+                </label>
+              </div>
               <div className="form-actions">
                 <button type="submit" disabled={loading}>
                   {loading ? 'Guardando...' : '💾 Guardar'}
@@ -186,6 +233,15 @@ const GestionProgramas = ({ user }) => {
       )}
 
       <div className="programas-list">
+        <div style={{marginBottom:'1rem', display:'flex', gap:'1rem'}}>
+          <label>Ver:
+            <select value={filtroActivo} onChange={e => setFiltroActivo(e.target.value)} style={{marginLeft:'0.5rem'}}>
+              <option value="todos">Todos</option>
+              <option value="activos">Activos</option>
+              <option value="inactivos">Inactivos</option>
+            </select>
+          </label>
+        </div>
         {programas.length === 0 ? (
           <div className="no-data">
             <p>No hay programas registrados</p>
@@ -196,18 +252,30 @@ const GestionProgramas = ({ user }) => {
               <tr>
                 <th>Código</th>
                 <th>Nombre</th>
+                <th>Facultad</th>
                 <th>Duración</th>
                 <th>Créditos</th>
+                <th>Activo</th>
+                <th>Fecha Creación</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {programas.map(programa => (
+              {programas
+                .filter(programa => {
+                  if (filtroActivo === 'activos') return String(programa.activo) === '1' || programa.activo === 1 || programa.activo === true;
+                  if (filtroActivo === 'inactivos') return String(programa.activo) === '0' || programa.activo === 0 || programa.activo === false;
+                  return true;
+                })
+                .map(programa => (
                 <tr key={programa.id}>
                   <td><strong>{programa.codigo}</strong></td>
                   <td>{programa.nombre}</td>
+                  <td>{programa.facultad_nombre || '-'}</td>
                   <td>{programa.duracion_semestres} semestres</td>
                   <td>{programa.creditos_totales} créditos</td>
+                  <td>{String(programa.activo) === '1' || programa.activo === 1 || programa.activo === true ? 'Sí' : 'No'}</td>
+                  <td>{programa.fecha_creacion ? new Date(programa.fecha_creacion).toLocaleDateString() : '-'}</td>
                   <td>
                     <div className="action-buttons">
                       <button onClick={() => editPrograma(programa)}>✏️ Editar</button>

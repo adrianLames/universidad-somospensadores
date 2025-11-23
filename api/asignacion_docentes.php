@@ -37,11 +37,23 @@ switch ($method) {
 
             echo json_encode(['success' => true, 'data' => $asignaciones]);
         } else {
-            // Obtener todas las materias creadas
-            $query = "SELECT id, nombre FROM cursos WHERE activo = 1";
+            // Obtener todas las vinculaciones docente-materia con datos completos y nombres normalizados
+            $query = "SELECT ad.id, ad.usuario_id, ad.curso_id, ad.anio, ad.semestre, 
+                             u.nombres, u.apellidos, c.nombre AS materia, c.codigo AS codigo_materia, 
+                             p.nombre AS programa_nombre, f.nombre AS facultad_nombre
+                      FROM asignacion_docentes ad
+                      JOIN docentes d ON ad.usuario_id = d.usuario_id
+                      JOIN usuarios u ON d.usuario_id = u.id
+                      JOIN cursos c ON ad.curso_id = c.id
+                      LEFT JOIN programas p ON c.programa_id = p.id
+                      LEFT JOIN facultades f ON p.facultad_id = f.id
+                      ORDER BY u.nombres, u.apellidos, c.nombre";
             $result = $conn->query($query);
-            $cursos = $result->fetch_all(MYSQLI_ASSOC);
-            echo json_encode(['success' => true, 'data' => $cursos]);
+            $rows = [];
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+            echo json_encode(['success' => true, 'data' => $rows]);
         }
         break;
 
