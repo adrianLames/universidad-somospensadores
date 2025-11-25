@@ -67,7 +67,7 @@
 }
 
 .btn-primary:hover {
-  background: var(--accent-purple);
+  background: #f0d070;
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }

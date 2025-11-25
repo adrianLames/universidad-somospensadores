@@ -1,23 +1,23 @@
-/* App.css - Paleta moderna: Timó, Lila y Morados Suaves */
+/* App.css - Paleta: Negro y Dorado */
 :root {
-  --primary-teal: #5a9fb5;
-  --primary-purple: #9b7fb5;
-  --primary-lavender: #c8a9d8;
-  --accent-purple: #8b6ba3;
-  --accent-light: #e8dff5;
-  --accent-lighter: #f5f0fb;
+  --primary-black: #1a1a1a;
+  --primary-gold: #d4af37;
+  --secondary-gold: #c9a227;
+  --accent-gold: #f0d070;
+  --accent-light: #2a2a2a;
+  --accent-lighter: #0f0f0f;
   
-  --text-dark: #2c3e50;
-  --text-medium: #555555;
-  --text-light: #888888;
-  --bg-white: #ffffff;
-  --bg-light: #f8f6fb;
-  --border-color: #d4c9e0;
-  --border-light: #e8dff5;
+  --text-dark: #ffffff;
+  --text-medium: #e0e0e0;
+  --text-light: #a0a0a0;
+  --bg-white: #1a1a1a;
+  --bg-light: #2a2a2a;
+  --border-color: #d4af37;
+  --border-light: #3a3a3a;
   
-  --shadow-soft: 0 2px 8px rgba(155, 127, 181, 0.08);
-  --shadow-medium: 0 4px 16px rgba(155, 127, 181, 0.12);
-  --shadow-strong: 0 8px 24px rgba(155, 127, 181, 0.15);
+  --shadow-soft: 0 2px 8px rgba(212, 175, 55, 0.1);
+  --shadow-medium: 0 4px 16px rgba(212, 175, 55, 0.15);
+  --shadow-strong: 0 8px 24px rgba(212, 175, 55, 0.2);
   --border-radius: 12px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -46,7 +46,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-purple) 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   color: white;
 }
 
@@ -78,23 +78,23 @@ body {
 }
 
 h2, h1 {
-  color: var(--primary-purple);
+  color: #d4af37;
 }
 
 .page-header {
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 2px solid var(--accent-light);
+  border-bottom: 2px solid #d4af37;
 }
 
 .page-header h2 {
   font-size: 2rem;
   margin-bottom: 0.5rem;
-  color: var(--accent-purple);
+  color: #f0d070;
 }
 
 .page-header p {
-  color: var(--text-light);
+  color: #a0a0a0;
   font-size: 0.95rem;
 }
 

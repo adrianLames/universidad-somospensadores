@@ -11,35 +11,36 @@
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 3px solid #3498db;
+  border-bottom: 3px solid #d4af37;
 }
 
 .mapa-plano-header h1 {
   margin: 0 0 10px 0;
-  color: #2c3e50;
+  color: #f0d070;
   font-size: 2rem;
 }
 
 .mapa-subtitle {
-  color: #7f8c8d;
+  color: #b0b0b0;
   margin: 0;
   font-size: 1rem;
 }
 
 /* Placeholder para cuando no hay imagen */
 .imagen-placeholder {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   border-radius: 12px;
   padding: 40px;
   margin: 20px 0;
   color: white;
   text-align: center;
+  border: 2px solid #d4af37;
 }
 
 .placeholder-content {
   max-width: 700px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(212, 175, 55, 0.1);
   padding: 30px;
   border-radius: 8px;
   backdrop-filter: blur(10px);
@@ -48,12 +49,14 @@
 .placeholder-content h3 {
   margin-top: 0;
   font-size: 1.5rem;
+  color: #f0d070;
 }
 
 .placeholder-content ol {
   text-align: left;
   line-height: 1.8;
   margin: 20px 0;
+  color: #e0e0e0;
 }
 
 .placeholder-content code {
@@ -61,13 +64,15 @@
   padding: 3px 8px;
   border-radius: 4px;
   font-family: 'Courier New', monospace;
+  color: #d4af37;
 }
 
 .nota-temporal {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(212, 175, 55, 0.2);
   padding: 15px;
   border-radius: 6px;
   margin-top: 20px;
+  color: #f0d070;
 }
 
 /* Filtros */
@@ -76,10 +81,11 @@
   gap: 15px;
   flex-wrap: wrap;
   padding: 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   border-radius: 12px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
+  border: 1px solid #3a3a3a;
 }
 
 .filtro-grupo {
@@ -92,28 +98,29 @@
 
 .filtro-grupo label {
   font-weight: 600;
-  color: #2c3e50;
+  color: #d4af37;
   font-size: 0.9rem;
 }
 
 .filtro-grupo select {
   padding: 10px 15px;
-  border: 2px solid #ddd;
+  border: 2px solid #3a3a3a;
   border-radius: 8px;
   font-size: 1rem;
-  background: white;
+  background: #0f0f0f;
+  color: #ffffff;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .filtro-grupo select:hover {
-  border-color: #3498db;
+  border-color: #d4af37;
 }
 
 .filtro-grupo select:focus {
   outline: none;
-  border-color: #2980b9;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
 .filtro-info {
@@ -123,8 +130,8 @@
 }
 
 .salones-count {
-  background: #3498db;
-  color: white;
+  background: #d4af37;
+  color: #1a1a1a;
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: 600;
@@ -141,11 +148,12 @@
 
 .plano-viewer {
   position: relative;
-  background: #ecf0f1;
+  background: #2a2a2a;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
   min-height: 600px;
+  border: 1px solid #3a3a3a;
 }
 
 .plano-controles {
@@ -155,17 +163,18 @@
   z-index: 100;
   display: flex;
   gap: 8px;
-  background: white;
+  background: #1a1a1a;
   padding: 8px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  border: 1px solid #3a3a3a;
 }
 
 .plano-controles button {
   padding: 10px 15px;
   border: none;
-  background: #3498db;
-  color: white;
+  background: #d4af37;
+  color: #1a1a1a;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
@@ -174,9 +183,9 @@
 }
 
 .plano-controles button:hover {
-  background: #2980b9;
+  background: #f0d070;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(212, 175, 55, 0.25);
 }
 
 .plano-controles button:active {
@@ -188,7 +197,7 @@
   height: 600px;
   overflow: hidden;
   position: relative;
-  background: #ffffff;
+  background: #1a1a1a;
 }
 
 .plano-canvas {
@@ -213,8 +222,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 3px solid white;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  border: 3px solid #d4af37;
+  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -222,19 +231,21 @@
   transform: translate(-50%, -50%);
   transition: all 0.3s ease;
   z-index: 10;
+  background: #1a1a1a;
 }
 
 .salon-marker:hover {
   transform: translate(-50%, -50%) scale(1.2);
   z-index: 20;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+  background: #2a2a2a;
 }
 
 .marker-label {
-  color: white;
+  color: #d4af37;
   font-weight: bold;
   font-size: 0.75rem;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 /* Popup de información del salón */
@@ -243,14 +254,15 @@
   bottom: 20px;
   left: 20px;
   width: 350px;
-  background: white;
+  background: #1a1a1a;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
   z-index: 200;
   max-height: 500px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 1px solid #3a3a3a;
 }
 
 .info-popup-header {
@@ -258,19 +270,20 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #d4af37 0%, #f0d070 100%);
+  color: #1a1a1a;
 }
 
 .info-popup-header h3 {
   margin: 0;
   font-size: 1.3rem;
+  font-weight: 700;
 }
 
 .close-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(26, 26, 26, 0.2);
   border: none;
-  color: white;
+  color: #1a1a1a;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -283,7 +296,7 @@
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(26, 26, 26, 0.3);
   transform: rotate(90deg);
 }
 
@@ -295,7 +308,7 @@
 
 .info-popup-content p {
   margin: 8px 0;
-  color: #2c3e50;
+  color: #e0e0e0;
 }
 
 .estado-badge {
@@ -308,29 +321,29 @@
 }
 
 .estado-badge.disponible {
-  background: #d4edda;
-  color: #155724;
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
 }
 
 .estado-badge.ocupado {
-  background: #f8d7da;
-  color: #721c24;
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
 }
 
 .estado-badge.mantenimiento {
-  background: #fff3cd;
-  color: #856404;
+  background: rgba(212, 175, 55, 0.2);
+  color: #d4af37;
 }
 
 .info-horarios-section {
   margin-top: 20px;
   padding-top: 15px;
-  border-top: 2px solid #ecf0f1;
+  border-top: 2px solid #3a3a3a;
 }
 
 .info-horarios-section h4 {
   margin: 0 0 15px 0;
-  color: #2c3e50;
+  color: #d4af37;
   font-size: 1.1rem;
 }
 
@@ -341,34 +354,35 @@
 }
 
 .horario-item-popup {
-  background: #f8f9fa;
+  background: #0f0f0f;
   padding: 12px;
   border-radius: 8px;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #d4af37;
 }
 
 .horario-item-popup p {
   margin: 4px 0;
   font-size: 0.9rem;
+  color: #e0e0e0;
 }
 
 .horario-tiempo {
-  color: #3498db;
+  color: #d4af37;
   font-weight: 600;
 }
 
 .curso-nombre {
   font-weight: 600;
-  color: #2c3e50;
+  color: #f0d070;
 }
 
 .profesor-nombre {
-  color: #7f8c8d;
+  color: #b0b0b0;
   font-size: 0.85rem;
 }
 
 .sin-clases {
-  color: #95a5a6;
+  color: #a0a0a0;
   font-style: italic;
   text-align: center;
   padding: 20px;
@@ -376,20 +390,21 @@
 
 /* Panel lateral */
 .salones-panel-lateral {
-  background: white;
+  background: #1a1a1a;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
   display: flex;
   flex-direction: column;
+  border: 1px solid #3a3a3a;
 }
 
 .salones-panel-lateral h3 {
   margin: 0 0 15px 0;
-  color: #2c3e50;
+  color: #d4af37;
   font-size: 1.2rem;
   padding-bottom: 10px;
-  border-bottom: 2px solid #ecf0f1;
+  border-bottom: 2px solid #3a3a3a;
 }
 
 .salones-lista-scroll {
@@ -401,7 +416,7 @@
 }
 
 .salon-card-mini {
-  background: #f8f9fa;
+  background: #2a2a2a;
   border-radius: 8px;
   padding: 12px;
   cursor: pointer;
@@ -410,15 +425,15 @@
 }
 
 .salon-card-mini:hover {
-  background: #e9ecef;
+  background: #3a3a3a;
   transform: translateX(5px);
-  border-color: #3498db;
+  border-color: #d4af37;
 }
 
 .salon-card-mini.selected {
-  background: #d6eaf8;
-  border-color: #2980b9;
-  box-shadow: 0 3px 10px rgba(52, 152, 219, 0.2);
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #d4af37;
+  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.2);
 }
 
 .salon-card-header-mini {
@@ -432,27 +447,28 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 2px solid white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  border: 2px solid #d4af37;
+  box-shadow: 0 2px 6px rgba(212, 175, 55, 0.2);
   flex-shrink: 0;
+  background: #1a1a1a;
 }
 
 .salon-card-header-mini h4 {
   margin: 0;
   font-size: 1rem;
-  color: #2c3e50;
+  color: #d4af37;
 }
 
 .edificio-mini {
   margin: 0;
   font-size: 0.85rem;
-  color: #7f8c8d;
+  color: #b0b0b0;
 }
 
 .capacidad-badge-mini {
   margin-left: auto;
-  background: #3498db;
-  color: white;
+  background: #d4af37;
+  color: #1a1a1a;
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.85rem;
@@ -462,29 +478,30 @@
 .clases-mini {
   margin: 8px 0 0 0;
   font-size: 0.85rem;
-  color: #27ae60;
+  color: #2ecc71;
   font-weight: 500;
 }
 
 .sin-coordenadas {
   margin: 8px 0 0 0;
   font-size: 0.8rem;
-  color: #e67e22;
+  color: #ff6b6b;
   font-style: italic;
 }
 
 /* Leyenda */
 .mapa-legenda {
-  background: white;
+  background: #1a1a1a;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
   margin-bottom: 20px;
+  border: 1px solid #3a3a3a;
 }
 
 .mapa-legenda h4 {
   margin: 0 0 15px 0;
-  color: #2c3e50;
+  color: #d4af37;
 }
 
 .legenda-items {
@@ -497,26 +514,29 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  color: #e0e0e0;
 }
 
 .legenda-marker {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 2px solid white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  border: 2px solid #d4af37;
+  box-shadow: 0 2px 4px rgba(212, 175, 55, 0.2);
+  background: #1a1a1a;
 }
 
 /* Instrucciones */
 .instrucciones-uso {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #f0d070 100%);
   border-radius: 12px;
   padding: 20px;
-  color: white;
+  color: #1a1a1a;
 }
 
 .instrucciones-uso h4 {
   margin: 0 0 15px 0;
+  font-weight: 700;
 }
 
 .instrucciones-uso ul {
@@ -534,13 +554,13 @@
   text-align: center;
   padding: 60px 20px;
   font-size: 1.2rem;
-  color: #7f8c8d;
+  color: #b0b0b0;
 }
 
 .error-message {
-  background: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid #ff6b6b;
+  color: #ff8787;
   padding: 15px 20px;
   border-radius: 8px;
   margin-bottom: 20px;

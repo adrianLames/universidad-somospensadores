@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   padding: 20px;
   gap: 15px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -10,7 +10,7 @@
 
 .mapa-header {
   text-align: center;
-  color: white;
+  color: #f0d070;
   margin-bottom: 10px;
 }
 
@@ -18,40 +18,45 @@
   margin: 0;
   font-size: 28px;
   font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: #f0d070;
 }
 
 .mapa-subtitle {
   margin: 5px 0 0 0;
   font-size: 14px;
   opacity: 0.9;
+  color: #b0b0b0;
 }
 
 .loading,
 .error-message {
   padding: 20px;
-  background: white;
+  background: #1a1a1a;
   border-radius: 8px;
   text-align: center;
   font-size: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(212, 175, 55, 0.1);
+  border: 1px solid #3a3a3a;
+  color: #e0e0e0;
 }
 
 .error-message {
-  background: #FFE5E5;
-  color: #C92A2A;
-  border-left: 4px solid #C92A2A;
+  background: rgba(255, 107, 107, 0.1);
+  color: #ff6b6b;
+  border-left: 4px solid #ff6b6b;
 }
 
 .mapa-filtros {
   display: flex;
   gap: 15px;
-  background: white;
+  background: #1a1a1a;
   padding: 15px 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(212, 175, 55, 0.1);
   flex-wrap: wrap;
   align-items: center;
+  border: 1px solid #3a3a3a;
 }
 
 .filtro-grupo {
@@ -62,16 +67,17 @@
 
 .filtro-grupo label {
   font-weight: 600;
-  color: #333;
+  color: #d4af37;
   font-size: 14px;
   min-width: 80px;
 }
 
 .filtro-grupo select {
   padding: 8px 12px;
-  border: 2px solid #667eea;
+  border: 2px solid #d4af37;
   border-radius: 6px;
-  background: white;
+  background: #0f0f0f;
+  color: #ffffff;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
@@ -79,14 +85,14 @@
 }
 
 .filtro-grupo select:hover {
-  border-color: #764ba2;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  border-color: #f0d070;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
 }
 
 .filtro-grupo select:focus {
   outline: none;
-  border-color: #764ba2;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #f0d070;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
 .mapa-contenedor-principal {
@@ -112,12 +118,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   padding: 40px;
 }
 
 .error-content {
-  background: white;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
   border-radius: 12px;
   padding: 40px;
   max-width: 600px;
@@ -159,8 +166,8 @@
 }
 
 .error-content pre {
-  background: #f5f5f5;
-  border: 1px solid #ddd;
+  background: #0f0f0f;
+  border: 1px solid #3a3a3a;
   border-radius: 6px;
   padding: 12px;
   font-family: 'Courier New', monospace;
@@ -170,7 +177,7 @@
 }
 
 .error-content a {
-  color: #667eea;
+  color: #f0d070;
   text-decoration: none;
   font-weight: 600;
 }
@@ -180,7 +187,7 @@
 }
 
 .error-content small {
-  color: #999;
+  color: #a0a0a0;
   display: block;
   margin-top: 15px;
   padding-top: 15px;
@@ -189,9 +196,10 @@
 
 .mapa-panel-info {
   width: 350px;
-  background: white;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.15);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -199,8 +207,8 @@
 
 .panel-header {
   padding: 15px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #d4af37 0%, #f0d070 100%);
+  color: #1a1a1a;
   border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -217,8 +225,8 @@
 }
 
 .salon-card {
-  background: white;
-  border: 2px solid #E9ECEF;
+  background: #1a1a1a;
+  border: 2px solid #3a3a3a;
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 10px;
@@ -227,8 +235,8 @@
 }
 
 .salon-card:hover {
-  border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  border-color: #d4af37;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
   transform: translateY(-2px);
 }
 
@@ -246,14 +254,14 @@
 
 .salon-card-header h4 {
   margin: 0;
-  color: #333;
+  color: #f0d070;
   font-size: 14px;
   font-weight: 700;
 }
 
 .capacidad-badge {
-  background: #667eea;
-  color: white;
+  background: #d4af37;
+  color: #1a1a1a;
   padding: 3px 8px;
   border-radius: 12px;
   font-size: 12px;
@@ -262,7 +270,7 @@
 
 .salon-edificio {
   margin: 0 0 4px 0;
-  color: #666;
+  color: #a0a0a0;
   font-size: 12px;
   font-weight: 600;
 }
@@ -274,7 +282,7 @@
 }
 
 .clases-resumen {
-  background: #FFD43B;
+  background: rgba(212, 175, 55, 0.15);
   padding: 6px 8px;
   border-radius: 4px;
   margin-bottom: 8px;
@@ -284,7 +292,7 @@
   margin: 0;
   font-size: 12px;
   font-weight: 600;
-  color: #333;
+  color: #d4af37;
 }
 
 .salon-estado {
@@ -331,18 +339,18 @@
   align-items: center;
   margin-bottom: 10px;
   padding-bottom: 8px;
-  border-bottom: 2px solid #667eea;
+  border-bottom: 2px solid #d4af37;
 }
 
 .info-header h3 {
   margin: 0;
-  color: #333;
+  color: #f0d070;
   font-size: 16px;
 }
 
 .edificio-tag {
-  background: #667eea;
-  color: white;
+  background: #d4af37;
+  color: #1a1a1a;
   padding: 3px 10px;
   border-radius: 12px;
   font-size: 11px;
@@ -356,11 +364,11 @@
 .info-details p {
   margin: 6px 0;
   font-size: 13px;
-  color: #555;
+  color: #e0e0e0;
 }
 
 .info-details strong {
-  color: #333;
+  color: #f0d070;
 }
 
 .estado {
@@ -382,12 +390,12 @@
 .info-horarios {
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 2px solid #E9ECEF;
+  border-top: 2px solid #3a3a3a;
 }
 
 .info-horarios h4 {
   margin: 0 0 10px 0;
-  color: #333;
+  color: #d4af37;
   font-size: 14px;
   font-weight: 700;
 }
@@ -401,8 +409,8 @@
 }
 
 .horario-item {
-  background: #F8F9FA;
-  border-left: 3px solid #667eea;
+  background: #2a2a2a;
+  border-left: 3px solid #d4af37;
   padding: 8px;
   border-radius: 4px;
 }
@@ -410,42 +418,43 @@
 .horario-dia {
   font-size: 11px;
   font-weight: 700;
-  color: #667eea;
+  color: #f0d070;
   text-transform: uppercase;
   margin-bottom: 4px;
 }
 
 .horario-info {
   font-size: 12px;
-  color: #555;
+  color: #e0e0e0;
 }
 
 .horario-tiempo {
   margin: 0 0 3px 0;
   font-weight: 600;
-  color: #333;
+  color: #ffffff;
 }
 
 .curso-nombre {
   margin: 3px 0;
-  color: #666;
+  color: #e0e0e0;
   font-weight: 500;
 }
 
 .profesor-nombre {
   margin: 3px 0;
-  color: #764ba2;
+  color: #f0d070;
   font-weight: 600;
 }
 
 .sin-clases {
-  color: #999;
+  color: #a0a0a0;
   font-style: italic;
   margin: 0;
 }
 
 .mapa-legenda {
-  background: white;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
   padding: 12px 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -453,7 +462,7 @@
 
 .mapa-legenda h4 {
   margin: 0 0 10px 0;
-  color: #333;
+  color: #d4af37;
   font-size: 14px;
   font-weight: 700;
 }
@@ -469,14 +478,14 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #555;
+  color: #e0e0e0;
 }
 
 .legenda-marker {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid #d4af37;
 }
 
 /* Responsive Design */
@@ -518,7 +527,7 @@
 }
 
 .leaflet-container {
-  background: #f0f0f0 !important;
+  background: #2a2a2a !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
 }
 
@@ -549,18 +558,18 @@
 }
 
 .leaflet-popup-tip {
-  background: white;
+  background: #1a1a1a;
 }
 
 .leaflet-control-zoom {
-  border: 2px solid rgba(102, 126, 234, 0.3);
+  border: 2px solid rgba(212, 175, 55, 0.3);
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .leaflet-control-zoom a {
-  background: white;
-  color: #667eea;
+  background: #1a1a1a;
+  color: #d4af37;
   font-weight: bold;
   font-size: 16px;
   width: 36px !important;
@@ -569,12 +578,13 @@
 }
 
 .leaflet-control-zoom a:hover {
-  background: #667eea;
-  color: white;
+  background: #d4af37;
+  color: #1a1a1a;
 }
 
 .leaflet-control-attribution {
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(26, 26, 26, 0.8) !important;
+  color: #e0e0e0 !important;
   font-size: 11px !important;
 }
 

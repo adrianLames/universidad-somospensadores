@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   padding: 20px;
   gap: 15px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -10,26 +10,28 @@
 
 .admin-visual-header {
   text-align: center;
-  color: white;
+  color: #f0d070;
 }
 
 .admin-visual-header h1 {
   margin: 0;
   font-size: 28px;
   font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: #f0d070;
 }
 
 .admin-visual-header p {
   margin: 5px 0 0 0;
   font-size: 14px;
   opacity: 0.9;
+  color: #b0b0b0;
 }
 
 .error-banner {
-  background: #FFE5E5;
-  border-left: 4px solid #C92A2A;
-  color: #C92A2A;
+  background: rgba(255, 107, 107, 0.1);
+  border-left: 4px solid #ff6b6b;
+  color: #ff6b6b;
   padding: 12px 16px;
   border-radius: 4px;
   font-weight: 500;
@@ -46,16 +48,17 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: white;
+  background: #1a1a1a;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(212, 175, 55, 0.1);
   overflow: hidden;
+  border: 1px solid #3a3a3a;
 }
 
 .mapa-controls {
   padding: 12px 16px;
-  background: #F8F9FA;
-  border-bottom: 1px solid #E9ECEF;
+  background: #2a2a2a;
+  border-bottom: 1px solid #3a3a3a;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -69,22 +72,24 @@
 }
 
 .badge-info {
-  background: #E3F2FD;
-  color: #1976D2;
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
+  border: 1px solid #3a3a3a;
 }
 
 .badge-cambios {
-  background: #C8E6C9;
-  color: #2E7D32;
+  background: rgba(46, 204, 113, 0.1);
+  color: #2ecc71;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
   animation: pulse 1s infinite;
+  border: 1px solid #2ecc71;
 }
 
 @keyframes pulse {
@@ -98,19 +103,20 @@
 
 .panel-section {
   width: 320px;
-  background: white;
+  background: #1a1a1a;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(212, 175, 55, 0.1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border: 1px solid #3a3a3a;
 }
 
 .panel-header {
   padding: 15px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-bottom: 2px solid #E9ECEF;
+  background: linear-gradient(135deg, #d4af37 0%, #f0d070 100%);
+  color: #1a1a1a;
+  border-bottom: 2px solid #3a3a3a;
 }
 
 .panel-header h3 {
@@ -124,22 +130,24 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border-bottom: 1px solid #E9ECEF;
+  border-bottom: 1px solid #3a3a3a;
 }
 
 .input-busqueda,
 .select-filtro {
   padding: 8px 10px;
-  border: 1px solid #E9ECEF;
+  border: 1px solid #3a3a3a;
   border-radius: 6px;
   font-size: 13px;
+  background: #0f0f0f;
+  color: #ffffff;
 }
 
 .input-busqueda:focus,
 .select-filtro:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+  border-color: #d4af37;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.15);
 }
 
 .panel-salones {
@@ -152,23 +160,24 @@
 }
 
 .salon-item {
-  background: #F8F9FA;
-  border: 2px solid #E9ECEF;
+  background: #2a2a2a;
+  border: 2px solid #3a3a3a;
   border-radius: 6px;
   padding: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
+  color: #e0e0e0;
 }
 
 .salon-item:hover {
-  border-color: #667eea;
-  background: white;
+  border-color: #d4af37;
+  background: #3a3a3a;
 }
 
 .salon-item.selected {
-  background: #E3F2FD;
-  border-color: #667eea;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #d4af37;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
 }
 
 .salon-item-header {
@@ -180,14 +189,14 @@
 
 .salon-info h4 {
   margin: 0;
-  color: #333;
+  color: #d4af37;
   font-size: 14px;
   font-weight: 700;
 }
 
 .salon-edificio {
   margin: 4px 0 0 0;
-  color: #666;
+  color: #b0b0b0;
   font-size: 12px;
 }
 
@@ -210,7 +219,7 @@
 }
 
 .btn-visibility.visible {
-  color: #4ECDC4;
+  color: #d4af37;
 }
 
 .btn-visibility.oculto {
@@ -231,12 +240,12 @@
 }
 
 .detail-item .label {
-  color: #999;
+  color: #a0a0a0;
   font-weight: 600;
 }
 
 .detail-item .value {
-  color: #333;
+  color: #e0e0e0;
   font-weight: 500;
 }
 
@@ -250,12 +259,12 @@
   flex-direction: column;
   gap: 8px;
   padding-top: 10px;
-  border-top: 1px solid #E9ECEF;
+  border-top: 1px solid #3a3a3a;
 }
 
 .btn-modo-edicion {
-  background: #667eea;
-  color: white;
+  background: #d4af37;
+  color: #1a1a1a;
   border: none;
   border-radius: 4px;
   padding: 6px 10px;
@@ -266,25 +275,25 @@
 }
 
 .btn-modo-edicion:hover {
-  background: #764ba2;
+  background: #f0d070;
 }
 
 .btn-modo-edicion.activo {
-  background: #FF6B6B;
+  background: #ff6b6b;
   animation: pulse 0.6s infinite;
 }
 
 .instruccion {
   text-align: center;
-  color: #667eea;
+  color: #d4af37;
   font-size: 11px;
   font-style: italic;
 }
 
 .panel-stats {
   padding: 12px;
-  background: #F8F9FA;
-  border-top: 1px solid #E9ECEF;
+  background: #2a2a2a;
+  border-top: 1px solid #3a3a3a;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 8px;
@@ -298,13 +307,13 @@
 
 .stat-label {
   font-size: 11px;
-  color: #999;
+  color: #a0a0a0;
   font-weight: 600;
 }
 
 .stat-value {
   font-size: 16px;
-  color: #667eea;
+  color: #d4af37;
   font-weight: 700;
 }
 
@@ -315,19 +324,20 @@
 
 .popup-salon h4 {
   margin: 0 0 8px 0;
-  color: #333;
+  color: #d4af37;
   font-size: 14px;
+  font-weight: 700;
 }
 
 .popup-salon p {
   margin: 4px 0;
-  color: #666;
+  color: #e0e0e0;
 }
 
 .loading {
   text-align: center;
   padding: 40px;
-  color: white;
+  color: #e0e0e0;
   font-size: 16px;
   font-weight: 600;
 }

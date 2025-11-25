@@ -1,25 +1,25 @@
 :root {
-  /* Paleta de Colores Moderna: Timó, Lila y Morados Suaves */
-  --primary-teal: #5a9fb5;        /* Timó suave */
-  --primary-purple: #9b7fb5;      /* Lila/Morado suave */
-  --primary-lavender: #c8a9d8;    /* Lavanda clara */
-  --accent-purple: #8b6ba3;       /* Morado más oscuro (acento) */
-  --accent-light: #e8dff5;        /* Fondo claro lavanda */
-  --accent-lighter: #f5f0fb;      /* Fondo muy claro */
+  /* Paleta de Colores: Negro y Dorado */
+  --primary-black: #1a1a1a;       /* Negro primario */
+  --primary-gold: #d4af37;        /* Dorado principal */
+  --secondary-gold: #c9a227;      /* Dorado secundario */
+  --accent-gold: #f0d070;         /* Dorado claro (acento) */
+  --accent-light: #2a2a2a;        /* Gris oscuro */
+  --accent-lighter: #0f0f0f;      /* Negro más oscuro */
   
   /* Escala de grises */
-  --text-dark: #2c3e50;
-  --text-medium: #555555;
-  --text-light: #888888;
-  --bg-white: #ffffff;
-  --bg-light: #f8f6fb;
-  --border-color: #d4c9e0;
-  --border-light: #e8dff5;
+  --text-dark: #ffffff;
+  --text-medium: #e0e0e0;
+  --text-light: #a0a0a0;
+  --bg-white: #1a1a1a;
+  --bg-light: #2a2a2a;
+  --border-color: #d4af37;
+  --border-light: #3a3a3a;
   
   /* Efectos */
-  --shadow-soft: 0 2px 8px rgba(155, 127, 181, 0.08);
-  --shadow-medium: 0 4px 16px rgba(155, 127, 181, 0.12);
-  --shadow-strong: 0 8px 24px rgba(155, 127, 181, 0.15);
+  --shadow-soft: 0 2px 8px rgba(212, 175, 55, 0.1);
+  --shadow-medium: 0 4px 16px rgba(212, 175, 55, 0.15);
+  --shadow-strong: 0 8px 24px rgba(212, 175, 55, 0.2);
   --border-radius: 12px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -38,7 +38,8 @@ body {
   font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, var(--accent-lighter) 0%, var(--bg-light) 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  color: #ffffff;
   color: var(--text-dark);
   min-height: 100vh;
 }

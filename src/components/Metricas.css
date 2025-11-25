@@ -5,59 +5,68 @@
   align-items: center;
   margin-bottom: 2rem;
 }
+
 .metricas-titulo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #222;
+  color: #d4af37;
 }
+
 .metricas-barra-botones {
   display: flex;
   gap: 1rem;
 }
+
 /* Botón Inicio estilo degradado */
 .btn-inicio-metricas {
-  background: linear-gradient(90deg, #1766c2 0%, #00c6d7 100%);
-  color: #fff;
+  background: linear-gradient(90deg, #d4af37 0%, #f0d070 100%);
+  color: #1a1a1a;
   border: none;
   padding: 0.6rem 1.5rem;
   border-radius: 18px;
   font-weight: 700;
   font-size: 1.13rem;
-  box-shadow: 0 4px 16px #e0e7ef;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   transition: box-shadow 0.2s, transform 0.2s;
 }
+
 .btn-inicio-metricas:hover {
-  box-shadow: 0 8px 24px #b3c6e7;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
   transform: translateY(-2px) scale(1.04);
-  color: #fff;
+  color: #1a1a1a;
 }
+
 .btn-inicio-icon {
   font-size: 1.2rem;
   font-weight: 700;
   margin-right: 2px;
 }
+
 .btn-inicio-text {
   font-size: 1.13rem;
   font-weight: 700;
 }
+
 .btn-excel-metricas {
   padding: 0.6rem 1.2rem;
   border-radius: 12px;
-  background: #222;
-  color: #fff;
+  background: #1a1a1a;
+  color: #d4af37;
   font-weight: 600;
-  border: none;
-  box-shadow: 0 2px 8px #e0e7ef;
+  border: 2px solid #d4af37;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
   cursor: pointer;
   font-size: 1rem;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
+
 .btn-excel-metricas:hover {
-  background: #1766c2;
+  background: #d4af37;
+  color: #1a1a1a;
 }
 
 /* Cards grid */
@@ -67,36 +76,42 @@
   gap: 2rem;
   margin-bottom: 2.5rem;
 }
+
 .metricas-card {
-  background: #fff;
+  background: #1a1a1a;
   border-radius: 16px;
-  box-shadow: 0 2px 12px #e0e7ef;
+  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.1);
   padding: 1.5rem 2.2rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   min-width: 220px;
   min-height: 140px;
+  border: 1px solid #3a3a3a;
 }
+
 .metricas-card-icon {
   font-size: 2.2rem;
   margin-bottom: 0.7rem;
 }
+
 .metricas-card-titulo {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #222;
+  color: #d4af37;
   margin-bottom: 0.3rem;
 }
+
 .metricas-card-valor {
   font-size: 1.7rem;
   font-weight: 700;
-  color: #222;
+  color: #f0d070;
   margin-bottom: 0.2rem;
 }
+
 .metricas-card-label {
   font-size: 1rem;
-  color: #888;
+  color: #b0b0b0;
   font-weight: 400;
 }
 .metricas-card-label2 {
@@ -114,7 +129,7 @@
 }
 .metricas-bar-activos {
   height: 100%;
-  background: #1976d2;
+  background: #d4af37;
   border-radius: 5px;
 }
 .metricas-bar-docentes {
@@ -125,9 +140,10 @@
 
 /* Resumen de actividad */
 .metricas-resumen-actividad {
-  background: #fff;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
   border-radius: 16px;
-  box-shadow: 0 2px 12px #e0e7ef;
+  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.15);
   padding: 1.5rem 2.2rem;
   margin-top: 2.5rem;
 }
@@ -172,7 +188,7 @@
 }
 .dot.green { background: #2ecc40; }
 .dot.red { background: #e74c3c; }
-.dot.blue { background: #1976d2; }
+.dot.blue { background: #d4af37; }
 .dot.orange { background: #e67e22; }
 
 @media (max-width: 1100px) {

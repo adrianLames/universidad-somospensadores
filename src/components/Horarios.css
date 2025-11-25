@@ -105,10 +105,11 @@
 }
 
 .horarios {
-  background: white;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.15);
   margin: 1rem;
 }
 
@@ -127,8 +128,8 @@
 }
 
 .btn-primary {
-  background: var(--primary-purple);
-  color: #fff;
+  background: #d4af37;
+  color: #1a1a1a;
   border: none;
   border-radius: 6px;
   padding: 0.7rem 1.2rem;
@@ -136,19 +137,19 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 .btn-primary:hover {
-  background: var(--accent-purple);
+  background: #f0d070;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
 }
 
 .horarios h2 {
-  color: var(--primary-purple);
+  color: #f0d070;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--primary-teal);
+  border-bottom: 2px solid #d4af37;
   font-size: 1.8rem;
   font-weight: 700;
 }
@@ -164,12 +165,12 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-  background: #fff;
+  background: #1a1a1a;
 }
 
 .grid-header {
   display: flex;
-  background: var(--primary-purple);
+  background: linear-gradient(135deg, #d4af37 0%, #f0d070 100%);
 }
 .grid-time {
   width: 90px;
@@ -182,8 +183,8 @@
 }
 .grid-day {
   flex: 1;
-  background: var(--primary-teal);
-  color: #fff;
+  background: linear-gradient(135deg, #d4af37 0%, #f0d070 100%);
+  color: #1a1a1a;
   font-weight: bold;
   text-align: center;
   border-right: 1px solid #e0e0e0;
@@ -196,8 +197,8 @@
 .grid-cell {
   flex: 1;
   min-height: 48px;
-  border-right: 1px solid #e0e0e0;
-  background: #fff;
+  border-right: 1px solid #3a3a3a;
+  background: #1a1a1a;
   position: relative;
   padding: 2px;
 }
@@ -281,7 +282,7 @@
 }
 .form-group label {
   font-weight: bold;
-  color: var(--primary-purple);
+  color: #d4af37;
   margin-bottom: 0.3rem;
   display: block;
   font-size: 1.05rem;
@@ -291,17 +292,18 @@
   width: 100%;
   padding: 0.6rem;
   border-radius: 8px;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #3a3a3a;
   font-size: 1.05rem;
   margin-bottom: 0.9rem;
-  background: #f7f7fa;
+  background: #0f0f0f;
+  color: #ffffff;
   transition: border 0.2s;
 }
 .form-group select:focus,
 .form-group input[type="time"]:focus {
-  border: 1.5px solid var(--primary-purple);
+  border: 1.5px solid #d4af37;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(155, 127, 181, 0.15);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 .form-actions {
   margin-top: 1.2rem;

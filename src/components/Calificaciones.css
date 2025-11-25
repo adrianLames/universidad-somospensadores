@@ -73,8 +73,8 @@
   font-size: 0.8rem;
 }
 .btn-primary {
-  background: var(--primary-purple);
-  color: #fff;
+  background: #d4af37;
+  color: #1a1a1a;
   border: none;
   border-radius: 8px;
   padding: 0.7rem 1.2rem;
@@ -82,10 +82,10 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 .btn-primary:hover {
-  background: var(--accent-purple);
+  background: #f0d070;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
 }

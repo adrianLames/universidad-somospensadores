@@ -1,22 +1,23 @@
 /* Fondo general claro */
 .vincular-profesor-materia-bg {
   min-height: 100vh;
-  background: #f7f9fb;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   padding: 0;
 }
 
 /* Tarjeta principal */
 .vincular-profesor-materia-card {
-  background: #fff;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(44,62,145,0.10);
+  box-shadow: 0 4px 24px rgba(212, 175, 55, 0.15);
   padding: 2.5rem 2rem;
   max-width: 900px;
   margin: 2rem auto 2rem auto;
 }
 .vincular-profesor-materia-card h2 {
   font-size: 1.35rem;
-  color: var(--primary-purple);
+  color: #d4af37;
   font-weight: 700;
   margin-bottom: 1.2rem;
   display: flex;
@@ -24,7 +25,7 @@
   gap: 0.5rem;
 }
 .vincular-profesor-materia-card p {
-  color: #444;
+  color: #e0e0e0;
   font-size: 1.05rem;
   margin-bottom: 2rem;
 }
@@ -32,7 +33,7 @@
 /* Inputs y selects suaves */
 .vincular-profesor-materia-card .form-group label {
   font-weight: 600;
-  color: #222;
+  color: #d4af37;
   margin-bottom: 0.3rem;
   font-size: 1rem;
 }
@@ -41,22 +42,23 @@
   width: 100%;
   padding: 0.7rem;
   border-radius: 10px;
-  border: 1.5px solid #e0e0e0;
+  border: 1.5px solid #3a3a3a;
   font-size: 1.05rem;
-  background: #f7f7fa;
+  background: #0f0f0f;
+  color: #ffffff;
   margin-bottom: 1rem;
   transition: border 0.2s;
 }
 .vincular-profesor-materia-card .form-group input:focus,
 .vincular-profesor-materia-card .form-group select:focus {
-  border: 1.5px solid var(--primary-purple);
+  border: 1.5px solid #d4af37;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(155, 127, 181, 0.15);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
 }
 
 .vincular-profesor-materia-card .btn-primary {
-  background: var(--primary-purple);
-  color: #fff;
+  background: linear-gradient(135deg, #d4af37 0%, #f0d070 100%);
+  color: #1a1a1a;
   border: none;
   border-radius: 10px;
   padding: 0.8rem 1.5rem;
@@ -70,7 +72,7 @@
   gap: 0.5rem;
 }
 .vincular-profesor-materia-card .btn-primary:hover {
-  background: var(--accent-purple);
+  background: linear-gradient(135deg, #f0d070 0%, #d4af37 100%);
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
@@ -80,15 +82,15 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(44,62,145,0.10);
+  background: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
   border-radius: 14px;
   overflow: hidden;
   margin-top: 1rem;
 }
 .vincular-profesor-materia-table th {
-  background: #f7f9fb;
-  color: #222;
+  background: linear-gradient(135deg, #d4af37 0%, #f0d070 100%);
+  color: #1a1a1a;
   font-size: 1.05rem;
   font-weight: 700;
   padding: 1rem 0.5rem;
@@ -98,25 +100,26 @@
 .vincular-profesor-materia-table td {
   padding: 0.8rem 0.3rem;
   text-align: center;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #3a3a3a;
   vertical-align: middle;
-  background: #fff;
+  background: #1a1a1a;
+  color: #e0e0e0;
   font-size: 1.02rem;
 }
 .vincular-profesor-materia-table tr:hover {
-  background: #f2f6fa;
+  background: #2a2a2a;
 }
 
 .vincular-profesor-materia-table .tag {
-  background: #e6f2fb;
-  color: var(--primary-purple);
+  background: rgba(212, 175, 55, 0.15);
+  color: #d4af37;
   border-radius: 8px;
   padding: 0.25rem 0.7rem;
   font-size: 0.95rem;
   font-weight: 600;
   margin-right: 0.3rem;
   margin-bottom: 2px;
-  border: 1px solid rgba(155, 127, 181, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   display: inline-block;
 }
 
@@ -124,7 +127,7 @@
 .vincular-profesor-materia-table .btn-icon {
   background: none;
   border: none;
-  color: var(--primary-purple);
+  color: #d4af37;
   font-size: 1.25rem;
   cursor: pointer;
   margin: 0 4px;
@@ -136,21 +139,22 @@
 
 /* Tarjeta secundaria para la tabla */
 .vincular-profesor-materia-list-card {
-  background: #fff;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(44,62,145,0.10);
+  box-shadow: 0 4px 24px rgba(212, 175, 55, 0.15);
   padding: 2rem 1.5rem;
   max-width: 900px;
   margin: 2rem auto 2rem auto;
 }
 .vincular-profesor-materia-list-card h3 {
   font-size: 1.1rem;
-  color: #222;
+  color: #d4af37;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 .vincular-profesor-materia-list-card p {
-  color: #666;
+  color: #e0e0e0;
   font-size: 0.98rem;
   margin-bottom: 1.2rem;
 }
