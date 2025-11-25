@@ -75,7 +75,8 @@
 }
 .tabla-horarios .bloque-horario strong {
   font-size: 1.1rem;
-  color: #2c3e91;
+  color: var(--primary-purple);
+  font-weight: 700;
 }
 .tabla-horarios .bloque-horario span {
   font-size: 0.98rem;
@@ -167,7 +168,7 @@
 
 .grid-header {
   display: flex;
-  background: #2c3e91;
+  background: var(--primary-purple);
 }
 .grid-time {
   width: 90px;
@@ -180,7 +181,7 @@
 }
 .grid-day {
   flex: 1;
-  background: #f9a825;
+  background: var(--primary-teal);
   color: #fff;
   font-weight: bold;
   text-align: center;
@@ -279,7 +280,7 @@
 }
 .form-group label {
   font-weight: bold;
-  color: #2c3e91;
+  color: var(--primary-purple);
   margin-bottom: 0.3rem;
   display: block;
   font-size: 1.05rem;
@@ -297,8 +298,9 @@
 }
 .form-group select:focus,
 .form-group input[type="time"]:focus {
-  border: 1.5px solid #2c3e91;
+  border: 1.5px solid var(--primary-purple);
   outline: none;
+  box-shadow: 0 0 0 3px rgba(155, 127, 181, 0.15);
 }
 .form-actions {
   margin-top: 1.2rem;

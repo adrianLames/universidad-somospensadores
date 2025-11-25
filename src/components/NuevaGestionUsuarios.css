@@ -381,7 +381,7 @@
   background: #f5f5fa;
 }
 .btn-primary {
-  background: #2c3e91;
+  background: var(--primary-purple);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -389,7 +389,8 @@
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
 .btn-primary:hover {
   background: var(--accent-purple);
