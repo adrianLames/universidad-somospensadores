@@ -16,7 +16,7 @@
 }
 .vincular-profesor-materia-card h2 {
   font-size: 1.35rem;
-  color: #1565c0;
+  color: var(--primary-purple);
   font-weight: 700;
   margin-bottom: 1.2rem;
   display: flex;
@@ -49,12 +49,13 @@
 }
 .vincular-profesor-materia-card .form-group input:focus,
 .vincular-profesor-materia-card .form-group select:focus {
-  border: 1.5px solid #1565c0;
+  border: 1.5px solid var(--primary-purple);
   outline: none;
+  box-shadow: 0 0 0 3px rgba(155, 127, 181, 0.15);
 }
 
 .vincular-profesor-materia-card .btn-primary {
-  background: #1565c0;
+  background: var(--primary-purple);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -62,8 +63,8 @@
   font-size: 1.08rem;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 2px 8px #1565c022;
-  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -107,15 +108,15 @@
 }
 
 .vincular-profesor-materia-table .tag {
-  background: #f7f7fa;
-  color: #1565c0;
+  background: #e6f2fb;
+  color: var(--primary-purple);
   border-radius: 8px;
   padding: 0.25rem 0.7rem;
   font-size: 0.95rem;
   font-weight: 600;
   margin-right: 0.3rem;
   margin-bottom: 2px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(155, 127, 181, 0.2);
   display: inline-block;
 }
 
@@ -123,7 +124,7 @@
 .vincular-profesor-materia-table .btn-icon {
   background: none;
   border: none;
-  color: #1565c0;
+  color: var(--primary-purple);
   font-size: 1.25rem;
   cursor: pointer;
   margin: 0 4px;
