@@ -11,18 +11,14 @@ const Login = ({ onLogin }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const [showRegister, setShowRegister] = useState(false);
+
   const handleChange = (e) => {
     setCredentials({
       ...credentials,
       [e.target.name]: e.target.value
     });
   };
-  // Integración con el componente de registro público
-
-  const [showRegister, setShowRegister] = useState(false);
-  if (showRegister) {
-  return <RegistroPublico onSwitchToLogin={() => setShowRegister(false)} />;
-}
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,6 +47,10 @@ const Login = ({ onLogin }) => {
       setLoading(false);
     }
   };
+
+  if (showRegister) {
+    return <RegistroPublico onSwitchToLogin={() => setShowRegister(false)} />;
+  }
 
   return (
     <div className="login-container">
