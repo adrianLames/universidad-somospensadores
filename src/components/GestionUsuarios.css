@@ -202,13 +202,14 @@
 }
 
 .btn-save {
-  background: linear-gradient(135deg, #12518c, #00bbc3);
+  background: linear-gradient(135deg, var(--primary-purple), var(--accent-purple));
   color: white;
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-save:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(18, 81, 140, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .form-actions button:first-child {
@@ -257,12 +258,12 @@
 }
 
 .usuarios-list th {
-  background: linear-gradient(135deg, #12518c, #00bbc3);
+  background: linear-gradient(135deg, var(--primary-purple), var(--accent-purple));
   color: white;
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  border-right: 1px solid #00bbc3;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .usuarios-list th:last-child {
@@ -378,8 +379,9 @@
 
 .docente-asignaciones h4 {
   margin: 0 0 0.75rem 0;
-  color: #12518c;
+  color: var(--primary-purple);
   font-size: 1.05rem;
+  font-weight: 700;
 }
 
 .docente-asignaciones ul {
@@ -462,8 +464,8 @@
 
 .docente-asignaciones .asignacion-actions .edit-btn {
   background: linear-gradient(90deg,#ffffff,#f6fffe);
-  border: 1px solid #00bbc3;
-  color: #007e86;
+  border: 1px solid var(--primary-purple);
+  color: var(--primary-purple);
 }
 
 .docente-asignaciones .asignacion-actions .delete-btn {
@@ -474,7 +476,8 @@
 
 .docente-asignaciones .asignacion-actions .edit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0,187,195,0.08);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(90deg, rgba(155, 127, 181, 0.1), rgba(139, 107, 163, 0.08));
 }
 
 .docente-asignaciones .asignacion-actions .delete-btn:hover {
@@ -633,7 +636,7 @@
 
 /* Estilos para facultad */
 .facultad-badge {
-  background: linear-gradient(135deg, #00bbc3, #12518c);
+  background: linear-gradient(135deg, var(--accent-purple), var(--primary-purple));
   color: white;
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
@@ -661,8 +664,8 @@
 
 .form-group select:focus {
   outline: none;
-  border-color: #00bbc3;
-  box-shadow: 0 0 0 3px rgba(0, 187, 195, 0.1);
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 3px rgba(155, 127, 181, 0.15);
 }
 
 .form-group select:disabled {
@@ -695,14 +698,14 @@
 }
 
 .tab-button:hover {
-  color: #00bbc3;
-  background-color: rgba(0, 187, 195, 0.05);
+  color: var(--primary-purple);
+  background-color: rgba(155, 127, 181, 0.05);
 }
 
 .tab-button.active {
-  color: #12518c;
-  border-bottom-color: #00bbc3;
-  background-color: rgba(0, 187, 195, 0.1);
+  color: var(--accent-purple);
+  border-bottom-color: var(--primary-purple);
+  background-color: rgba(155, 127, 181, 0.1);
 }
 
 .tab-actions {

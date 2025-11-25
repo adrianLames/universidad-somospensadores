@@ -54,7 +54,7 @@
 .profesor-asignaciones .meta { color:#666; font-size:0.9rem; }
 .profesor-asignaciones .actions { display:flex; gap:0.5rem; }
 .profesor-asignaciones .edit-btn, .profesor-asignaciones .delete-btn { padding:0.4rem 0.6rem; border-radius:6px; border:none; cursor:pointer; font-size:0.85rem; }
-.profesor-asignaciones .edit-btn { background:#e9fbfc; color:#007e86; border:1px solid #00bbc3; }
+.profesor-asignaciones .edit-btn { background:#e6f2fb; color:var(--primary-purple); border:1px solid var(--primary-purple); }
 .profesor-asignaciones .delete-btn { background:#fff0f0; color:#c03030; border:1px solid #ff9b9b; }
 .profesor-asignaciones .edit-btn:hover { background:#dff8f9 }
 .profesor-asignaciones .delete-btn:hover { background:#ffdede }

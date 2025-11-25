@@ -99,7 +99,7 @@
 }
 
 .editar-usuarios h2 {
-  color: #12518c;
+  color: var(--primary-purple);
   font-size: 1.5rem;
   margin-bottom: 1.2rem;
   font-weight: 700;

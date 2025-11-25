@@ -57,7 +57,9 @@
   transition: background 0.2s;
 }
 .btn-primary:hover {
-  background: #12518c;
+  background: var(--accent-purple);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .pensum-container {
