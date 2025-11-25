@@ -1,17 +1,18 @@
 /* Panel principal moderno */
 .matriculas {
-  background: white;
+  background: #2a2a2a;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(44,62,145,0.10);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.1);
   margin: 1.5rem;
+  border: 1px solid #3a3a3a;
 }
 
 .matriculas h2 {
-  color: var(--primary-purple);
+  color: #f0d070;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--primary-teal);
+  border-bottom: 2px solid #d4af37;
   font-size: 1.8rem;
   font-weight: 700;
 }
@@ -20,40 +21,41 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(44,62,145,0.07);
+  background: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 2rem;
 }
 
 .matriculas-list th {
-  background: linear-gradient(90deg, var(--primary-purple) 80%, var(--primary-lavender) 100%);
-  color: #fff;
+  background: linear-gradient(90deg, #d4af37 80%, #f0d070 100%);
+  color: #1a1a1a;
   font-size: 1.13rem;
   font-weight: bold;
   padding: 0.8rem 0.5rem;
   text-align: center;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(212, 175, 55, 0.2);
   letter-spacing: 0.5px;
 }
 
 .matriculas-list td {
   padding: 0.7rem 0.3rem;
   text-align: center;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #2a2a2a;
   min-width: 120px;
   vertical-align: top;
-  background: #fcfcfc;
+  background: #1a1a1a;
+  color: #e0e0e0;
 }
 
 .matriculas-list tr:hover {
-  background: #f5f5fa;
+  background: #252525;
 }
 
 .btn-primary {
-  background: var(--primary-purple);
-  color: #fff;
+  background: #d4af37;
+  color: #1a1a1a;
   border: none;
   border-radius: 8px;
   padding: 0.7rem 1.2rem;
