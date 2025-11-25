@@ -7,8 +7,9 @@
   margin-bottom: 1.5rem;
 }
 .editar-form h4 {
-  color: #12518c;
+  color: var(--primary-purple);
   margin-bottom: 1.2rem;
+  font-weight: 700;
 }
 .editar-form .form-group {
   margin-bottom: 1.1rem;
@@ -33,11 +34,12 @@
 .editar-form input:focus,
 .editar-form select:focus,
 .editar-form textarea:focus {
-  border-color: #00bbc3;
+  border-color: var(--primary-purple);
   outline: none;
+  box-shadow: 0 0 0 3px rgba(155, 127, 181, 0.15);
 }
 .editar-form button[type="submit"] {
-  background: linear-gradient(135deg, #00bbc3, #12518c);
+  background: linear-gradient(135deg, var(--primary-purple), var(--accent-purple));
   color: #fff;
   border: none;
   padding: 0.7rem 1.5rem;
@@ -45,11 +47,14 @@
   font-weight: 700;
   cursor: pointer;
   margin-top: 0.5rem;
-  transition: background 0.2s, transform 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
+
 .editar-form button[type="submit"]:hover {
-  background: linear-gradient(135deg, #12518c, #00bbc3);
+  background: linear-gradient(135deg, var(--accent-purple), var(--primary-purple));
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 /* Tabs */
@@ -61,26 +66,28 @@
 }
 .editar-tabs button {
   background: #e1e5e9;
-  color: #12518c;
+  color: var(--primary-purple);
   border: none;
   padding: 0.6rem 1.3rem;
   border-radius: 6px 6px 0 0;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: all 0.2s ease;
   border-bottom: 2px solid transparent;
 }
+
 .editar-tabs button.active {
   background: #fff;
-  color: #00bbc3;
-  border-bottom: 2px solid #00bbc3;
+  color: var(--accent-purple);
+  border-bottom: 2px solid var(--primary-purple);
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 187, 195, 0.07);
+  box-shadow: 0 2px 8px rgba(155, 127, 181, 0.1);
 }
+
 .editar-tabs button:hover:not(.active) {
   background: #d0d8e0;
-  color: #00bbc3;
+  color: var(--primary-purple);
 }
 
 /* Usuarios */
@@ -106,8 +113,9 @@
   padding: 1rem 1.5rem;
 }
 .usuarios-lista h4 {
-  color: #00bbc3;
+  color: var(--accent-purple);
   margin-bottom: 0.7rem;
+  font-weight: 700;
 }
 .usuarios-lista ul {
   list-style: none;
@@ -120,7 +128,7 @@
   margin-bottom: 0.5rem;
 }
 .usuarios-lista button {
-  background: #2c3e91;
+  background: var(--primary-purple);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -128,16 +136,20 @@
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
+
 .usuarios-lista button:hover {
-  background: #12518c;
+  background: var(--accent-purple);
   color: #fff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 /* Mensajes */
 .mensaje-editar {
-  color: #00bbc3;
+  color: var(--primary-purple);
   font-weight: 600;
   margin-top: 1rem;
   text-align: center;

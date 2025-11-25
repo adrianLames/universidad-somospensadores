@@ -1,16 +1,25 @@
-/* App.css - Con la paleta de colores especificada */
+/* App.css - Paleta moderna: Timó, Lila y Morados Suaves */
 :root {
-  --color1: #12518c;
-  --color2: #00659b;
-  --color3: #0087b0;
-  --color4: #00bbc3;
-  --color5: #00ffc9;
-  --text-light: #ffffff;
-  --text-dark: #333333;
-  --bg-light: #f8f9fa;
+  --primary-teal: #5a9fb5;
+  --primary-purple: #9b7fb5;
+  --primary-lavender: #c8a9d8;
+  --accent-purple: #8b6ba3;
+  --accent-light: #e8dff5;
+  --accent-lighter: #f5f0fb;
+  
+  --text-dark: #2c3e50;
+  --text-medium: #555555;
+  --text-light: #888888;
   --bg-white: #ffffff;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --border-radius: 8px;
+  --bg-light: #f8f6fb;
+  --border-color: #d4c9e0;
+  --border-light: #e8dff5;
+  
+  --shadow-soft: 0 2px 8px rgba(155, 127, 181, 0.08);
+  --shadow-medium: 0 4px 16px rgba(155, 127, 181, 0.12);
+  --shadow-strong: 0 8px 24px rgba(155, 127, 181, 0.15);
+  --border-radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -21,8 +30,9 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%);
+  background: linear-gradient(135deg, var(--accent-lighter) 0%, var(--bg-light) 100%);
   min-height: 100vh;
+  color: var(--text-dark);
 }
 
 .App {
@@ -36,15 +46,15 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%);
+  background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-purple) 100%);
   color: white;
 }
 
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid var(--color5);
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid #ffffff;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
@@ -55,49 +65,174 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-/* Estilos generales para componentes */
+/* Componentes generales */
 .gestion-cursos, .gestion-usuarios, .gestion-programas,
-.matriculas, .asistencias, .calificaciones, .horarios {
+.matriculas, .asistencias, .calificaciones, .horarios,
+.dashboard, .salones {
   background: var(--bg-white);
   padding: 2rem;
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-medium);
   margin: 1rem;
+  border: 1px solid var(--border-light);
 }
 
-.gestion-cursos h2, .gestion-usuarios h2, .gestion-programas h2,
-.matriculas h2, .asistencias h2, .calificaciones h2, .horarios h2 {
-  color: var(--color1);
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--color4);
+h2, h1 {
+  color: var(--primary-purple);
 }
 
+.page-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--accent-light);
+}
+
+.page-header h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent-purple);
+}
+
+.page-header p {
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+/* Botones */
 .btn-primary {
-  background: linear-gradient(135deg, var(--color2) 0%, var(--color3) 100%);
+  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--accent-purple) 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: var(--border-radius);
   cursor: pointer;
-  margin-bottom: 2rem;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: var(--transition);
+  box-shadow: var(--shadow-soft);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%);
+  background: linear-gradient(135deg, var(--accent-purple) 0%, var(--primary-purple) 100%);
   transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-medium);
 }
 
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-secondary {
+  background: var(--accent-light);
+  color: var(--accent-purple);
+  border: 2px solid var(--primary-purple);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover {
+  background: var(--primary-purple);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Formularios */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-light);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  color: var(--text-dark);
+  transition: var(--transition);
+  background: var(--bg-white);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 4px rgba(155, 127, 181, 0.1);
+  background: var(--accent-lighter);
+}
+
+/* Tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+table thead {
+  background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-purple) 100%);
+  color: white;
+}
+
+table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-medium);
+}
+
+table tbody tr:hover {
+  background: var(--accent-lighter);
+}
+
+/* Cards y Paneles */
+.card {
+  background: var(--bg-white);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.panel-form {
+  background: linear-gradient(135deg, var(--bg-white) 0%, var(--accent-lighter) 100%);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-light);
+}
+
+/* Modales */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;

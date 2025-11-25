@@ -98,8 +98,9 @@
   transition: background 0.2s, box-shadow 0.2s;
 }
 .btn-primary:hover {
-  background: #12518c;
-  box-shadow: 0 4px 16px #1565c044;
+  background: var(--accent-purple);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 .btn-secondary {
   background: #bdbdbd;

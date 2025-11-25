@@ -1,14 +1,46 @@
+:root {
+  /* Paleta de Colores Moderna: Timó, Lila y Morados Suaves */
+  --primary-teal: #5a9fb5;        /* Timó suave */
+  --primary-purple: #9b7fb5;      /* Lila/Morado suave */
+  --primary-lavender: #c8a9d8;    /* Lavanda clara */
+  --accent-purple: #8b6ba3;       /* Morado más oscuro (acento) */
+  --accent-light: #e8dff5;        /* Fondo claro lavanda */
+  --accent-lighter: #f5f0fb;      /* Fondo muy claro */
+  
+  /* Escala de grises */
+  --text-dark: #2c3e50;
+  --text-medium: #555555;
+  --text-light: #888888;
+  --bg-white: #ffffff;
+  --bg-light: #f8f6fb;
+  --border-color: #d4c9e0;
+  --border-light: #e8dff5;
+  
+  /* Efectos */
+  --shadow-soft: 0 2px 8px rgba(155, 127, 181, 0.08);
+  --shadow-medium: 0 4px 16px rgba(155, 127, 181, 0.12);
+  --shadow-strong: 0 8px 24px rgba(155, 127, 181, 0.15);
+  --border-radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f5f5f5;
+  background: linear-gradient(135deg, var(--accent-lighter) 0%, var(--bg-light) 100%);
+  color: var(--text-dark);
+  min-height: 100vh;
 }
 
 code {

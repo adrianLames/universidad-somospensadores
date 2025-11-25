@@ -8,11 +8,12 @@
 }
 
 .matriculas h2 {
-  color: #12518c;
+  color: var(--primary-purple);
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #00bbc3;
+  border-bottom: 2px solid var(--primary-teal);
   font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .matriculas-list table {
@@ -27,13 +28,13 @@
 }
 
 .matriculas-list th {
-  background: linear-gradient(90deg, #12518c 80%, #00659b 100%);
+  background: linear-gradient(90deg, var(--primary-purple) 80%, var(--primary-lavender) 100%);
   color: #fff;
   font-size: 1.13rem;
   font-weight: bold;
   padding: 0.8rem 0.5rem;
   text-align: center;
-  border-right: 1px solid #fff;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
   letter-spacing: 0.5px;
 }
 
@@ -51,7 +52,7 @@
 }
 
 .btn-primary {
-  background: #2c3e91;
+  background: var(--primary-purple);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -59,9 +60,12 @@
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-  background: #12518c;
+  background: var(--accent-purple);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }

@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 50%, var(--color3) 100%);
+  background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-purple) 50%, var(--accent-purple) 100%);
   padding: 20px;
 }
 
@@ -11,14 +11,14 @@
   background: var(--bg-white);
   padding: 3rem;
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-strong);
   width: 100%;
   max-width: 450px;
-  border-top: 5px solid var(--color4);
+  border-top: 5px solid var(--primary-purple);
 }
 
 .login-form h1 {
-  color: var(--color1);
+  color: var(--accent-purple);
   text-align: center;
   margin-bottom: 0.5rem;
   font-size: 2rem;
@@ -26,10 +26,11 @@
 }
 
 .login-form h2 {
-  color: var(--color2);
+  color: var(--primary-purple);
   text-align: center;
   margin-bottom: 2rem;
   font-weight: 400;
+  font-size: 0.95rem;
 }
 
 .form-group {
@@ -39,29 +40,31 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--color1);
+  color: var(--text-dark);
   font-weight: 600;
 }
 
 .form-group input {
   width: 100%;
-  padding: 0.75rem;
-  border: 2px solid #e1e5e9;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-light);
   border-radius: var(--border-radius);
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: var(--transition);
+  background: var(--bg-white);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--color4);
-  box-shadow: 0 0 0 3px rgba(0, 187, 195, 0.1);
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 4px rgba(155, 127, 181, 0.1);
+  background: var(--accent-lighter);
 }
 
 .login-form button {
   width: 100%;
-  padding: 0.75rem;
-  background: linear-gradient(135deg, var(--color2) 0%, var(--color3) 100%);
+  padding: 0.875rem;
+  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--accent-purple) 100%);
   color: white;
   border: none;
   border-radius: var(--border-radius);
@@ -69,13 +72,14 @@
   font-weight: 600;
   cursor: pointer;
   margin-top: 1rem;
-  transition: all 0.3s ease;
+  transition: var(--transition);
+  box-shadow: var(--shadow-soft);
 }
 
 .login-form button:hover {
-  background: linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%);
+  background: linear-gradient(135deg, var(--accent-purple) 0%, var(--primary-purple) 100%);
   transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-medium);
 }
 
 .login-form button:disabled {

@@ -7,8 +7,9 @@
 }
 
 .asignacion-profesores h1 {
-  color: #12518c;
+  color: var(--primary-purple);
   margin: 0;
+  font-weight: 700;
 }
 
 .asignacion-profesores form { margin-top: 1rem; }
