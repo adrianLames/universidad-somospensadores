@@ -1,30 +1,31 @@
 
+
 .back-home-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  background: linear-gradient(90deg, var(--primary-purple) 0%, var(--accent-purple) 100%);
+  background: linear-gradient(90deg, #d4af37 0%, #f0d070 100%);
   border: none;
-  color: white;
+  color: #1a1a1a;
   padding: 0.6rem 0.95rem;
   border-radius: 999px;
   cursor: pointer;
   font-weight: 700;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.25);
   transition: transform 150ms ease, box-shadow 150ms ease;
 }
 
 .back-home-btn:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
 }
 
 /* Variant for light backgrounds (if you need the old white style) */
 .back-home-btn.light {
-  background: linear-gradient(90deg, #f3f6f7, #ffffff);
-  color: #0b3a57;
-  border: 1px solid #d7e9ea;
-  box-shadow: 0 6px 18px rgba(3,45,60,0.04);
+  background: linear-gradient(90deg, #2a2a2a, #1a1a1a);
+  color: #d4af37;
+  border: 1px solid #3a3a3a;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.1);
 }
 
 /* Small variant for headers */
@@ -32,7 +33,7 @@
   padding: 0.4rem 0.7rem;
   font-size: 0.95rem;
   border-radius: 10px;
-  box-shadow: 0 8px 18px rgba(3,45,60,0.12);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 
 /* Right alignment helper and header container */
@@ -46,7 +47,7 @@
   margin-bottom: 1rem;
 }
 
-.page-header h2 { margin: 0; font-size: 1.6rem; color: #0b3a57; }
+.page-header h2 { margin: 0; font-size: 1.6rem; color: #f0d070; }
 
 @media (max-width: 720px) {
   .page-header { flex-direction: column; align-items: flex-start; }
@@ -57,3 +58,4 @@
 @media (max-width: 600px) {
   .back-home-btn { padding: 0.5rem 0.8rem; font-size: 0.95rem; }
 }
+

@@ -1,16 +1,17 @@
 /* Panel principal moderno */
 .pensum {
-  background: white;
+  background: #2a2a2a;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(44,62,145,0.10);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.1);
   margin: 1.5rem;
+  border: 1px solid #3a3a3a;
 }
 .pensum h2 {
-  color: var(--primary-purple);
+  color: #f0d070;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--primary-teal);
+  border-bottom: 2px solid #d4af37;
   font-size: 1.8rem;
   font-weight: 700;
 }
@@ -18,36 +19,37 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(44,62,145,0.07);
+  background: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 2rem;
 }
 .pensum-list th {
-  background: linear-gradient(90deg, var(--primary-purple) 80%, var(--primary-lavender) 100%);
-  color: #fff;
+  background: linear-gradient(90deg, #d4af37 80%, #f0d070 100%);
+  color: #1a1a1a;
   font-size: 1.13rem;
   font-weight: bold;
   padding: 0.8rem 0.5rem;
   text-align: center;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid #c9a227;
   letter-spacing: 0.5px;
 }
 .pensum-list td {
   padding: 0.7rem 0.3rem;
   text-align: center;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #2a2a2a;
   min-width: 120px;
   vertical-align: top;
-  background: #fcfcfc;
+  background: #1a1a1a;
+  color: #e0e0e0;
 }
 .pensum-list tr:hover {
-  background: #f5f5fa;
+  background: #252525;
 }
 .btn-primary {
-  background: var(--primary-purple);
-  color: #fff;
+  background: #d4af37;
+  color: #1a1a1a;
   border: none;
   border-radius: 8px;
   padding: 0.7rem 1.2rem;
@@ -55,12 +57,12 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 .btn-primary:hover {
-  background: var(--accent-purple);
+  background: #f0d070;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
 }
 
 .pensum-container {
@@ -76,24 +78,25 @@
   min-width: 180px;
   min-height: 90px;
   border-radius: 8px;
-  color: #fff;
+  color: #e0e0e0;
   padding: 1rem;
-  box-shadow: 0 2px 8px #0001;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   font-size: 1rem;
   transition: transform 0.2s;
+  background: #1a1a1a;
 }
 .pensum-curso.aprobado {
-  border: 2px solid #27ae60;
+  border: 2px solid #2ecc71;
 }
 .pensum-curso.cursando {
-  border: 2px solid #f1c40f;
+  border: 2px solid #d4af37;
 }
 .pensum-curso.pendiente {
-  border: 2px solid #e74c3c;
+  border: 2px solid #ff6b6b;
 }
 .pensum-estado {
   margin-top: 0.5rem;
@@ -104,8 +107,8 @@
 .pensum-prerequisito {
   margin-top: 0.5rem;
   font-size: 0.85em;
-  color: #fffbe6;
-  background: #34495e;
+  color: #e0e0e0;
+  background: #3a3a3a;
   border-radius: 4px;
   padding: 2px 6px;
   display: inline-block;
@@ -119,6 +122,7 @@
   display: inline-block;
   padding: 0.3em 1em;
   border-radius: 5px;
-  color: #fff;
+  color: #ffffff;
   font-size: 0.95em;
 }
+
