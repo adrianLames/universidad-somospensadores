@@ -7,10 +7,10 @@
   align-items: flex-start;
   box-sizing: border-box;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(44,62,145,0.10);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
   padding: 0.7rem 0.7rem;
   margin: 3px 0;
-  border: 2px solid #90caf9;
+  border: 2px solid #d4af37;
   font-size: 1.05rem;
   transition: box-shadow 0.2s;
 }
@@ -26,25 +26,25 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(44,62,145,0.07);
+  background: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 2rem;
 }
 .tabla-horarios th {
-  background: linear-gradient(90deg, #ffa726 80%, #ffd54f 100%);
-  color: #fff;
+  background: linear-gradient(90deg, #c9a227 80%, #d4af37 100%);
+  color: #1a1a1a;
   font-size: 1.13rem;
   font-weight: bold;
   padding: 0.8rem 0.5rem;
   text-align: center;
-  border-right: 1px solid #fff;
+  border-right: 1px solid #a0a0a0;
   letter-spacing: 0.5px;
 }
 .tabla-horarios th:first-child {
-  background: #29b6f6;
-  color: #fff;
+  background: #c9a227;
+  color: #ffffff;
   border-top-left-radius: 10px;
 }
 .tabla-horarios th:last-child {
@@ -53,29 +53,30 @@
 .tabla-horarios td {
   padding: 0.7rem 0.3rem;
   text-align: center;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #2a2a2a;
   min-width: 120px;
   vertical-align: top;
-  background: #fcfcfc;
+  background: #1a1a1a;
+  color: #e0e0e0;
 }
 .tabla-horarios .grid-time {
-  background: #29b6f6;
-  color: #fff;
+  background: #c9a227;
+  color: #ffffff;
   font-weight: bold;
-  border-right: 1px solid #fff;
+  border-right: 1px solid #a0a0a0;
 }
 .tabla-horarios .grid-cell {
-  background: #fff;
-  border-right: 1px solid #e0e0e0;
-  border-left: 1px solid #e0e0e0;
+  background: #1a1a1a;
+  border-right: 1px solid #2a2a2a;
+  border-left: 1px solid #2a2a2a;
   transition: background 0.2s;
 }
 .tabla-horarios .grid-cell:hover {
-  background: #f5f5fa;
+  background: #252525;
 }
 .tabla-horarios .bloque-horario strong {
   font-size: 1.1rem;
-  color: var(--primary-purple);
+  color: #d4af37;
   font-weight: 700;
 }
 .tabla-horarios .bloque-horario span {
@@ -201,17 +202,17 @@
   padding: 2px;
 }
 .bloque-horario {
-  background: #e3f2fd;
-  border: 1px solid #d5c9e4;
+  background: #1a3d2a;
+  border: 1px solid #d4af37;
   border-radius: 8px;
   padding: 8px 10px;
   font-size: 1em;
-  color: #7b4da8;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  color: #d4af37;
+  box-shadow: 0 1px 2px rgba(212, 175, 55, 0.15);
   margin-bottom: 2px;
 }
 .btn-delete {
-  background: #e57373;
+  background: #ff6b6b;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -221,14 +222,14 @@
   margin-top: 2px;
 }
 .grid-row.pausa {
-  background: #e0f7fa;
+  background: #1a2f3a;
   text-align: center;
   font-weight: bold;
-  color: #0097a7;
+  color: #c9a227;
 }
 .grid-row.pausa .grid-time,
 .grid-row.pausa .grid-cell {
-  background: #e0f7fa;
+  background: #1a2f3a;
   border: none;
 }
 .no-data {
@@ -271,12 +272,12 @@
 
 /* Panel de asignación moderno */
 .panel-form {
-  background: linear-gradient(120deg, #f7f7fa 80%, #e3f2fd 100%);
+  background: linear-gradient(120deg, #1a1a1a 80%, #2a2a2a 100%);
   border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(44,62,145,0.10);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.1);
   padding: 2rem 1.5rem;
   margin-bottom: 2rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #3a3a3a;
 }
 .form-group label {
   font-weight: bold;
