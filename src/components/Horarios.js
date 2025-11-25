@@ -445,7 +445,7 @@
                                     if (horario && horario.rowSpan > 1) {
                                       return (
                                         <td className="grid-cell" key={dia} rowSpan={horario.rowSpan} style={{verticalAlign: 'top'}}>
-                                          <div className="bloque-horario" style={{background: horario.colorBloque, borderColor: '#90caf9', color: '#1565c0'}}>
+                                          <div className="bloque-horario" style={{background: horario.colorBloque, borderColor: '#d5c9e4', color: '#7b4da8'}}>
                                             <strong>{horario.curso_nombre}</strong><br/>
                                             <span>👨‍🏫 {horario.docente_nombres} {horario.docente_apellidos}</span><br/>
                                             <button className="btn-delete" onClick={() => deleteHorario(horario.id)}>Eliminar</button>
@@ -456,7 +456,7 @@
                                     return (
                                       <td className="grid-cell" key={dia}>
                                         {horario ? (
-                                          <div className="bloque-horario" style={{background: horario.colorBloque, borderColor: '#90caf9', color: '#1565c0'}}>
+                                          <div className="bloque-horario" style={{background: horario.colorBloque, borderColor: '#d5c9e4', color: '#7b4da8'}}>
                                             <strong>{horario.curso_nombre}</strong><br/>
                                             <span>👨‍🏫 {horario.docente_nombres} {horario.docente_apellidos}</span><br/>
                                             <button className="btn-delete" onClick={() => deleteHorario(horario.id)}>Eliminar</button>

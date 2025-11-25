@@ -119,7 +119,7 @@
 .nuevo-salon-form {
   background: #f7f7fa;
   border-radius: 14px;
-  box-shadow: 0 2px 8px #1565c022;
+  box-shadow: var(--shadow-sm);
   padding: 2rem 1.5rem;
   margin-bottom: 2rem;
   border: 1px solid #ececec;
@@ -130,7 +130,7 @@
 }
 .nuevo-salon-form label {
   font-weight: bold;
-  color: #1565c0;
+  color: var(--primary-purple);
   margin-bottom: 0.3rem;
   display: block;
   font-size: 1.05rem;
@@ -148,8 +148,9 @@
 }
 .nuevo-salon-form input:focus,
 .nuevo-salon-form select:focus {
-  border: 1.5px solid #1565c0;
+  border: 1.5px solid var(--primary-purple);
   outline: none;
+  box-shadow: 0 0 0 3px rgba(155, 127, 181, 0.15);
 }
 
 /* Tabla moderna */
@@ -225,7 +226,7 @@
 .btn-icon {
   background: none;
   border: none;
-  color: #1565c0;
+  color: var(--primary-purple);
   font-size: 1.3rem;
   cursor: pointer;
   margin: 0 4px;

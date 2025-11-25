@@ -77,7 +77,7 @@ const RegistroPublico = () => {
 
   return (
     <div className="modal-content" style={{ maxWidth: 400, margin: '2rem auto' }}>
-      <h2 style={{ textAlign: 'center', color: '#12518c' }}>Registro Público</h2>
+      <h2 style={{ textAlign: 'center', color: '#7b4da8' }}>Registro Público</h2>
       {success && <div style={{ color: 'green', textAlign: 'center', marginBottom: '1rem' }}>¡Registro exitoso! Espera la activación por el administrador.</div>}
       {error && <div style={{ color: 'red', textAlign: 'center', marginBottom: '1rem' }}>{error}</div>}
       <form onSubmit={handleSubmit}>
