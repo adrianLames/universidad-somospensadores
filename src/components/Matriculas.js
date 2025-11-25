@@ -11,8 +11,7 @@ const Matriculas = ({ user }) => {
   const [showForm, setShowForm] = useState(false);
   const [currentMatricula, setCurrentMatricula] = useState({
     curso_id: '',
-    semestre: '',
-    anio: new Date().getFullYear()
+    semestre: ''
   });
   const [loading, setLoading] = useState(false);
   const [selectedCurso, setSelectedCurso] = useState(null);
@@ -21,6 +20,7 @@ const Matriculas = ({ user }) => {
     fetchMatriculas();
     fetchCursos();
     fetchNoAprobadas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Obtener materias matriculadas sin aprobar
@@ -64,24 +64,40 @@ const Matriculas = ({ user }) => {
 
   const fetchCursos = async () => {
     try {
-      const response = await fetch(`${API_BASE}/cursos.php`);
+      // Solicitar solo cursos activos
+      const response = await fetch(`${API_BASE}/cursos.php?activo=1`);
       const data = await response.json();
+
+      if (!Array.isArray(data)) {
+        console.error('La respuesta de cursos no es un array:', data);
+        setCursos([]);
+        return;
+      }
 
       // Obtener profesores asignados para cada curso
       const cursosConProfesores = await Promise.all(
         data.map(async (curso) => {
-          const profesorResponse = await fetch(`${API_BASE}/asignacion_docentes.php?curso_id=${curso.id}`);
-          const profesorData = await profesorResponse.json();
-          return {
-            ...curso,
-            profesor: profesorData.data.length > 0 ? profesorData.data[0] : null
-          };
+          try {
+            const profesorResponse = await fetch(`${API_BASE}/asignacion_docentes.php?curso_id=${curso.id}`);
+            const profesorData = await profesorResponse.json();
+            return {
+              ...curso,
+              profesor: profesorData.data && profesorData.data.length > 0 ? profesorData.data[0] : null
+            };
+          } catch (err) {
+            console.error(`Error obteniendo profesor para curso ${curso.id}:`, err);
+            return {
+              ...curso,
+              profesor: null
+            };
+          }
         })
       );
 
       setCursos(cursosConProfesores);
     } catch (error) {
       console.error('Error fetching cursos:', error);
+      setCursos([]);
     }
   };
 
@@ -90,9 +106,27 @@ const Matriculas = ({ user }) => {
     setLoading(true);
 
     try {
+      // Verificar prerequisitos antes de matricular
+      const prereqResponse = await fetch(`${API_BASE}/verificar_prerequisitos.php?curso_id=${currentMatricula.curso_id}&estudiante_id=${user.id}`);
+      const prereqData = await prereqResponse.json();
+      
+      if (prereqData.data && prereqData.data.length > 0) {
+        const noAprobados = prereqData.data.filter(p => !p.aprobado);
+        if (noAprobados.length > 0) {
+          alert(`No puedes matricular este curso. Debes aprobar primero: ${noAprobados.map(p => p.nombre).join(', ')}`);
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Separar semestre y año del formato 'YYYY-S'
+      const [anio, semestreNum] = currentMatricula.semestre.split('-');
+      
       const matriculaData = {
-        ...currentMatricula,
-        estudiante_id: user.id
+        estudiante_id: user.id,
+        curso_id: currentMatricula.curso_id,
+        semestre: semestreNum,
+        anio: parseInt(anio)
       };
 
       const response = await fetch(`${API_BASE}/matriculas.php`, {
@@ -103,17 +137,19 @@ const Matriculas = ({ user }) => {
         body: JSON.stringify(matriculaData),
       });
 
-      if (response.ok) {
+      const result = await response.json();
+
+      if (response.ok && result.success) {
         await fetchMatriculas();
+        await fetchNoAprobadas();
         resetForm();
         alert('Matrícula realizada exitosamente');
       } else {
-        const errorData = await response.json();
-        alert(errorData.error || 'Error al realizar la matrícula');
+        alert(result.message || result.error || 'Error al realizar la matrícula');
       }
     } catch (error) {
       console.error('Error saving matricula:', error);
-      alert('Error de conexión');
+      alert('Error de conexión al matricular');
     } finally {
       setLoading(false);
     }
@@ -122,9 +158,10 @@ const Matriculas = ({ user }) => {
   const resetForm = () => {
     setCurrentMatricula({
       curso_id: '',
-      semestre: '',
-      anio: new Date().getFullYear()
+      semestre: ''
     });
+    setSelectedCurso(null);
+    setPrerequisitos([]);
     setShowForm(false);
   };
 
@@ -135,16 +172,18 @@ const Matriculas = ({ user }) => {
           method: 'DELETE',
         });
         
-        if (response.ok) {
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
           await fetchMatriculas();
+          await fetchNoAprobadas();
           alert('Matrícula cancelada exitosamente');
         } else {
-          const errorData = await response.json();
-          alert(errorData.error || 'Error al cancelar la matrícula');
+          alert(result.message || result.error || 'Error al cancelar la matrícula');
         }
       } catch (error) {
         console.error('Error deleting matricula:', error);
-        alert('Error de conexión');
+        alert('Error de conexión al cancelar');
       }
     }
   };
@@ -184,12 +223,29 @@ const Matriculas = ({ user }) => {
       </div>
       
       {user.tipo === 'estudiante' && (
-        <button 
-          className="btn-primary"
-          onClick={() => setShowForm(true)}
-        >
-          ➕ Nueva Matrícula
-        </button>
+        <>
+          <button 
+            className="btn-primary"
+            onClick={() => setShowForm(true)}
+            disabled={cursos.length === 0}
+          >
+            ➕ Nueva Matrícula
+          </button>
+          {cursos.length === 0 && (
+            <div style={{
+              background: '#fff3cd', 
+              border: '1px solid #ffc107', 
+              padding: '15px', 
+              borderRadius: '5px',
+              marginTop: '10px'
+            }}>
+              <p style={{margin: 0, color: '#856404'}}>
+                ⚠️ <strong>No hay cursos disponibles para matricular.</strong><br/>
+                Por favor contacta con el administrador para activar cursos en el sistema.
+              </p>
+            </div>
+          )}
+        </>
       )}
 
       {showForm && (
@@ -201,45 +257,59 @@ const Matriculas = ({ user }) => {
                 <label>Curso:</label>
                 <select
                   value={currentMatricula.curso_id}
-                  onChange={(e) => setCurrentMatricula({...currentMatricula, curso_id: e.target.value})}
+                  onChange={(e) => {
+                    const cursoId = e.target.value;
+                    setCurrentMatricula({...currentMatricula, curso_id: cursoId});
+                    if (cursoId) handleCursoSelect(cursoId);
+                  }}
                   required
                   disabled={loading}
                 >
-                  <option value="">Seleccionar curso</option>
+                  <option value="">
+                    {cursos.length === 0 ? 'No hay cursos disponibles' : 'Seleccionar curso'}
+                  </option>
                   {cursos.map(curso => (
                     <option key={curso.id} value={curso.id}>
                       {curso.codigo} - {curso.nombre} ({curso.creditos} créditos)
+                      {curso.profesor ? ` - Prof. ${curso.profesor.docente_nombre}` : ''}
                     </option>
                   ))}
                 </select>
+                {cursos.length === 0 && (
+                  <p style={{color: 'orange', fontSize: '0.9em', marginTop: '5px'}}>
+                    ⚠️ No hay cursos activos disponibles. Contacta con administración.
+                  </p>
+                )}
               </div>
+              
+              {currentMatricula.curso_id && prerequisitos.length > 0 && (
+                <div className="form-group prerequisitos-info">
+                  <label>Prerequisitos del curso:</label>
+                  <ul style={{margin: '5px 0', paddingLeft: '20px'}}>
+                    {prerequisitos.map(p => (
+                      <li key={p.id} style={{color: p.aprobado ? 'green' : 'red'}}>
+                        {p.nombre} - {p.aprobado ? '✅ Aprobado' : '❌ No aprobado'}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
               <div className="form-group">
-                <label>Semestre:</label>
+                <label>Periodo (Año-Semestre):</label>
                 <select
                   value={currentMatricula.semestre}
                   onChange={(e) => setCurrentMatricula({...currentMatricula, semestre: e.target.value})}
                   required
                   disabled={loading}
                 >
-                  <option value="">Seleccionar semestre</option>
+                  <option value="">Seleccionar periodo</option>
                   {getSemestres().map(semestre => (
                     <option key={semestre} value={semestre}>
-                      {semestre}
+                      {semestre.replace('-1', ' - Primer Semestre').replace('-2', ' - Segundo Semestre')}
                     </option>
                   ))}
                 </select>
-              </div>
-              <div className="form-group">
-                <label>Año:</label>
-                <input
-                  type="number"
-                  value={currentMatricula.anio}
-                  onChange={(e) => setCurrentMatricula({...currentMatricula, anio: e.target.value})}
-                  required
-                  min="2020"
-                  max="2030"
-                  disabled={loading}
-                />
               </div>
               <div className="form-actions">
                 <button type="submit" disabled={loading}>
@@ -275,10 +345,10 @@ const Matriculas = ({ user }) => {
           <table>
             <thead>
               <tr>
-                <th>Curso</th>
                 <th>Código</th>
-                <th>Semestre</th>
-                <th>Año</th>
+                <th>Curso</th>
+                <th>Periodo</th>
+                <th>Fecha Matrícula</th>
                 <th>Estado</th>
                 {user.tipo === 'estudiante' && <th>Acciones</th>}
               </tr>
@@ -286,19 +356,25 @@ const Matriculas = ({ user }) => {
             <tbody>
               {matriculas.map(matricula => (
                 <tr key={matricula.id}>
-                  <td>{matricula.curso_nombre}</td>
                   <td><strong>{matricula.curso_codigo}</strong></td>
-                  <td>{matricula.semestre}</td>
-                  <td>{matricula.anio}</td>
+                  <td>{matricula.curso_nombre}</td>
+                  <td>{matricula.anio}-{matricula.semestre}</td>
+                  <td>{new Date(matricula.fecha_matricula).toLocaleDateString('es-CO')}</td>
                   <td>
                     <span className={`estado ${matricula.estado}`}>
-                      {matricula.estado.toUpperCase()}
+                      {matricula.estado === 'activa' ? '🟢 ACTIVA' : 
+                       matricula.estado === 'completada' ? '✅ COMPLETADA' : '❌ CANCELADA'}
                     </span>
                   </td>
                   {user.tipo === 'estudiante' && matricula.estado === 'activa' && (
                     <td>
                       <div className="action-buttons">
-                        <button onClick={() => cancelMatricula(matricula.id)}>❌ Cancelar</button>
+                        <button 
+                          onClick={() => cancelMatricula(matricula.id)}
+                          className="btn-danger"
+                        >
+                          ❌ Cancelar
+                        </button>
                       </div>
                     </td>
                   )}

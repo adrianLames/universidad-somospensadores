@@ -6,7 +6,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch($method) {
     case 'GET':
-<<<<<<< HEAD
         $facultad_id = isset($_GET['facultad_id']) ? intval($_GET['facultad_id']) : 0;
         $all = isset($_GET['all']) ? intval($_GET['all']) : 0;
         if ($all === 1) {
@@ -34,21 +33,6 @@ switch($method) {
                 $result = $conn->query($sql);
             }
         }
-=======
-        $facultad = isset($_GET['facultad']) ? $_GET['facultad'] : '';
-        
-        if($facultad) {
-            $sql = "SELECT * FROM programas WHERE facultad = ? AND activo = 1 ORDER BY nombre";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("s", $facultad);
-            $stmt->execute();
-            $result = $stmt->get_result();
-        } else {
-            $sql = "SELECT * FROM programas WHERE activo = 1 ORDER BY nombre";
-            $result = $conn->query($sql);
-        }
-        
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
         $programas = [];
         while($row = $result->fetch_assoc()) {
             $programas[] = $row;

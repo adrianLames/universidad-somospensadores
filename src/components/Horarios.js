@@ -29,7 +29,10 @@
       const [nuevoSalon, setNuevoSalon] = useState({
         codigo: '',
         edificio: '',
-        capacidad: ''
+        capacidad: '',
+        tipo: 'aula',
+        equipamiento: '',
+        estado: 'Disponible'
       });
       const [loadingSalon, setLoadingSalon] = useState(false);
 
@@ -86,7 +89,7 @@
           if (response.ok) {
             await fetchSalones();
             setShowSalonForm(false);
-            setNuevoSalon({ codigo: '', edificio: '', capacidad: '' });
+            setNuevoSalon({ codigo: '', edificio: '', capacidad: '', tipo: 'aula', equipamiento: '', estado: 'Disponible' });
             alert('Salón creado correctamente');
           } else {
             const errorData = await response.json();
@@ -271,20 +274,102 @@
               </div>
             </div>
             {/* Filtros de salones */}
-            <div className="filtros-salones-panel" style={{display:'flex', gap:'1.2rem', marginBottom:'1.5rem', alignItems:'center', justifyContent:'center'}}>
-              <select id="filtro-edificio" style={{padding:'0.5em 1em', borderRadius:8, border:'1px solid #b5c6e0', fontSize:'1rem'}} value={filtroEdificio} onChange={e => setFiltroEdificio(e.target.value)}>
-                <option value="">Todos los edificios</option>
-                {[...new Set(salones.map(s => s.edificio))].map(edificio => (
-                  <option key={edificio} value={edificio}>{edificio}</option>
-                ))}
-              </select>
-              <select id="filtro-capacidad" style={{padding:'0.5em 1em', borderRadius:8, border:'1px solid #b5c6e0', fontSize:'1rem'}} value={filtroCapacidad} onChange={e => setFiltroCapacidad(e.target.value)}>
-                <option value="">Todas las capacidades</option>
-                {[...new Set(salones.map(s => s.capacidad))].map(capacidad => (
-                  <option key={capacidad} value={capacidad}>{capacidad}</option>
-                ))}
-              </select>
+            <div className="filtros-salones-panel" style={{display:'flex', gap:'1.2rem', marginBottom:'1.5rem', alignItems:'center', justifyContent:'space-between'}}>
+              <div style={{display:'flex', gap:'1.2rem'}}>
+                <select id="filtro-edificio" style={{padding:'0.5em 1em', borderRadius:8, border:'1px solid #b5c6e0', fontSize:'1rem'}} value={filtroEdificio} onChange={e => setFiltroEdificio(e.target.value)}>
+                  <option value="">Todos los edificios</option>
+                  {[...new Set(salones.map(s => s.edificio))].map(edificio => (
+                    <option key={edificio} value={edificio}>{edificio}</option>
+                  ))}
+                </select>
+                <select id="filtro-capacidad" style={{padding:'0.5em 1em', borderRadius:8, border:'1px solid #b5c6e0', fontSize:'1rem'}} value={filtroCapacidad} onChange={e => setFiltroCapacidad(e.target.value)}>
+                  <option value="">Todas las capacidades</option>
+                  {[...new Set(salones.map(s => s.capacidad))].map(capacidad => (
+                    <option key={capacidad} value={capacidad}>{capacidad}</option>
+                  ))}
+                </select>
+              </div>
+              <button onClick={() => setShowSalonForm(!showSalonForm)} style={{padding:'0.7rem 1.2rem', background:'#7c4dff', color:'#fff', border:'none', borderRadius:'6px', fontWeight:'bold', cursor:'pointer'}}>
+                {showSalonForm ? '✖ Cancelar' : '➕ Nuevo Salón'}
+              </button>
             </div>
+            {/* Formulario para crear salón */}
+            {showSalonForm && (
+              <div style={{marginBottom:'1.5rem', padding:'1rem', background:'#f5f5f5', borderRadius:'8px', border:'1px solid #ddd'}}>
+                <h4>Crear Nuevo Salón</h4>
+                <form onSubmit={handleCreateSalon} style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem'}}>
+                  <div className="form-group">
+                    <label>Código:</label>
+                    <input
+                      type="text"
+                      value={nuevoSalon.codigo}
+                      onChange={(e) => setNuevoSalon({...nuevoSalon, codigo: e.target.value})}
+                      required
+                      disabled={loadingSalon}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Edificio:</label>
+                    <input
+                      type="text"
+                      value={nuevoSalon.edificio}
+                      onChange={(e) => setNuevoSalon({...nuevoSalon, edificio: e.target.value})}
+                      required
+                      disabled={loadingSalon}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Capacidad:</label>
+                    <input
+                      type="number"
+                      value={nuevoSalon.capacidad}
+                      onChange={(e) => setNuevoSalon({...nuevoSalon, capacidad: e.target.value})}
+                      required
+                      disabled={loadingSalon}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Tipo:</label>
+                    <select
+                      value={nuevoSalon.tipo}
+                      onChange={(e) => setNuevoSalon({...nuevoSalon, tipo: e.target.value})}
+                      disabled={loadingSalon}
+                    >
+                      <option value="aula">Aula</option>
+                      <option value="laboratorio">Laboratorio</option>
+                      <option value="auditorio">Auditorio</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Equipamiento:</label>
+                    <input
+                      type="text"
+                      value={nuevoSalon.equipamiento}
+                      onChange={(e) => setNuevoSalon({...nuevoSalon, equipamiento: e.target.value})}
+                      disabled={loadingSalon}
+                      placeholder="Ej: Proyector, WiFi"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Estado:</label>
+                    <select
+                      value={nuevoSalon.estado}
+                      onChange={(e) => setNuevoSalon({...nuevoSalon, estado: e.target.value})}
+                      disabled={loadingSalon}
+                    >
+                      <option value="Disponible">Disponible</option>
+                      <option value="Ocupado">Ocupado</option>
+                      <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                  </div>
+                  <div style={{gridColumn:'1 / -1', display:'flex', gap:'1rem'}}>
+                    <button type="submit" className="btn-primary" disabled={loadingSalon} style={{flex:1}}>
+                      {loadingSalon ? 'Creando...' : '✅ Crear Salón'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
             {/* Panel por salón */}
             <div className="horarios-grid">
               <h3>Horarios por Salón</h3>

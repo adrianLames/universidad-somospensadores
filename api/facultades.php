@@ -6,7 +6,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch($method) {
     case 'GET':
-<<<<<<< HEAD
         // Obtener todas las facultades desde la tabla facultades
         $sql = "SELECT id, nombre FROM facultades ORDER BY nombre";
         $result = $conn->query($sql);
@@ -24,16 +23,21 @@ switch($method) {
             echo json_encode(["error" => "El nombre es obligatorio"]);
             break;
         }
-        $nombre = $conn->real_escape_string(trim($data['nombre']));
+        $nombre = trim($data['nombre']);
         // Verificar si ya existe una facultad con ese nombre
-        $check = $conn->query("SELECT id FROM facultades WHERE nombre = '$nombre'");
-        if ($check && $check->num_rows > 0) {
+        $check = $conn->prepare("SELECT id FROM facultades WHERE nombre = ?");
+        $check->bind_param("s", $nombre);
+        $check->execute();
+        $check_result = $check->get_result();
+        if ($check_result->num_rows > 0) {
             http_response_code(409);
             echo json_encode(["error" => "Ya existe una facultad con ese nombre"]);
             break;
         }
-        $sql = "INSERT INTO facultades (nombre) VALUES ('$nombre')";
-        if ($conn->query($sql)) {
+        $sql = "INSERT INTO facultades (nombre) VALUES (?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $nombre);
+        if ($stmt->execute()) {
             echo json_encode(["success" => true, "id" => $conn->insert_id, "nombre" => $nombre]);
         } else {
             http_response_code(500);
@@ -50,16 +54,21 @@ switch($method) {
             echo json_encode(["error" => "ID y nombre requeridos"]);
             break;
         }
-        $nombre = $conn->real_escape_string(trim($data['nombre']));
+        $nombre = trim($data['nombre']);
         // Verificar si ya existe otra facultad con ese nombre
-        $check = $conn->query("SELECT id FROM facultades WHERE nombre = '$nombre' AND id != $id");
-        if ($check && $check->num_rows > 0) {
+        $check = $conn->prepare("SELECT id FROM facultades WHERE nombre = ? AND id != ?");
+        $check->bind_param("si", $nombre, $id);
+        $check->execute();
+        $check_result = $check->get_result();
+        if ($check_result->num_rows > 0) {
             http_response_code(409);
             echo json_encode(["error" => "Ya existe una facultad con ese nombre"]);
             break;
         }
-        $sql = "UPDATE facultades SET nombre = '$nombre' WHERE id = $id";
-        if ($conn->query($sql)) {
+        $sql = "UPDATE facultades SET nombre = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("si", $nombre, $id);
+        if ($stmt->execute()) {
             echo json_encode(["success" => true]);
         } else {
             http_response_code(500);
@@ -90,18 +99,6 @@ switch($method) {
             echo json_encode(["error" => "Error al eliminar la facultad"]);
         }
         break;
-=======
-        // Obtener todas las facultades únicas de la tabla programas
-        $sql = "SELECT DISTINCT facultad FROM programas WHERE facultad IS NOT NULL AND facultad != '' AND activo = 1 ORDER BY facultad";
-        $result = $conn->query($sql);
-        $facultades = [];
-        while($row = $result->fetch_assoc()) {
-            $facultades[] = $row['facultad'];
-        }
-        echo json_encode($facultades);
-        break;
-        
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
     default:
         http_response_code(405);
         echo json_encode(["error" => "Método no permitido"]);

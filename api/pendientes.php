@@ -370,8 +370,8 @@ switch($method) {
                             $chkSpec->execute();
                             $rSpec = $chkSpec->get_result();
                             if($rSpec->num_rows === 0) {
-                                    $insSpec = $conn->prepare("INSERT INTO estudiantes (usuario_id, facultad, programa_id) VALUES (?, ?, ?)");
-                                    $insSpec->bind_param("iss", $existingId, $row['facultad'], $row['programa_id']);
+                                    $insSpec = $conn->prepare("INSERT INTO estudiantes (usuario_id, facultad_id, programa_id) VALUES (?, ?, ?)");
+                                    $insSpec->bind_param("iii", $existingId, $row['facultad_id'], $row['programa_id']);
                                     $insSpec->execute();
                             }
                             } else if($row['tipo'] === 'docente') {
@@ -380,8 +380,8 @@ switch($method) {
                                 $chkSpec->execute();
                                 $rSpec = $chkSpec->get_result();
                                 if($rSpec->num_rows === 0) {
-                                    $insSpec = $conn->prepare("INSERT INTO docentes (usuario_id, facultad, programa_id) VALUES (?, ?, ?)");
-                                    $insSpec->bind_param("iss", $existingId, $row['facultad'], $row['programa_id']);
+                                    $insSpec = $conn->prepare("INSERT INTO docentes (usuario_id, facultad_id, programa_id) VALUES (?, ?, ?)");
+                                    $insSpec->bind_param("iii", $existingId, $row['facultad_id'], $row['programa_id']);
                                     $insSpec->execute();
                                 }
                             } else if($row['tipo'] === 'admin') {
@@ -440,16 +440,16 @@ switch($method) {
 
                 // Insertar en la tabla específica según el tipo
                 if($row['tipo'] === 'estudiante') {
-                    $stmt2 = $conn->prepare("INSERT INTO estudiantes (usuario_id, facultad, programa_id) VALUES (?, ?, ?)");
-                    $stmt2->bind_param("iss", $newUserId, $row['facultad'], $row['programa_id']);
+                    $stmt2 = $conn->prepare("INSERT INTO estudiantes (usuario_id, facultad_id, programa_id) VALUES (?, ?, ?)");
+                    $stmt2->bind_param("iii", $newUserId, $row['facultad_id'], $row['programa_id']);
                     $stmt2->execute();
                 } else if($row['tipo'] === 'docente') {
                     $codigo_docente = 'DOC-' . $newUserId;
                     $fecha_vinculacion = date('Y-m-d');
-                    $facultad = (isset($row['facultad']) && is_numeric($row['facultad'])) ? intval($row['facultad']) : null;
+                    $facultad_id = (isset($row['facultad_id']) && is_numeric($row['facultad_id'])) ? intval($row['facultad_id']) : null;
                     $programa_id = (isset($row['programa_id']) && is_numeric($row['programa_id'])) ? intval($row['programa_id']) : null;
-                    $stmt2 = $conn->prepare("INSERT INTO docentes (usuario_id, facultad, programa_id, codigo_docente, fecha_vinculacion) VALUES (?, ?, ?, ?, ?)");
-                    $stmt2->bind_param("iisss", $newUserId, $facultad, $programa_id, $codigo_docente, $fecha_vinculacion);
+                    $stmt2 = $conn->prepare("INSERT INTO docentes (usuario_id, facultad_id, programa_id, codigo_docente, fecha_vinculacion) VALUES (?, ?, ?, ?, ?)");
+                    $stmt2->bind_param("iisss", $newUserId, $facultad_id, $programa_id, $codigo_docente, $fecha_vinculacion);
                     $stmt2->execute();
                 } else if($row['tipo'] === 'admin') {
                     $stmt2 = $conn->prepare("INSERT INTO administradores (usuario_id) VALUES (?)");

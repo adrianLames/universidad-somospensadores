@@ -8,7 +8,7 @@ const AsignacionProfesores = () => {
     const [cursos, setCursos] = useState([]);
     const [asignaciones, setAsignaciones] = useState([]);
     const [formData, setFormData] = useState({
-        docente_id: '',
+        docente_id: '',  // Alias para usuario_id (se enviará como docente_id en la API)
         curso_id: '',
         semestre: '',
         anio: new Date().getFullYear()

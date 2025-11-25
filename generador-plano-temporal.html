@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Plano Temporal - Campus Universidad</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+        canvas {
+            border: 2px solid #ddd;
+            display: block;
+            margin: 20px auto;
+            background: white;
+            cursor: crosshair;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .coordinates {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .coord-item {
+            font-family: monospace;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .instructions {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+            margin-top: 20px;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏫 Generador de Plano Temporal del Campus</h1>
+        
+        <div class="info">
+            <strong>📋 Información:</strong>
+            <p>Esta herramienta crea un plano temporal de ejemplo mientras conviertes el archivo campusV1.dwg a imagen.</p>
+            <p><strong>Haz click en el canvas</strong> para marcar la ubicación de cada salón y obtener las coordenadas.</p>
+        </div>
+
+        <div class="controls">
+            <label for="salonCodigo">Código del Salón: </label>
+            <input type="text" id="salonCodigo" placeholder="Ej: A101" style="padding: 8px; font-size: 14px;">
+            <button onclick="generarPlano()">🎨 Generar Plano de Ejemplo</button>
+            <button onclick="descargarPlano()">💾 Descargar Imagen</button>
+            <button onclick="limpiarMarcadores()">🗑️ Limpiar Marcadores</button>
+        </div>
+
+        <canvas id="canvas" width="2000" height="1200"></canvas>
+
+        <div class="coordinates">
+            <h3>📍 Coordenadas de Salones (para SQL):</h3>
+            <div id="coordList"></div>
+        </div>
+
+        <div class="instructions">
+            <h3>💡 Instrucciones:</h3>
+            <ol>
+                <li>Haz click en "Generar Plano de Ejemplo" para crear un plano temporal</li>
+                <li>Escribe el código del salón (ej: A101, LAB01, etc.)</li>
+                <li>Haz click en el plano donde quieres ubicar ese salón</li>
+                <li>Repite para todos los salones</li>
+                <li>Copia las coordenadas SQL generadas abajo</li>
+                <li>Descarga la imagen con "Descargar Imagen"</li>
+                <li>Guárdala en: <code>public/images/campus-plano.png</code></li>
+                <li>Ejecuta las consultas SQL en tu base de datos</li>
+            </ol>
+            <p><strong>Nota:</strong> Este es un plano temporal. Reemplázalo con el plano real del archivo campusV1.dwg cuando lo conviertas.</p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const marcadores = [];
+
+        function generarPlano() {
+            // Fondo
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar edificios de ejemplo
+            
+            // Edificio A - Edificio principal
+            ctx.fillStyle = '#e3f2fd';
+            ctx.fillRect(100, 200, 600, 400);
+            ctx.strokeStyle = '#1976d2';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(100, 200, 600, 400);
+            ctx.fillStyle = '#1976d2';
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('EDIFICIO A', 300, 250);
+
+            // Dibujar salones del edificio A
+            dibujarSalon(150, 300, 120, 80, 'A101');
+            dibujarSalon(290, 300, 120, 80, 'A102');
+            dibujarSalon(430, 300, 120, 80, 'A103');
+            dibujarSalon(570, 300, 120, 80, 'A104');
+            
+            // Segundo piso Edificio A
+            dibujarSalon(150, 450, 120, 80, 'A201');
+            dibujarSalon(290, 450, 120, 80, 'A202');
+            dibujarSalon(430, 450, 120, 80, 'A203');
+            dibujarSalon(570, 450, 120, 80, 'A204');
+
+            // Edificio B - Laboratorios
+            ctx.fillStyle = '#fff3e0';
+            ctx.fillRect(800, 200, 500, 400);
+            ctx.strokeStyle = '#f57c00';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(800, 200, 500, 400);
+            ctx.fillStyle = '#f57c00';
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('EDIFICIO B - LABS', 900, 250);
+
+            dibujarSalon(850, 300, 150, 120, 'LAB01');
+            dibujarSalon(1050, 300, 150, 120, 'LAB02');
+            dibujarSalon(850, 450, 150, 120, 'LAB03');
+            dibujarSalon(1050, 450, 150, 120, 'LAB04');
+
+            // Edificio C - Auditorios
+            ctx.fillStyle = '#f3e5f5';
+            ctx.fillRect(100, 700, 600, 400);
+            ctx.strokeStyle = '#7b1fa2';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(100, 700, 600, 400);
+            ctx.fillStyle = '#7b1fa2';
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('EDIFICIO C - AUDITORIOS', 200, 750);
+
+            dibujarSalon(150, 850, 250, 150, 'AUD01');
+            dibujarSalon(430, 850, 250, 150, 'AUD02');
+
+            // Cafetería
+            ctx.fillStyle = '#e8f5e9';
+            ctx.fillRect(800, 700, 400, 250);
+            ctx.strokeStyle = '#388e3c';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(800, 700, 400, 250);
+            ctx.fillStyle = '#388e3c';
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('CAFETERÍA', 920, 800);
+
+            // Biblioteca
+            ctx.fillStyle = '#fce4ec';
+            ctx.fillRect(1400, 200, 500, 900);
+            ctx.strokeStyle = '#c2185b';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(1400, 200, 500, 900);
+            ctx.fillStyle = '#c2185b';
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('BIBLIOTECA', 1520, 250);
+
+            dibujarSalon(1450, 350, 180, 120, 'BIBLIO01');
+            dibujarSalon(1450, 520, 180, 120, 'BIBLIO02');
+            dibujarSalon(1650, 350, 180, 120, 'SALA-EST-1');
+            dibujarSalon(1650, 520, 180, 120, 'SALA-EST-2');
+
+            // Zonas verdes
+            ctx.fillStyle = '#c8e6c9';
+            ctx.beginPath();
+            ctx.arc(400, 100, 80, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#388e3c';
+            ctx.font = '18px Arial';
+            ctx.fillText('Zona Verde', 350, 105);
+
+            ctx.beginPath();
+            ctx.arc(1600, 50, 60, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Título del campus
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 36px Arial';
+            ctx.fillText('CAMPUS UNIVERSIDAD', 550, 80);
+            ctx.font = '20px Arial';
+            ctx.fillText('Plano Temporal de Ejemplo', 700, 120);
+
+            // Redibujar marcadores existentes
+            marcadores.forEach(m => dibujarMarcador(m.x, m.y, m.codigo));
+        }
+
+        function dibujarSalon(x, y, w, h, label) {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(x, y, w, h);
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x, y, w, h);
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.fillText(label, x + 10, y + 25);
+        }
+
+        function dibujarMarcador(x, y, codigo) {
+            // Marcador rojo
+            ctx.fillStyle = '#ff6b6b';
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Texto del código
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 10px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(codigo.substring(0, 4), x, y + 4);
+            ctx.textAlign = 'left';
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.round(e.clientX - rect.left);
+            const y = Math.round(e.clientY - rect.top);
+            const codigo = document.getElementById('salonCodigo').value.trim();
+
+            if (!codigo) {
+                alert('Por favor ingresa el código del salón primero');
+                return;
+            }
+
+            marcadores.push({ x, y, codigo });
+            dibujarMarcador(x, y, codigo);
+            actualizarLista();
+            document.getElementById('salonCodigo').value = '';
+        });
+
+        function actualizarLista() {
+            const list = document.getElementById('coordList');
+            list.innerHTML = marcadores.map((m, i) => `
+                <div class="coord-item">
+                    ${i + 1}. UPDATE salones SET coord_x = ${m.x}, coord_y = ${m.y} WHERE codigo = '${m.codigo}';
+                </div>
+            `).join('');
+        }
+
+        function descargarPlano() {
+            const link = document.createElement('a');
+            link.download = 'campus-plano.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function limpiarMarcadores() {
+            if (confirm('¿Limpiar todos los marcadores?')) {
+                marcadores.length = 0;
+                generarPlano();
+                actualizarLista();
+            }
+        }
+
+        // Generar plano inicial
+        window.onload = generarPlano;
+    </script>
+</body>
+</html>

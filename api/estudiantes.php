@@ -8,7 +8,6 @@ switch($method) {
     case 'GET':
         // Obtener todos los estudiantes con información del usuario
         $sql = "SELECT e.*, u.identificacion, u.nombres, u.apellidos, u.email, u.telefono, 
-<<<<<<< HEAD
                    u.fecha_nacimiento, u.direccion, u.facultad_id, f.nombre as facultad_nombre, p.nombre as programa_nombre
             FROM estudiantes e 
             INNER JOIN usuarios u ON e.usuario_id = u.id 
@@ -16,14 +15,6 @@ switch($method) {
             LEFT JOIN programas p ON u.programa_id = p.id
             WHERE u.activo = 1 AND e.estado_estudiante != 'retirado'
             ORDER BY u.nombres, u.apellidos";
-=======
-                       u.fecha_nacimiento, u.direccion, u.facultad, p.nombre as programa_nombre
-                FROM estudiantes e 
-                INNER JOIN usuarios u ON e.usuario_id = u.id 
-                LEFT JOIN programas p ON u.programa_id = p.id
-                WHERE u.activo = 1 AND e.estado_estudiante != 'retirado'
-                ORDER BY u.nombres, u.apellidos";
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
         $result = $conn->query($sql);
         $estudiantes = [];
         while($row = $result->fetch_assoc()) {
@@ -66,17 +57,10 @@ switch($method) {
             
             // Crear usuario primero
             $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
-<<<<<<< HEAD
             $sql_user = "INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, telefono, fecha_nacimiento, direccion, facultad_id, programa_id, password_hash) 
                          VALUES ('estudiante', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt_user = $conn->prepare($sql_user);
             $stmt_user->bind_param("sssssssiis", 
-=======
-            $sql_user = "INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, telefono, fecha_nacimiento, direccion, facultad, programa_id, password_hash) 
-                         VALUES ('estudiante', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt_user = $conn->prepare($sql_user);
-            $stmt_user->bind_param("ssssssssis", 
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 $data['identificacion'],
                 $data['nombres'],
                 $data['apellidos'],
@@ -84,11 +68,7 @@ switch($method) {
                 $data['telefono'],
                 $data['fecha_nacimiento'],
                 $data['direccion'],
-<<<<<<< HEAD
                 $data['facultad_id'],
-=======
-                $data['facultad'],
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 $data['programa_id'],
                 $password_hash
             );
@@ -151,7 +131,6 @@ switch($method) {
             // Actualizar usuario
             if(isset($data['password']) && !empty($data['password'])) {
                 $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
-<<<<<<< HEAD
                 $sql_user = "UPDATE usuarios SET identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, password_hash=? WHERE id=?";
                 $stmt_user = $conn->prepare($sql_user);
                 $stmt_user->bind_param("sssssssiisi", 
@@ -166,22 +145,6 @@ switch($method) {
                     $data['identificacion'], $data['nombres'], $data['apellidos'], $data['email'], 
                     $data['telefono'], $data['fecha_nacimiento'], $data['direccion'], 
                     $data['facultad_id'], $data['programa_id'], $data['usuario_id']
-=======
-                $sql_user = "UPDATE usuarios SET identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad=?, programa_id=?, password_hash=? WHERE id=?";
-                $stmt_user = $conn->prepare($sql_user);
-                $stmt_user->bind_param("ssssssssssi", 
-                    $data['identificacion'], $data['nombres'], $data['apellidos'], $data['email'], 
-                    $data['telefono'], $data['fecha_nacimiento'], $data['direccion'], 
-                    $data['facultad'], $data['programa_id'], $password_hash, $data['usuario_id']
-                );
-            } else {
-                $sql_user = "UPDATE usuarios SET identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad=?, programa_id=? WHERE id=?";
-                $stmt_user = $conn->prepare($sql_user);
-                $stmt_user->bind_param("sssssssssi", 
-                    $data['identificacion'], $data['nombres'], $data['apellidos'], $data['email'], 
-                    $data['telefono'], $data['fecha_nacimiento'], $data['direccion'], 
-                    $data['facultad'], $data['programa_id'], $data['usuario_id']
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 );
             }
             $stmt_user->execute();

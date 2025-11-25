@@ -23,7 +23,8 @@ const GestionCursos = ({ user }) => {
     facultad_id: '',
     jornada: 'diurna',
     activo: true,
-    es_prerequisito: true // Nuevo campo para marcar si puede ser prerequisito
+    es_prerequisito: true, // Nuevo campo para marcar si puede ser prerequisito
+    es_publico: false // Campo para marcar si el curso es público
   });
   const [loading, setLoading] = useState(false);
   const [selectedCurso, setSelectedCurso] = useState(null);
@@ -188,7 +189,8 @@ const GestionCursos = ({ user }) => {
       facultad_id: '',
       jornada: 'diurna',
       activo: true,
-      es_prerequisito: true
+      es_prerequisito: true,
+      es_publico: false
     });
     setSelectedPrereqs([]);
     setShowForm(false);
@@ -430,6 +432,18 @@ const GestionCursos = ({ user }) => {
                   </label>
                 </div>
               </div>
+              <div className="form-group">
+                <label style={{ fontWeight: 'bold', color: '#1a3c7b' }}>
+                  ¿Curso público? (Accesible para usuarios públicos)
+                </label>
+                <input
+                  type="checkbox"
+                  checked={!!currentCurso.es_publico}
+                  onChange={e => setCurrentCurso({...currentCurso, es_publico: e.target.checked})}
+                  disabled={loading}
+                  style={{ marginLeft: 8 }}
+                />
+              </div>
               <div className="form-actions">
                 <button type="submit" disabled={loading}>
                   {loading ? 'Guardando...' : '💾 Guardar'}
@@ -458,8 +472,8 @@ const GestionCursos = ({ user }) => {
                 <th>Programa</th>
                 <th>Jornada</th>
                 <th>Activo</th>
+                <th>Público</th>
                 <th>Fecha Creación</th>
-                {/* <th>¿Prerequisito?</th> */}
                 <th>¿Puede ser prerequisito?</th>
                 <th>Es prerequisito de</th>
                 <th>Acciones</th>
@@ -474,8 +488,13 @@ const GestionCursos = ({ user }) => {
                   <td>{curso.programa_nombre || 'Sin programa'}</td>
                   <td>{curso.jornada === 'nocturna' ? 'Nocturna' : curso.jornada === 'diurna' ? 'Diurna' : '-'}</td>
                   <td>{String(curso.activo) === '1' || curso.activo === 1 || curso.activo === true ? 'Sí' : 'No'}</td>
+                  <td>
+                    {curso.es_publico === 1 || curso.es_publico === true || curso.es_publico === '1' ? 
+                      <span style={{color: '#1bbd7e', fontWeight: 'bold'}}>✓ Sí</span> : 
+                      <span style={{color: '#888'}}>No</span>
+                    }
+                  </td>
                   <td>{curso.fecha_creacion ? new Date(curso.fecha_creacion).toLocaleDateString() : '-'}</td>
-                  {/* <td>{curso.es_prerequisito ? 'Sí' : 'No'}</td> */}
                   <td>{curso.es_prerequisito === 1 || curso.es_prerequisito === true || curso.es_prerequisito === '1' ? 'Sí' : 'No'}</td>
                   <td>
                     {Array.isArray(esDeCursosMap[curso.id]) && esDeCursosMap[curso.id].length > 0

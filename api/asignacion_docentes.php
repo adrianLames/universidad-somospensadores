@@ -60,15 +60,15 @@ switch ($method) {
     case 'POST':
         $data = json_decode(file_get_contents("php://input"), true);
 
-        $docente_id = $data['docente_id'];
+        $usuario_id = $data['docente_id'];  // Aceptar docente_id pero usar usuario_id en BD
         $curso_id = $data['curso_id'];
         $semestre = $data['semestre'];
         $anio = $data['anio'];
 
-        // Insertar nueva asignación
-        $query = "INSERT INTO asignacion_docentes (docente_id, curso_id, semestre, anio) VALUES (?, ?, ?, ?)";
+        // Insertar nueva asignación usando usuario_id
+        $query = "INSERT INTO asignacion_docentes (usuario_id, curso_id, semestre, anio) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param('iisi', $docente_id, $curso_id, $semestre, $anio);
+        $stmt->bind_param('iisi', $usuario_id, $curso_id, $semestre, $anio);
 
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => 'Asignación creada exitosamente.']);

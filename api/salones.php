@@ -17,21 +17,42 @@ switch($method) {
         
     case 'POST':
         $data = json_decode(file_get_contents("php://input"), true);
+        
+        // Validar campos requeridos
+        if (!isset($data['codigo']) || !isset($data['edificio']) || !isset($data['capacidad'])) {
+            http_response_code(400);
+            echo json_encode(["error" => "Código, edificio y capacidad son requeridos"]);
+            break;
+        }
+        
         $sql = "INSERT INTO salones (codigo, edificio, ubicacion, capacidad, tipo, recursos, equipamiento, estado, latitud, longitud, visible, activo) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssssddi", 
-            $data['codigo'], 
-            $data['edificio'],
-            isset($data['ubicacion']) ? $data['ubicacion'] : '',
-            $data['capacidad'], 
-            $data['tipo'],
-            isset($data['recursos']) ? $data['recursos'] : '',
-            isset($data['equipamiento']) ? $data['equipamiento'] : '',
-            isset($data['estado']) ? $data['estado'] : 'Disponible',
-            isset($data['latitud']) ? $data['latitud'] : 3.022922,
-            isset($data['longitud']) ? $data['longitud'] : -76.482656,
-            isset($data['visible']) ? $data['visible'] : 1
+        
+        $codigo = $data['codigo'];
+        $edificio = $data['edificio'];
+        $ubicacion = isset($data['ubicacion']) ? $data['ubicacion'] : '';
+        $capacidad = (int)$data['capacidad'];
+        $tipo = isset($data['tipo']) ? $data['tipo'] : 'aula';
+        $recursos = isset($data['recursos']) ? $data['recursos'] : '';
+        $equipamiento = isset($data['equipamiento']) ? $data['equipamiento'] : '';
+        $estado = isset($data['estado']) ? $data['estado'] : 'Disponible';
+        $latitud = isset($data['latitud']) ? (float)$data['latitud'] : 3.022922;
+        $longitud = isset($data['longitud']) ? (float)$data['longitud'] : -76.482656;
+        $visible = isset($data['visible']) ? (int)$data['visible'] : 1;
+        
+        $stmt->bind_param("sssissssddi", 
+            $codigo, 
+            $edificio,
+            $ubicacion,
+            $capacidad, 
+            $tipo,
+            $recursos,
+            $equipamiento,
+            $estado,
+            $latitud,
+            $longitud,
+            $visible
         );
         if($stmt->execute()) {
             echo json_encode(["message" => "Salón creado exitosamente"]);

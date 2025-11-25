@@ -8,7 +8,6 @@ switch($method) {
     case 'GET':
         // Obtener todos los docentes con información del usuario
         $sql = "SELECT d.*, u.identificacion, u.nombres, u.apellidos, u.email, u.telefono, 
-<<<<<<< HEAD
                    u.fecha_nacimiento, u.direccion, u.facultad_id, f.nombre as facultad_nombre, p.nombre as programa_nombre
             FROM docentes d 
             INNER JOIN usuarios u ON d.usuario_id = u.id 
@@ -16,14 +15,6 @@ switch($method) {
             LEFT JOIN programas p ON u.programa_id = p.id
             WHERE u.activo = 1 AND d.estado_docente != 'inactivo'
             ORDER BY u.nombres, u.apellidos";
-=======
-                       u.fecha_nacimiento, u.direccion, u.facultad, p.nombre as programa_nombre
-                FROM docentes d 
-                INNER JOIN usuarios u ON d.usuario_id = u.id 
-                LEFT JOIN programas p ON u.programa_id = p.id
-                WHERE u.activo = 1 AND d.estado_docente != 'inactivo'
-                ORDER BY u.nombres, u.apellidos";
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
         $result = $conn->query($sql);
         $docentes = [];
         while($row = $result->fetch_assoc()) {
@@ -66,17 +57,12 @@ switch($method) {
             
             // Crear usuario primero
             $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
-<<<<<<< HEAD
             $sql_user = "INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, telefono, fecha_nacimiento, direccion, facultad_id, programa_id, password_hash) 
                          VALUES ('docente', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt_user = $conn->prepare($sql_user);
+            $facultad_id = isset($data['facultad_id']) && $data['facultad_id'] !== '' ? (int)$data['facultad_id'] : null;
+            $programa_id = isset($data['programa_id']) && $data['programa_id'] !== '' ? (int)$data['programa_id'] : null;
             $stmt_user->bind_param("sssssssiis", 
-=======
-            $sql_user = "INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, telefono, fecha_nacimiento, direccion, facultad, programa_id, password_hash) 
-                         VALUES ('docente', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt_user = $conn->prepare($sql_user);
-            $stmt_user->bind_param("ssssssssis", 
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 $data['identificacion'],
                 $data['nombres'],
                 $data['apellidos'],
@@ -84,12 +70,8 @@ switch($method) {
                 $data['telefono'],
                 $data['fecha_nacimiento'],
                 $data['direccion'],
-<<<<<<< HEAD
-                $data['facultad_id'],
-=======
-                $data['facultad'],
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
-                $data['programa_id'],
+                $facultad_id,
+                $programa_id,
                 $password_hash
             );
             $stmt_user->execute();
@@ -97,23 +79,11 @@ switch($method) {
             
             // Crear registro de docente
             $codigo_docente = 'DOC-' . str_pad($usuario_id, 6, '0', STR_PAD_LEFT);
-<<<<<<< HEAD
             $facultad_id = isset($data['facultad_id']) ? $data['facultad_id'] : null;
             $programa_id = isset($data['programa_id']) ? $data['programa_id'] : null;
             $sql_docente = "INSERT INTO docentes (usuario_id, codigo_docente, facultad_id, programa_id) VALUES (?, ?, ?, ?)";
             $stmt_docente = $conn->prepare($sql_docente);
             $stmt_docente->bind_param("isii", $usuario_id, $codigo_docente, $facultad_id, $programa_id);
-=======
-            $sql_docente = "INSERT INTO docentes (usuario_id, codigo_docente, titulo_profesional, experiencia_anos, tipo_contrato, fecha_vinculacion, especialidad) 
-                           VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $stmt_docente = $conn->prepare($sql_docente);
-            $titulo = isset($data['titulo_profesional']) ? $data['titulo_profesional'] : '';
-            $experiencia = isset($data['experiencia_anos']) ? $data['experiencia_anos'] : 0;
-            $contrato = isset($data['tipo_contrato']) ? $data['tipo_contrato'] : 'catedra';
-            $fecha_vinculacion = isset($data['fecha_vinculacion']) ? $data['fecha_vinculacion'] : date('Y-m-d');
-            $especialidad = isset($data['especialidad']) ? $data['especialidad'] : '';
-            $stmt_docente->bind_param("issssss", $usuario_id, $codigo_docente, $titulo, $experiencia, $contrato, $fecha_vinculacion, $especialidad);
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
             $stmt_docente->execute();
             
             $conn->commit();
@@ -136,7 +106,6 @@ switch($method) {
             // Actualizar usuario
             if(isset($data['password']) && !empty($data['password'])) {
                 $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
-<<<<<<< HEAD
                 $sql_user = "UPDATE usuarios SET identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, password_hash=? WHERE id=?";
                 $stmt_user = $conn->prepare($sql_user);
                 $stmt_user->bind_param("sssssssiisi", 
@@ -151,39 +120,16 @@ switch($method) {
                     $data['identificacion'], $data['nombres'], $data['apellidos'], $data['email'], 
                     $data['telefono'], $data['fecha_nacimiento'], $data['direccion'], 
                     $data['facultad_id'], $data['programa_id'], $data['usuario_id']
-=======
-                $sql_user = "UPDATE usuarios SET identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad=?, programa_id=?, password_hash=? WHERE id=?";
-                $stmt_user = $conn->prepare($sql_user);
-                $stmt_user->bind_param("ssssssssssi", 
-                    $data['identificacion'], $data['nombres'], $data['apellidos'], $data['email'], 
-                    $data['telefono'], $data['fecha_nacimiento'], $data['direccion'], 
-                    $data['facultad'], $data['programa_id'], $password_hash, $data['usuario_id']
-                );
-            } else {
-                $sql_user = "UPDATE usuarios SET identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad=?, programa_id=? WHERE id=?";
-                $stmt_user = $conn->prepare($sql_user);
-                $stmt_user->bind_param("sssssssssi", 
-                    $data['identificacion'], $data['nombres'], $data['apellidos'], $data['email'], 
-                    $data['telefono'], $data['fecha_nacimiento'], $data['direccion'], 
-                    $data['facultad'], $data['programa_id'], $data['usuario_id']
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 );
             }
             $stmt_user->execute();
             
-<<<<<<< HEAD
-            // Actualizar docente (incluyendo facultad y programa_id)
-            $sql_docente = "UPDATE docentes SET facultad=?, programa_id=?, titulo_profesional=?, titulo_postgrado=?, experiencia_anos=?, tipo_contrato=?, especialidad=?, horas_semanales=?, observaciones=? WHERE id=?";
+            // Actualizar docente (incluyendo facultad_id y programa_id)
+            $sql_docente = "UPDATE docentes SET facultad_id=?, programa_id=?, titulo_profesional=?, titulo_postgrado=?, experiencia_anos=?, tipo_contrato=?, especialidad=?, horas_semanales=?, observaciones=? WHERE id=?";
             $stmt_docente = $conn->prepare($sql_docente);
-            $stmt_docente->bind_param("ssssissssi", 
-                $data['facultad'],
+            $stmt_docente->bind_param("iisssisssi", 
+                $data['facultad_id'],
                 $data['programa_id'],
-=======
-            // Actualizar docente
-            $sql_docente = "UPDATE docentes SET titulo_profesional=?, titulo_postgrado=?, experiencia_anos=?, tipo_contrato=?, especialidad=?, horas_semanales=?, observaciones=? WHERE id=?";
-            $stmt_docente = $conn->prepare($sql_docente);
-            $stmt_docente->bind_param("ssissssi", 
->>>>>>> 0463b860943076551cf7381e33b9111f296f599d
                 $data['titulo_profesional'], 
                 $data['titulo_postgrado'], 
                 $data['experiencia_anos'],
