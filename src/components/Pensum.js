@@ -43,7 +43,22 @@ const Pensum = ({ user }) => {
         return true;
       });
       
-      setCursos(cursosFiltrados);
+      // Eliminar duplicados por código (tomar solo el primero de cada código)
+      const cursosUnicos = [];
+      const codigosVistos = new Set();
+      
+      cursosFiltrados.forEach(curso => {
+        // Extraer código base (sin sufijos como _PROG1, _AL, etc.)
+        const codigoBase = curso.codigo.split('_')[0];
+        const key = `${codigoBase}-${curso.nombre}`;
+        
+        if (!codigosVistos.has(key)) {
+          codigosVistos.add(key);
+          cursosUnicos.push(curso);
+        }
+      });
+      
+      setCursos(cursosUnicos);
     } catch (error) {
       console.error('Error fetching cursos:', error);
       setCursos([]);
