@@ -17,8 +17,8 @@ switch($method) {
             $sql = "SELECT DISTINCT c.*, p.nombre as programa_nombre
                 FROM cursos c 
                 LEFT JOIN programas p ON c.programa_id = p.id 
-                LEFT JOIN asignacion_docentes ad ON c.id = ad.curso_id 
-                WHERE ad.docente_id = ?";
+                INNER JOIN asignacion_docentes ad ON c.id = ad.curso_id 
+                WHERE ad.usuario_id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $docente_id);
             $stmt->execute();

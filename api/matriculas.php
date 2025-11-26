@@ -46,20 +46,37 @@ switch ($method) {
             break;
         }
 
-        // Verificar si ya aprobó el curso
-        $query = "SELECT id FROM calificaciones WHERE estudiante_id = ? AND curso_id = ? AND estado = 'aprobado'";
+        // Verificar si ya existe una matrícula (activa o cancelada) con la misma combinación de periodo
+        $query = "SELECT id, estado FROM matriculas WHERE estudiante_id = ? AND curso_id = ? AND semestre = ? AND anio = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ii", $estudiante_id, $curso_id);
+        $stmt->bind_param("iisi", $estudiante_id, $curso_id, $semestre, $anio);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
-            http_response_code(400);
-            echo json_encode(["success" => false, "message" => "Ya aprobaste este curso anteriormente"]);
-            break;
+            $existente = $result->fetch_assoc();
+            
+            if ($existente['estado'] === 'activa') {
+                http_response_code(400);
+                echo json_encode(["success" => false, "message" => "Ya tienes una matrícula activa en este periodo"]);
+                break;
+            } else if ($existente['estado'] === 'cancelada') {
+                // Re-activar la matrícula cancelada
+                $update_query = "UPDATE matriculas SET estado = 'activa', fecha_matricula = NOW() WHERE id = ?";
+                $update_stmt = $conn->prepare($update_query);
+                $update_stmt->bind_param("i", $existente['id']);
+                
+                if ($update_stmt->execute()) {
+                    echo json_encode(["success" => true, "message" => "Matrícula reactivada exitosamente"]);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(["success" => false, "message" => "Error al reactivar la matrícula: " . $update_stmt->error]);
+                }
+                break;
+            }
         }
 
-        // Insertar nueva matrícula
+        // Si no existe matrícula previa (ni activa ni cancelada), crear una nueva
         $query = "INSERT INTO matriculas (estudiante_id, curso_id, semestre, anio) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("iisi", $estudiante_id, $curso_id, $semestre, $anio);

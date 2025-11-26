@@ -149,7 +149,8 @@ const Matriculas = ({ user }) => {
       }
     } catch (error) {
       console.error('Error saving matricula:', error);
-      alert('Error de conexión al matricular');
+      console.error('Error details:', error.message);
+      alert(`Error de conexión al matricular: ${error.message || 'Por favor intenta de nuevo'}`);
     } finally {
       setLoading(false);
     }

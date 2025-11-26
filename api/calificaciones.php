@@ -8,6 +8,7 @@ switch($method) {
     case 'GET':
         $estudiante_id = isset($_GET['estudiante_id']) ? $_GET['estudiante_id'] : '';
         $docente_id = isset($_GET['docente_id']) ? $_GET['docente_id'] : '';
+        $curso_id = isset($_GET['curso_id']) ? $_GET['curso_id'] : '';
         
         if($estudiante_id) {
             $sql = "SELECT c.*, cur.codigo as curso_codigo, cur.nombre as curso_nombre, cur.creditos
@@ -19,6 +20,21 @@ switch($method) {
             $stmt->bind_param("i", $estudiante_id);
             $stmt->execute();
             $result = $stmt->get_result();
+        } else if($curso_id) {
+            // Retornar todos los estudiantes matriculados en un curso, con o sin calificación
+            $sql = "SELECT u.id as estudiante_id, u.nombres as estudiante_nombres, u.apellidos as estudiante_apellidos, u.email,
+                           c.id as calificacion_id, c.nota_final, c.estado, c.semestre, c.anio,
+                           cur.id as curso_id, cur.codigo as curso_codigo, cur.nombre as curso_nombre
+                    FROM usuarios u
+                    INNER JOIN matriculas m ON u.id = m.estudiante_id
+                    INNER JOIN cursos cur ON m.curso_id = cur.id
+                    LEFT JOIN calificaciones c ON u.id = c.estudiante_id AND cur.id = c.curso_id
+                    WHERE cur.id = ? AND m.estado = 'activa' AND u.tipo = 'estudiante' AND u.activo = 1
+                    ORDER BY u.nombres";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $curso_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
         } else if($docente_id) {
             $sql = "SELECT c.*, cur.codigo as curso_codigo, cur.nombre as curso_nombre,
                            u.nombres as estudiante_nombres, u.apellidos as estudiante_apellidos
@@ -26,7 +42,7 @@ switch($method) {
                     INNER JOIN cursos cur ON c.curso_id = cur.id 
                     INNER JOIN usuarios u ON c.estudiante_id = u.id 
                     INNER JOIN asignacion_docentes ad ON cur.id = ad.curso_id 
-                    WHERE ad.docente_id = ? 
+                    WHERE ad.usuario_id = ? 
                     ORDER BY c.anio DESC, c.semestre DESC";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $docente_id);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-11-2025 a las 13:59:24
+-- Tiempo de generación: 26-11-2025 a las 02:14:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -53,8 +53,33 @@ CREATE TABLE `asignacion_docentes` (
 --
 
 INSERT INTO `asignacion_docentes` (`id`, `usuario_id`, `curso_id`, `programa_id`, `facultad_id`, `anio`, `semestre`) VALUES
-(14, 2, 3, 5, 2, 2025, 1),
-(15, 4, 2, 4, 1, 2025, 1);
+(16, 2, 13, 8, 1, 2025, 1),
+(17, 2, 7, 8, 1, 2025, 1),
+(18, 2, 7, 8, 1, 2025, 1),
+(19, 2, 8, 8, 1, 2025, 1),
+(20, 2, 9, 8, 1, 2025, 1),
+(21, 2, 10, 8, 1, 2025, 1),
+(22, 2, 11, 8, 1, 2025, 1),
+(23, 2, 12, 8, 1, 2025, 1),
+(24, 2, 14, 8, 1, 2025, 1),
+(25, 2, 15, 8, 1, 2025, 1),
+(26, 2, 16, 8, 1, 2025, 1),
+(27, 2, 17, 8, 1, 2025, 1),
+(28, 2, 18, 8, 1, 2025, 1),
+(29, 2, 19, 8, 1, 2025, 1),
+(30, 2, 20, 8, 1, 2025, 1),
+(31, 2, 21, 8, 1, 2025, 1),
+(32, 2, 22, 8, 1, 2025, 1),
+(33, 2, 23, 8, 1, 2025, 1),
+(34, 2, 24, 8, 1, 2025, 1),
+(35, 2, 25, 8, 1, 2025, 1),
+(36, 2, 26, 8, 1, 2025, 1),
+(37, 2, 27, 8, 1, 2025, 1),
+(38, 2, 28, 8, 1, 2025, 1),
+(39, 2, 29, 8, 1, 2025, 1),
+(40, 2, 30, 8, 1, 2025, 1),
+(41, 2, 31, 8, 1, 2025, 1),
+(42, 2, 32, 8, 1, 2025, 1);
 
 --
 -- Disparadores `asignacion_docentes`
@@ -110,6 +135,14 @@ CREATE TABLE `calificaciones` (
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `calificaciones`
+--
+
+INSERT INTO `calificaciones` (`id`, `estudiante_id`, `curso_id`, `semestre`, `anio`, `nota_final`, `estado`, `fecha_registro`) VALUES
+(1, 12, 13, '1', '2025', 4.5, 'aprobado', '2025-11-25 23:05:54'),
+(2, 12, 8, '2025-1', '2025', 3.0, 'aprobado', '2025-11-26 00:53:26');
+
 -- --------------------------------------------------------
 
 --
@@ -128,20 +161,40 @@ CREATE TABLE `cursos` (
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
   `facultad_id` int(11) DEFAULT NULL,
   `jornada` enum('diurna','nocturna') NOT NULL DEFAULT 'diurna',
-  `es_prerequisito` tinyint(1) DEFAULT 1 COMMENT '1=puede ser prerequisito, 0=no puede',
-  `es_publico` tinyint(1) DEFAULT 0
+  `es_prerequisito` tinyint(1) DEFAULT 1 COMMENT '1=puede ser prerequisito, 0=no puede'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `cursos`
 --
 
-INSERT INTO `cursos` (`id`, `codigo`, `nombre`, `descripcion`, `creditos`, `programa_id`, `prerequisito_id`, `activo`, `fecha_creacion`, `facultad_id`, `jornada`, `es_prerequisito`, `es_publico`) VALUES
-(1, 'c01', 'Fundamentos de programacion ', 'esencial para aprender a programar ', 4, 4, NULL, 1, '2025-11-18 21:16:08', 1, 'diurna', 1, 0),
-(2, 'c02', 'base de datos ', 'base de datos ', 4, 4, NULL, 1, '2025-11-18 22:32:31', 1, 'diurna', 1, 0),
-(3, 'ec01', 'análisis económico ', 'análisis ', 4, 5, NULL, 1, '2025-11-18 22:34:34', 2, 'diurna', 0, 0),
-(4, 'c03', 'desarrollo de software', 'as', 4, 4, NULL, 1, '2025-11-20 01:41:40', 1, 'diurna', 0, 0),
-(5, 'Am1', 'analisis financiero', 'analisis', 4, 6, NULL, 1, '2025-11-21 23:04:21', 2, 'diurna', 0, 0);
+INSERT INTO `cursos` (`id`, `codigo`, `nombre`, `descripcion`, `creditos`, `programa_id`, `prerequisito_id`, `activo`, `fecha_creacion`, `facultad_id`, `jornada`, `es_prerequisito`) VALUES
+(7, '111021C', 'Fundamentos de Programación I', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(8, '111023C', 'Cálculo Matemático', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(9, '711008C', 'Taller Tecnológico I', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(10, '711016C', 'Introducción a las Tecnologías', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(11, '111023C_AL', 'Algebra Lineal', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(12, '204130C', 'Fundamentos de Textos Asignaciones', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(13, '711009C', 'Taller Tecnológico II', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(14, '40409C', 'Deporte y Salud', NULL, 2, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(15, '70100C', 'Programación de Textos Arquitectónicos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(16, '750004C', 'Matemáticas Discretas I', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(17, '750090C', 'Matemáticas Discretas II', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(18, '750088C', 'Análisis y Diseño de Algoritmos', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(19, '204130C_ED', 'Estructuras de Datos', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(20, '750042C', 'Bases de Datos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(21, '750092C', 'Desarrollo de Software I', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(22, '750091C', 'Desarrollo de Software II', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(23, '750090C_IE', 'Ingeniería Estructurada', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(24, '750089C', 'Sistemas Operacionales', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(25, '750086C', 'Desarrollo en Arquitectura Empresarial', NULL, 2, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(26, '750087C', 'Proyección Integrada', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(27, '750084C', 'Desarrollo Avanzado de Interfaces', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(28, '750081C', 'Electiva Profesional I', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(29, '750082C', 'Electiva Profesional II', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(30, '750083C', 'Electiva Profesional III', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(31, '204829C', 'Inglés con Fines Específicos y Académicos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(32, '204830C', 'Inglés con Fines Generales y Académicos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1);
 
 -- --------------------------------------------------------
 
@@ -228,10 +281,7 @@ INSERT INTO `horarios` (`id`, `salon_id`, `dia_semana`, `hora_inicio`, `hora_fin
 (56, 2, 'Martes', '08:00:00', '10:00:00', 2, 1, '#dcedc8'),
 (57, 1, 'Lunes', '08:00:00', '10:00:00', 4, 1, '#dcedc8'),
 (59, 3, 'Miércoles', '01:00:00', '07:00:00', 4, 2, '#ffe0b2'),
-(60, 3, 'Miércoles', '08:00:00', '10:00:00', 6, 5, '#f8bbd0'),
-(61, 3, 'Miércoles', '14:00:00', '15:00:00', 8, 4, '#ffe0b2'),
-(62, 3, 'Lunes', '08:00:00', '10:00:00', 4, 2, '#ffe0b2'),
-(63, 2, 'Lunes', '08:00:00', '10:00:00', 8, 3, '#ffe0b2');
+(62, 3, 'Lunes', '08:00:00', '10:00:00', 4, 2, '#ffe0b2');
 
 -- --------------------------------------------------------
 
@@ -248,6 +298,44 @@ CREATE TABLE `matriculas` (
   `fecha_matricula` timestamp NOT NULL DEFAULT current_timestamp(),
   `estado` enum('activa','completada','cancelada') DEFAULT 'activa'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `matriculas`
+--
+
+INSERT INTO `matriculas` (`id`, `estudiante_id`, `curso_id`, `semestre`, `anio`, `fecha_matricula`, `estado`) VALUES
+(5, 13, 7, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(6, 14, 7, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(7, 15, 7, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(8, 13, 8, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(9, 14, 8, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(10, 15, 8, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(11, 13, 9, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(12, 14, 9, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(13, 15, 9, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(14, 13, 10, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(15, 14, 10, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(16, 15, 10, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(17, 13, 11, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(18, 14, 11, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(19, 15, 11, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(20, 13, 12, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(21, 14, 12, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(22, 15, 12, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(23, 13, 13, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(24, 14, 13, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(25, 15, 13, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(26, 13, 14, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(27, 14, 14, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(28, 15, 14, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(29, 13, 15, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(30, 14, 15, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(31, 15, 15, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(32, 13, 16, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(33, 14, 16, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(34, 15, 16, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(38, 12, 8, '1', '2025', '2025-11-25 23:33:59', 'activa'),
+(50, 12, 7, '1', '2025', '2025-11-26 00:04:07', 'activa');
 
 -- --------------------------------------------------------
 
@@ -282,8 +370,7 @@ INSERT INTO `pendientes` (`id`, `tipo`, `identificacion`, `nombres`, `apellidos`
 (4, 'estudiante', '56', 'sa', 'si', 'sk@gmail.com', '7744558899', '2025-11-06', 1, 4, '$2y$10$ukH7U55pmXwigx.kK9PWJ.Jl3m5bp6F3igcGfOnT/2v9e2xWjdrLi', 'calle 8', 'aprobado', '2025-11-18 22:18:01'),
 (5, 'docente', '78987', 'Andres David', 'Villa Romero', 'andresd8888@gmail.com', '999888', '2025-10-16', 1, 4, '$2y$10$gr0sS5vBcC8.8toC6.4GLeq1YD.IcKx9/e4C8/C20AdGHNbtLMczu', 'calle 0', 'aprobado', '2025-11-18 22:31:14'),
 (6, 'docente', '9999', 'jaider', 'lames', 'lames@gmail.com', '87896', '2025-11-14', 2, 5, '$2y$10$ftTJ0nEoBkpZ5XkREHjMh.cIgzcSYVX9iVLQICsMGMVHWQeSvQfby', 'calle 8', 'aprobado', '2025-11-18 22:35:37'),
-(7, 'estudiante', '7894516', 'jaide', 'lames ', 'jaider@gmail.com', '59874568', '2025-11-12', 2, 5, '$2y$10$pNWjOzrYSBjRIf6Cl9FpBOWIYZXzTkV3V5X.Ij296WpVPzfzDmQKC', 'calle', 'aprobado', '2025-11-22 00:51:34'),
-(8, '', '2545456', 'publico', 'martinez', 'publico@gmail.com', '1234', NULL, NULL, NULL, '$2y$10$VPbdLwQHUAT9rPI.CLLvg.bTZqvv.PiQ0Gb5xPoOzdSUxpErUYQIa', NULL, 'aprobado', '2025-11-25 04:54:37');
+(7, 'estudiante', '7894516', 'jaide', 'lames ', 'jaider@gmail.com', '59874568', '2025-11-12', 2, 5, '$2y$10$pNWjOzrYSBjRIf6Cl9FpBOWIYZXzTkV3V5X.Ij296WpVPzfzDmQKC', 'calle', 'aprobado', '2025-11-22 00:51:34');
 
 -- --------------------------------------------------------
 
@@ -302,9 +389,29 @@ CREATE TABLE `prerequisitos` (
 --
 
 INSERT INTO `prerequisitos` (`id`, `curso_id`, `prerequisito_id`) VALUES
-(9, 2, 1),
-(10, 1, 2),
-(11, 1, 2);
+(11, 11, 8),
+(12, 15, 7),
+(13, 16, 8),
+(14, 17, 16),
+(15, 18, 7),
+(16, 19, 18),
+(17, 20, 15),
+(18, 21, 20),
+(19, 22, 20),
+(20, 23, 21),
+(21, 24, 22),
+(22, 25, 21),
+(23, 26, 22),
+(24, 27, 22),
+(25, 28, 25),
+(26, 28, 26),
+(27, 28, 27),
+(28, 29, 25),
+(29, 29, 26),
+(30, 29, 27),
+(31, 30, 25),
+(32, 30, 26),
+(33, 30, 27);
 
 -- --------------------------------------------------------
 
@@ -331,7 +438,8 @@ CREATE TABLE `programas` (
 INSERT INTO `programas` (`id`, `codigo`, `nombre`, `descripcion`, `facultad_id`, `duracion_semestres`, `creditos_totales`, `activo`, `fecha_creacion`) VALUES
 (4, '01', 'DESARROLLO DE SOFTWARE ', 'desarrollo de software ', 1, 10, 160, 1, '2025-11-18 21:15:19'),
 (5, 'e01', 'Contaduria publica ', 'contaduría publica ', 2, 10, 4, 1, '2025-11-18 22:33:37'),
-(6, 'a01', 'ADMINISTRACION DE EMPRESAS', 'ADMINISTRACION', 2, 10, 130, 1, '2025-11-18 23:33:15');
+(6, 'a01', 'ADMINISTRACION DE EMPRESAS', 'ADMINISTRACION', 2, 10, 130, 1, '2025-11-18 23:33:15'),
+(8, '2724', 'TECNOLOGIA EN DESARROLLO DE SOFTWARE', 'Programa nocturno de tecnología en desarrollo de software', 1, 7, 96, 1, '2025-11-25 22:52:40');
 
 -- --------------------------------------------------------
 
@@ -361,9 +469,10 @@ CREATE TABLE `salones` (
 --
 
 INSERT INTO `salones` (`id`, `codigo`, `edificio`, `capacidad`, `tipo`, `equipamiento`, `activo`, `latitud`, `longitud`, `visible`, `fecha_creacion`, `ubicacion`, `recursos`, `estado`) VALUES
-(1, '1A', 'CENTRAL', 30, 'aula', '5 MESAS 5 ASIENTOS ', 1, 3.0229293882132064, -76.48294062698149, 0, '2025-11-21 19:17:52', NULL, NULL, 'Disponible'),
-(2, '2A', 'bloque tecnico', 30, 'aula', '5 mesas 5 sillas ', 1, 3.0226160559226787, -76.48297012255149, 1, '2025-11-21 21:13:54', NULL, NULL, 'Disponible'),
-(3, '3A', 'Campus carvajal', 30, 'aula', '5 mesas 5 Sillas', 1, 3.0227338633580394, -76.48266702890398, 1, '2025-11-21 21:42:47', NULL, NULL, 'Disponible');
+(1, '1A', 'CENTRAL', 30, 'aula', '5 MESAS 5 ASIENTOS ', 1, 3.022988296577766, -76.48311232193213, 1, '2025-11-21 19:17:52', NULL, NULL, 'Disponible'),
+(2, '2A', 'bloque tecnico', 30, 'aula', '5 mesas 5 sillas ', 1, 3.0226856468017056, -76.48314178594288, 1, '2025-11-21 21:13:54', NULL, NULL, 'Disponible'),
+(3, '3A', 'Campus carvajal', 30, 'aula', '5 mesas 5 Sillas', 1, 3.023119389696045, -76.48310702600438, 1, '2025-11-21 21:42:47', NULL, NULL, 'Disponible'),
+(4, 'A4', 'Ingenieria', 36, 'aula', '36 sillas 36 mesas', 1, 3.0228329292176555, -76.48311763263227, 1, '2025-11-25 20:40:59', '', 'Proyector, WiFi', 'Disponible');
 
 -- --------------------------------------------------------
 
@@ -397,7 +506,11 @@ INSERT INTO `usuarios` (`id`, `tipo`, `identificacion`, `nombres`, `apellidos`, 
 (2, 'docente', '789', 'anjelo', 'lo', 'anjelo@gmail.com', '555', '2025-11-15', 'calle123', 1, 4, '$2y$10$6cBxhR951sMYbWqNX.vwhOpWAmrZtt5bOW5Pf2YfTq2Uxpu1pv5YO', 1, '2025-11-18 22:08:33'),
 (4, 'docente', '78987', 'Andres David', 'Villa Romero', 'andresd8888@gmail.com', '999888', '2025-10-16', 'calle 0', 1, 4, '$2y$10$gr0sS5vBcC8.8toC6.4GLeq1YD.IcKx9/e4C8/C20AdGHNbtLMczu', 1, '2025-11-18 22:31:53'),
 (12, 'estudiante', '7894516', 'jaide', 'lames ', 'jaider@gmail.com', '59874568', '2025-11-12', 'calle', 2, 5, '$2y$10$pNWjOzrYSBjRIf6Cl9FpBOWIYZXzTkV3V5X.Ij296WpVPzfzDmQKC', 1, '2025-11-22 00:51:47'),
-(13, '', '2545456', 'publico', 'martinez', 'publico@gmail.com', '1234', NULL, NULL, NULL, NULL, '$2y$10$VPbdLwQHUAT9rPI.CLLvg.bTZqvv.PiQ0Gb5xPoOzdSUxpErUYQIa', 1, '2025-11-25 04:55:08');
+(13, 'estudiante', '2000001', 'Carlos', 'López', 'carlos.lopez@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31'),
+(14, 'estudiante', '2000002', 'María', 'García', 'maria.garcia@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31'),
+(15, 'estudiante', '2000003', 'Juan', 'Rodríguez', 'juan.rodriguez@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31'),
+(16, 'estudiante', '2000004', 'Ana', 'Martínez', 'ana.martinez@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31'),
+(17, 'estudiante', '2000005', 'Pedro', 'Silva', 'pedro.silva@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31');
 
 --
 -- Índices para tablas volcadas
@@ -545,7 +658,7 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de la tabla `asignacion_docentes`
 --
 ALTER TABLE `asignacion_docentes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `asistencias`
@@ -557,13 +670,13 @@ ALTER TABLE `asistencias`
 -- AUTO_INCREMENT de la tabla `calificaciones`
 --
 ALTER TABLE `calificaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `docentes`
@@ -593,37 +706,37 @@ ALTER TABLE `horarios`
 -- AUTO_INCREMENT de la tabla `matriculas`
 --
 ALTER TABLE `matriculas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de la tabla `pendientes`
 --
 ALTER TABLE `pendientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `prerequisitos`
 --
 ALTER TABLE `prerequisitos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `programas`
 --
 ALTER TABLE `programas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `salones`
 --
 ALTER TABLE `salones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Restricciones para tablas volcadas

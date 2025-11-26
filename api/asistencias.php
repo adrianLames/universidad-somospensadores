@@ -35,7 +35,7 @@ switch($method) {
                                         INNER JOIN usuarios u ON a.estudiante_id = u.id 
                                         INNER JOIN asignacion_docentes ad ON c.id = ad.curso_id 
                                         INNER JOIN matriculas m ON m.estudiante_id = a.estudiante_id AND m.curso_id = a.curso_id
-                                        WHERE ad.docente_id = ?
+                                        WHERE ad.usuario_id = ?
                                             AND ad.semestre = ?
                                             AND ad.anio = ?
                                             AND m.semestre = ad.semestre

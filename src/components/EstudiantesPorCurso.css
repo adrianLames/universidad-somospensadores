@@ -1,0 +1,222 @@
+.estudiantes-por-curso {
+  background: #2a2a2a;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.1);
+  margin: 1.5rem;
+  border: 1px solid #3a3a3a;
+}
+
+.estudiantes-por-curso h2 {
+  color: #f0d070;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #d4af37;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #d4af37;
+  font-size: 1.2rem;
+}
+
+.no-cursos {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #d4af37;
+  font-size: 1.1rem;
+  background: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid #3a3a3a;
+}
+
+.cursos-container {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.curso-card {
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
+  transition: all 0.3s ease;
+}
+
+.curso-card:hover {
+  border-color: #d4af37;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.curso-header {
+  background: linear-gradient(90deg, #2a2a2a 0%, #1f1f1f 100%);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 2px solid #d4af37;
+  transition: background 0.2s ease;
+}
+
+.curso-header:hover {
+  background: linear-gradient(90deg, #303030 0%, #252525 100%);
+}
+
+.curso-info h3 {
+  color: #f0d070;
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.creditos {
+  color: #bbb;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+  display: inline-block;
+  background: #d4af37;
+  color: #1a1a1a;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.curso-stats {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.estudiantes-count {
+  color: #d4af37;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.expand-icon {
+  color: #d4af37;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.expand-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.curso-content {
+  padding: 1.5rem;
+  background: #1a1a1a;
+}
+
+.no-estudiantes {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  font-style: italic;
+}
+
+.estudiantes-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1a1a1a;
+}
+
+.estudiantes-table thead {
+  background: linear-gradient(90deg, #d4af37 80%, #f0d070 100%);
+  color: #1a1a1a;
+}
+
+.estudiantes-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  border-right: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.estudiantes-table th:last-child {
+  border-right: none;
+}
+
+.estudiantes-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #2a2a2a;
+  color: #e0e0e0;
+  vertical-align: middle;
+}
+
+.estudiantes-table tbody tr:hover {
+  background: #252525;
+  box-shadow: inset 0 0 8px rgba(212, 175, 55, 0.1);
+}
+
+.estudiantes-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nombre {
+  font-weight: 600;
+  color: #f0d070;
+}
+
+.email {
+  color: #bbb;
+  font-size: 0.95rem;
+}
+
+.nota {
+  text-align: center;
+  font-weight: 700;
+}
+
+.sin-nota {
+  color: #999;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.estado {
+  text-align: center;
+}
+
+.estado-badge {
+  display: inline-block;
+  color: white;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 90px;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .curso-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .curso-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .estudiantes-table {
+    font-size: 0.9rem;
+  }
+
+  .estudiantes-table th,
+  .estudiantes-table td {
+    padding: 0.6rem 0.5rem;
+  }
+}

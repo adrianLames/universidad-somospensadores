@@ -17,7 +17,7 @@ switch($method) {
                 LEFT JOIN facultades f ON u.facultad_id = f.id 
                 LEFT JOIN programas p ON u.programa_id = p.id 
                 INNER JOIN matriculas m ON u.id = m.estudiante_id 
-                WHERE m.curso_id = ? AND u.tipo = 'estudiante'";
+                WHERE m.curso_id = ? AND m.estado = 'activa' AND u.tipo = 'estudiante'";
             if (!$all && $activoParam === null) {
                 $sql .= " AND u.activo = 1";
                 $stmt = $conn->prepare($sql);

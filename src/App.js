@@ -19,6 +19,7 @@ import ProfesorMaterias from './components/ProfesorMaterias';
 import Pensum from './components/Pensum';
 import VincularProfesorMateria from './components/VincularProfesorMateria';
 import Salones from './components/Salones';
+import EstudiantesPorCurso from './components/EstudiantesPorCurso';
 import Metricas from './components/Metricas';
 import MapaSalonesLeaflet from './components/MapaSalonesLeaflet';
 import MapaSalonesPlano from './components/MapaSalonesPlano';
@@ -114,6 +115,7 @@ function App() {
             <Route path="/calificaciones" element={<Calificaciones user={user} />} />
             <Route path="/horarios" element={<Horarios user={user} />} />
             <Route path="/asignacion-profesores" element={<ProfesorMaterias profesorId={user?.id} />} />
+            <Route path="/estudiantes-por-curso" element={<EstudiantesPorCurso user={user} />} />
             <Route path="/vincular-profesor-materia" element={<VincularProfesorMateria />} />
             <Route path="/pensum" element={<Pensum user={user} />} />
             <Route path="/editar-usuarios" element={<EditarUsuarios />} />

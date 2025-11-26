@@ -41,6 +41,10 @@ const DashboardProfesor = ({ user, onLogout }) => {
               <h3>📊 Calificaciones</h3>
               <p>Ingresa y gestiona las calificaciones</p>
             </Link>
+            <Link to="/estudiantes-por-curso" className="feature-card">
+              <h3>👥 Estudiantes por Materia</h3>
+              <p>Visualiza todos los estudiantes matriculados en tus cursos</p>
+            </Link>
             <Link to="/asignacion-profesores" className="feature-card">
               <h3>📘 Asignación de Profesores</h3>
               <p>Consulta y gestiona los cursos asignados</p>

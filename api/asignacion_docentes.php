@@ -12,7 +12,7 @@ switch ($method) {
         if ($curso_id) {
             // Obtener el profesor asignado a un curso específico
             $query = "SELECT u.id, u.nombres, u.apellidos, u.email FROM asignacion_docentes ad
-                      INNER JOIN usuarios u ON ad.docente_id = u.id
+                      INNER JOIN usuarios u ON ad.usuario_id = u.id
                       WHERE ad.curso_id = ?";
             $stmt = $conn->prepare($query);
             $stmt->bind_param('i', $curso_id);
@@ -27,7 +27,7 @@ switch ($method) {
             $query = "SELECT ad.id, c.id as curso_id, c.nombre as curso_nombre, ad.semestre, ad.anio
                       FROM asignacion_docentes ad
                       INNER JOIN cursos c ON ad.curso_id = c.id
-                      WHERE ad.docente_id = ?";
+                      WHERE ad.usuario_id = ?";
             $stmt = $conn->prepare($query);
             $stmt->bind_param('i', $docente_id);
             $stmt->execute();
