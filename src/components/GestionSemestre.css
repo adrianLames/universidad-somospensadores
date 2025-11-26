@@ -1,0 +1,434 @@
+.gestion-semestre {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+    min-height: 100vh;
+}
+
+.gestion-semestre h2 {
+    color: #d4af37;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+/* Mensajes */
+.mensaje {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    animation: slideDown 0.3s ease;
+}
+
+.mensaje.success {
+    background: rgba(46, 204, 113, 0.2);
+    border: 1px solid #2ecc71;
+    color: #2ecc71;
+}
+
+.mensaje.error {
+    background: rgba(255, 107, 107, 0.2);
+    border: 1px solid #ff6b6b;
+    color: #ff6b6b;
+}
+
+/* Tabs */
+.vista-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #3a3a3a;
+}
+
+.vista-tabs button {
+    padding: 1rem 2rem;
+    background: transparent;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.vista-tabs button:hover {
+    color: #d4af37;
+}
+
+.vista-tabs button.active {
+    color: #d4af37;
+    border-bottom-color: #d4af37;
+}
+
+/* Configuración de Semestre */
+.config-semestre {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    background: #2a2a2a;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid #3a3a3a;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: #d4af37;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.75rem;
+    background: #1a1a1a;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #d4af37;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.semestre-display {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #d4af37 !important;
+    text-align: center;
+}
+
+/* Filtros */
+.filtros {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.input-busqueda {
+    font-size: 1rem !important;
+    padding: 0.85rem !important;
+    border: 2px solid #3a3a3a !important;
+    transition: all 0.3s ease !important;
+}
+
+.input-busqueda:focus {
+    border-color: #d4af37 !important;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3) !important;
+}
+
+/* Acciones */
+.acciones {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.acciones button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-seleccionar {
+    background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+    color: #fff;
+}
+
+.btn-seleccionar:hover {
+    background: linear-gradient(135deg, #4a4a4a, #3a3a3a);
+    transform: translateY(-2px);
+}
+
+.btn-limpiar {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+    color: #fff;
+}
+
+.btn-limpiar:hover {
+    background: linear-gradient(135deg, #ff5252, #e74c3c);
+    transform: translateY(-2px);
+}
+
+.btn-activar {
+    background: linear-gradient(135deg, #d4af37, #f0d070);
+    color: #1a1a1a;
+    font-weight: bold;
+    margin-left: auto;
+}
+
+.btn-activar:hover:not(:disabled) {
+    background: linear-gradient(135deg, #f0d070, #d4af37);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn-activar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.contador {
+    color: #d4af37;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    background: #2a2a2a;
+    border-radius: 8px;
+    border: 1px solid #3a3a3a;
+}
+
+/* Lista de Cursos para Seleccionar */
+.cursos-lista {
+    display: grid;
+    gap: 1rem;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.cursos-lista::-webkit-scrollbar {
+    width: 8px;
+}
+
+.cursos-lista::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+.cursos-lista::-webkit-scrollbar-thumb {
+    background: #d4af37;
+    border-radius: 4px;
+}
+
+.curso-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #2a2a2a;
+    border: 2px solid #3a3a3a;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.curso-item:hover {
+    border-color: #d4af37;
+    transform: translateX(5px);
+}
+
+.curso-item.seleccionado {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(240, 208, 112, 0.1));
+    border-color: #d4af37;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+.curso-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #d4af37;
+}
+
+.curso-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.curso-info strong {
+    color: #d4af37;
+    font-size: 1.1rem;
+}
+
+.curso-info span {
+    color: #ccc;
+}
+
+.curso-detalles {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.badge {
+    padding: 0.4rem 0.8rem;
+    background: #3a3a3a;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #fff;
+}
+
+.badge.jornada {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+/* Selector de Semestre */
+.semestre-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #2a2a2a;
+    border-radius: 12px;
+    border: 1px solid #3a3a3a;
+}
+
+.semestre-selector label {
+    color: #d4af37;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.semestre-selector select {
+    flex: 1;
+    padding: 0.75rem;
+    background: #1a1a1a;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* Tabla de Cursos Activos */
+.tabla-cursos-activos {
+    width: 100%;
+    background: #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #3a3a3a;
+}
+
+.tabla-cursos-activos thead {
+    background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+}
+
+.tabla-cursos-activos th {
+    padding: 1rem;
+    text-align: left;
+    color: #d4af37;
+    font-weight: 600;
+    border-bottom: 2px solid #d4af37;
+}
+
+.tabla-cursos-activos td {
+    padding: 1rem;
+    color: #ccc;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.tabla-cursos-activos tbody tr {
+    transition: all 0.3s ease;
+}
+
+.tabla-cursos-activos tbody tr:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.estado {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.estado.activo {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+}
+
+.estado.inactivo {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+}
+
+.btn-eliminar {
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-eliminar:hover {
+    background: linear-gradient(135deg, #ff5252, #e74c3c);
+    transform: scale(1.1);
+}
+
+.no-datos {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* Animaciones */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .config-semestre {
+        grid-template-columns: 1fr;
+    }
+    
+    .filtros {
+        grid-template-columns: 1fr;
+    }
+    
+    .acciones {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-activar {
+        margin-left: 0;
+    }
+    
+    .tabla-cursos-activos {
+        font-size: 0.85rem;
+    }
+    
+    .tabla-cursos-activos th,
+    .tabla-cursos-activos td {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .filtros {
+        grid-template-columns: 1fr 1fr;
+    }
+}

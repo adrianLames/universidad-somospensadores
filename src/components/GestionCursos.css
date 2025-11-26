@@ -1,0 +1,141 @@
+.gestion-cursos {
+  background: #2a2a2a;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(212, 175, 55, 0.1);
+  margin: 1rem;
+  border: 1px solid #3a3a3a;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow: auto;
+}
+
+.modal-content {
+  background: #1a1a1a;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 95vw;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #3a3a3a;
+}
+
+.no-data p {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #b0b0b0;
+}
+
+.cursos-list {
+  margin-top: 1rem;
+}
+
+.cursos-list table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1a1a1a;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(212, 175, 55, 0.1);
+  margin: 2em 0;
+}
+
+.cursos-list th {
+  background: linear-gradient(135deg, #d4af37 80%, #f0d070 100%);
+  color: #1a1a1a;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+  border-right: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.cursos-list td {
+  padding: 1rem;
+  border-bottom: 1px solid #2a2a2a;
+  color: #e0e0e0;
+}
+
+.cursos-list tr:hover {
+  background: #2a2a2a;
+}
+
+@media (max-width: 768px) {
+  .gestion-cursos {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .cursos-list {
+    overflow-x: auto;
+  }
+  
+  .cursos-list table {
+    min-width: 600px;
+  }
+}
+
+/* Filtro de programa */
+.filtro-programa {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  background: #2a2a2a;
+  border-radius: 6px;
+  padding: 0.5em 1em;
+  margin-left: 1em;
+  box-shadow: 0 1px 4px rgba(212, 175, 55, 0.1);
+  border: 1px solid #3a3a3a;
+}
+
+.filtro-programa label {
+  font-weight: 500;
+  color: #d4af37;
+  margin-right: 0.5em;
+}
+
+.filtro-programa select {
+  padding: 0.3em 1.2em 0.3em 0.7em;
+  border-radius: 5px;
+  border: 1px solid #3a3a3a;
+  background: #1a1a1a;
+  font-size: 1em;
+  color: #d4af37;
+  transition: border 0.2s;
+}
+
+.filtro-programa select:focus {
+  outline: none;
+  border: 1.5px solid #d4af37;
+}
+
+select[multiple] {
+  min-height: 100px;
+  max-height: 200px;
+  width: 100%;
+  overflow-y: auto;
+  font-size: 1rem;
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+select[multiple] option:checked {
+  background: #d4af37 !important;
+  color: #1a1a1a;
+  font-weight: bold;
+}

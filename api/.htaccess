@@ -1,0 +1,3 @@
+# Los headers CORS se manejan ahora en init_api.php (vía cors.php)
+# para evitar duplicación con Apache
+

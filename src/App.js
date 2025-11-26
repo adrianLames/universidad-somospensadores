@@ -1,0 +1,146 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import Dashboard from './components/Dashboard';
+import DashboardAdmin from './components/DashboardAdmin';
+import DashboardProfesor from './components/DashboardProfesor';
+import DashboardEstudiante from './components/DashboardEstudiante';
+import DashboardPublico from './components/DashboardPublico';
+import GestionCursos from './components/GestionCursos';
+import CursosPublicos from './components/CursosPublicos';
+import NuevaGestionUsuarios from './components/NuevaGestionUsuarios';
+import GestionProgramas from './components/GestionProgramas';
+import GestionFacultades from './components/GestionFacultades';
+import Matriculas from './components/Matriculas';
+import Asistencias from './components/Asistencias';
+import Calificaciones from './components/Calificaciones';
+import Horarios from './components/Horarios';
+import ProfesorMaterias from './components/ProfesorMaterias';
+import Pensum from './components/Pensum';
+import VincularProfesorMateria from './components/VincularProfesorMateria';
+import Salones from './components/Salones';
+import EstudiantesPorCurso from './components/EstudiantesPorCurso';
+import Metricas from './components/Metricas';
+import Reportes from './components/Reportes';
+import MisCursos from './components/MisCursos';
+import DetalleCurso from './components/DetalleCurso';
+import MapaSalonesLeaflet from './components/MapaSalonesLeaflet';
+import MapaSalonesPlano from './components/MapaSalonesPlano';
+import AdminMapaSalones from './components/AdminMapaSalones';
+import AdminMapaSalonesVisual from './components/AdminMapaSalonesVisual';
+import RegistroPublico from './components/RegistroPublico';
+import GestionPrerequisitos from './components/GestionPrerequisitos';
+import GestionSemestre from './components/GestionSemestre';
+
+import EditarUsuarios from './components/EditarUsuarios';
+import { API_BASE } from './config/api';
+import './App.css';
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [dbInitialized, setDbInitialized] = useState(false);
+
+  // Inicializar base de datos al cargar la aplicación
+  useEffect(() => {
+    initializeDatabase();
+  }, []);
+
+  const initializeDatabase = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/init.php`);
+      const result = await response.json();
+      console.log(result.message);
+      setDbInitialized(true);
+      
+      // Verificar si hay un usuario logueado
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error('Error inicializando base de datos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Inicializando sistema...</p>
+      </div>
+    );
+  }
+
+  // Determinar el tipo de usuario
+  const getDashboardComponent = () => {
+    if (!user) return <Login onLogin={handleLogin} />;
+    switch (user.tipo) {
+      case 'admin':
+        return <DashboardAdmin user={user} onLogout={handleLogout} />;
+      case 'docente':
+        return <DashboardProfesor user={user} onLogout={handleLogout} />;
+      case 'estudiante':
+        return <DashboardEstudiante user={user} onLogout={handleLogout} />;
+      case 'publico':
+        return <DashboardPublico user={user} onLogout={handleLogout} />;
+      default:
+        return <DashboardPublico user={user} onLogout={handleLogout} />;
+    }
+  };
+
+  return (
+    <Router>
+      <div className="App">
+        {!user ? (
+          <Login onLogin={handleLogin} />
+        ) : (
+          <Routes>
+            <Route path="/" element={getDashboardComponent()} />
+            <Route path="/cursos" element={user && user.tipo === 'publico' ? <CursosPublicos /> : <GestionCursos user={user} />} />
+            <Route path="/cursos-publicos" element={<CursosPublicos />} />
+            <Route path="/registro-publico" element={<RegistroPublico />} />
+            <Route path="/usuarios" element={<NuevaGestionUsuarios user={user} />} />
+            <Route path="/facultades" element={<GestionFacultades />} />
+            <Route path="/programas" element={<GestionProgramas user={user} />} />
+            <Route path="/matriculas" element={<Matriculas user={user} />} />
+            <Route path="/asistencias" element={<Asistencias user={user} />} />
+            <Route path="/calificaciones" element={<Calificaciones user={user} />} />
+            <Route path="/horarios" element={<Horarios user={user} />} />
+            <Route path="/asignacion-profesores" element={<ProfesorMaterias profesorId={user?.id} />} />
+            <Route path="/estudiantes-por-curso" element={<EstudiantesPorCurso user={user} />} />
+            <Route path="/vincular-profesor-materia" element={<VincularProfesorMateria />} />
+            <Route path="/pensum" element={<Pensum user={user} />} />
+            <Route path="/editar-usuarios" element={<EditarUsuarios />} />
+            <Route path="/salones" element={<Salones />} />
+            <Route path="/admin-mapa-salones" element={<AdminMapaSalones user={user} />} />
+            <Route path="/admin-mapa-salones-visual" element={<AdminMapaSalonesVisual user={user} />} />
+            <Route path="/mapa-salones" element={<MapaSalonesLeaflet />} />
+            <Route path="/mapa-salones-plano" element={<MapaSalonesPlano />} />
+            <Route path="/metricas" element={<Metricas />} />
+            <Route path="/reportes" element={<Reportes user={user} />} />
+            <Route path="/mis-cursos" element={<MisCursos user={user} />} />
+            <Route path="/curso/:cursoId" element={<DetalleCurso user={user} />} />
+            <Route path="/prerequisitos" element={<GestionPrerequisitos user={user} />} />
+            <Route path="/gestion-semestre" element={<GestionSemestre user={user} />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        )}
+      </div>
+    </Router>
+  );
+}
+
+export default App;

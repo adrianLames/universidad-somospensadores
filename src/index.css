@@ -1,0 +1,49 @@
+:root {
+  /* Paleta de Colores: Negro y Dorado */
+  --primary-black: #1a1a1a;       /* Negro primario */
+  --primary-gold: #d4af37;        /* Dorado principal */
+  --secondary-gold: #c9a227;      /* Dorado secundario */
+  --accent-gold: #f0d070;         /* Dorado claro (acento) */
+  --accent-light: #2a2a2a;        /* Gris oscuro */
+  --accent-lighter: #0f0f0f;      /* Negro más oscuro */
+  
+  /* Escala de grises */
+  --text-dark: #ffffff;
+  --text-medium: #e0e0e0;
+  --text-light: #a0a0a0;
+  --bg-white: #1a1a1a;
+  --bg-light: #2a2a2a;
+  --border-color: #d4af37;
+  --border-light: #3a3a3a;
+  
+  /* Efectos */
+  --shadow-soft: 0 2px 8px rgba(212, 175, 55, 0.1);
+  --shadow-medium: 0 4px 16px rgba(212, 175, 55, 0.15);
+  --shadow-strong: 0 8px 24px rgba(212, 175, 55, 0.2);
+  --border-radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  color: #ffffff;
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+code {
+  font-family: 'Courier New', monospace;
+}

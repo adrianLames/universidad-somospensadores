@@ -1,0 +1,26 @@
+.asignacion-profesores {
+  background: #2a2a2a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1);
+  margin: 1rem;
+  border: 1px solid #3a3a3a;
+}
+
+.asignacion-profesores h1 {
+  color: #f0d070;
+  margin: 0;
+  font-weight: 700;
+}
+
+.asignacion-profesores form { margin-top: 1rem; }
+
+.asignacion-profesores .form-group { margin-bottom: 0.75rem; }
+
+.asignacion-profesores ul { margin-top: 1rem; list-style: none; padding: 0; }
+
+.asignacion-profesores li { padding: 0.5rem 0; border-bottom: 1px solid #3a3a3a; color: #e0e0e0; }
+
+/* Ajuste BackHomeButton */
+.asignacion-profesores .back-home-btn { padding: 0.4rem 0.7rem; }
+
