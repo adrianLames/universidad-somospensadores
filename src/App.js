@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
 import DashboardAdmin from './components/DashboardAdmin';
 import DashboardProfesor from './components/DashboardProfesor';
 import DashboardEstudiante from './components/DashboardEstudiante';
 import DashboardPublico from './components/DashboardPublico';
 import GestionCursos from './components/GestionCursos';
 import CursosPublicos from './components/CursosPublicos';
-import NuevaGestionUsuarios from './components/NuevaGestionUsuarios';
 import GestionProgramas from './components/GestionProgramas';
 import GestionFacultades from './components/GestionFacultades';
 import Matriculas from './components/Matriculas';
@@ -33,6 +31,7 @@ import GestionPrerequisitos from './components/GestionPrerequisitos';
 import GestionSemestre from './components/GestionSemestre';
 
 import EditarUsuarios from './components/EditarUsuarios';
+import NuevaGestionUsuarios from './components/NuevaGestionUsuarios';
 import { API_BASE } from './config/api';
 import './App.css';
 

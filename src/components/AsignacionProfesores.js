@@ -23,27 +23,30 @@ const AsignacionProfesores = () => {
     const fetchProfesores = async () => {
         try {
             const data = await apiRequest('usuarios.php?tipo=docente');
-            setProfesores(data);
+            setProfesores(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching profesores:', error);
+            setProfesores([]);
         }
     };
 
     const fetchCursos = async () => {
         try {
             const data = await apiRequest('cursos.php');
-            setCursos(data);
+            setCursos(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching cursos:', error);
+            setCursos([]);
         }
     };
 
     const fetchAsignaciones = async () => {
         try {
             const data = await apiRequest('asignacion_docentes.php');
-            setAsignaciones(data);
+            setAsignaciones(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching asignaciones:', error);
+            setAsignaciones([]);
         }
     };
 
@@ -132,7 +135,7 @@ const AsignacionProfesores = () => {
                         required
                     >
                         <option value="">Seleccionar profesor</option>
-                        {profesores.map(profesor => (
+                        {Array.isArray(profesores) && profesores.map(profesor => (
                             <option key={profesor.id} value={profesor.id}>
                                 {profesor.nombres} {profesor.apellidos}
                             </option>
@@ -147,7 +150,7 @@ const AsignacionProfesores = () => {
                         required
                     >
                         <option value="">Seleccionar curso</option>
-                        {cursos.map(curso => (
+                        {Array.isArray(cursos) && cursos.map(curso => (
                             <option key={curso.id} value={curso.id}>
                                 {curso.nombre}
                             </option>
@@ -179,7 +182,7 @@ const AsignacionProfesores = () => {
 
             <h2>Asignaciones Existentes</h2>
             <ul>
-                {asignaciones.map(asignacion => (
+                {Array.isArray(asignaciones) && asignaciones.map(asignacion => (
                     <li key={asignacion.id}>
                         Profesor: {asignacion.docente_nombre} - Curso: {asignacion.curso_nombre} - Semestre: {asignacion.semestre} - Año: {asignacion.anio}
                     </li>

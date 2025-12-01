@@ -37,6 +37,10 @@ body {
 
 .App {
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* Loading Screen */
@@ -68,7 +72,7 @@ body {
 /* Componentes generales */
 .gestion-cursos, .gestion-usuarios, .gestion-programas,
 .matriculas, .asistencias, .calificaciones, .horarios,
-.dashboard, .salones {
+.salones {
   background: var(--bg-white);
   padding: 2rem;
   border-radius: var(--border-radius);

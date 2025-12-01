@@ -88,11 +88,11 @@ const DashboardProfesor = ({ user, onLogout }) => {
 
   return (
     <div className="dashboard">
-      {/* Overlay para cerrar el menú en móvil */}
-      {sidebarOpen && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
+      {/* Overlay para cerrar el menú */}
+      <div className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} onClick={toggleSidebar}></div>
       
       {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <button className="close-sidebar" onClick={toggleSidebar}>✕</button>
           <h3>Panel Profesor</h3>
@@ -124,7 +124,7 @@ const DashboardProfesor = ({ user, onLogout }) => {
       </aside>
 
       {/* Main Content */}
-      <div className="dashboard-content">
+      <div className={`dashboard-content ${sidebarOpen ? 'shifted' : ''}`}>
         <header className="dashboard-header">
           <div className="header-left">
             <button className="menu-toggle" onClick={toggleSidebar}>
