@@ -1,10 +1,4 @@
 <?php
-// PRIMERO incluir CORS para establecer headers
-include_once __DIR__ . '/cors.php';
-
-// LUEGO establecer Content-Type
-header("Content-Type: application/json; charset=UTF-8", true);
-
 // Configuración de la base de datos y conexión
 class Database {
     private $host = "localhost";
@@ -20,7 +14,7 @@ class Database {
             if ($this->conn->connect_error) {
                 throw new Exception("Connection failed: " . $this->conn->connect_error);
             }
-            $this->conn->set_charset("utf8");
+            $this->conn->set_charset("utf8mb4");
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode(["error" => $e->getMessage()]);

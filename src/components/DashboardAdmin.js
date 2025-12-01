@@ -1,9 +1,22 @@
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
+
+// Importar componentes existentes
+import GestionSemestre from './GestionSemestre';
+import VincularProfesorMateria from './VincularProfesorMateria';
+import Horarios from './Horarios';
+import Salones from './Salones';
+import AdminMapaSalones from './AdminMapaSalones';
+import AdminMapaSalonesVisual from './AdminMapaSalonesVisual';
+import Metricas from './Metricas';
+import Reportes from './Reportes';
 
 const DashboardAdmin = ({ user, onLogout }) => {
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedSections, setExpandedSections] = useState({});
+  const [currentView, setCurrentView] = useState('home');
 
   const handleLogout = () => {
     onLogout();
@@ -17,65 +30,163 @@ const DashboardAdmin = ({ user, onLogout }) => {
     return '¡Buenas noches!';
   };
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const menuSections = [
+    {
+      title: 'Gestión de Usuarios',
+      icon: '👥',
+      items: [
+        { name: 'Usuarios', view: 'usuarios', desc: 'Administra estudiantes, docentes y administradores' }
+      ]
+    },
+    {
+      title: 'Estructura Académica',
+      icon: '🏛️',
+      items: [
+        { name: 'Facultades', view: 'facultades', desc: 'Crea, edita y elimina facultades académicas' },
+        { name: 'Programas', view: 'programas', desc: 'Gestiona programas y planes de estudio' },
+        { name: 'Cursos', view: 'cursos', desc: 'Administra la oferta académica de cursos' },
+        { name: 'Prerequisitos', view: 'prerequisitos', desc: 'Gestiona las dependencias entre materias' }
+      ]
+    },
+    {
+      title: 'Gestión Semestral',
+      icon: '📅',
+      items: [
+        { name: 'Gestión de Semestre', view: 'gestion-semestre', desc: 'Activa cursos para matrícula' },
+        { name: 'Vincular Profesores', view: 'vincular-profesor-materia', desc: 'Vincula docentes con materias' },
+        { name: 'Horarios', view: 'horarios', desc: 'Asigna horarios a cursos y docentes' }
+      ]
+    },
+    {
+      title: 'Infraestructura',
+      icon: '🏫',
+      items: [
+        { name: 'Salones', view: 'salones', desc: 'Administra aulas y espacios universitarios' },
+        { name: 'Mapa de Salones (Tabla)', view: 'admin-mapa-salones', desc: 'Gestiona salones en vista tabular' },
+        { name: 'Mapa de Salones (Visual)', view: 'admin-mapa-salones-visual', desc: 'Gestiona salones de forma visual' }
+      ]
+    },
+    {
+      title: 'Reportes y Estadísticas',
+      icon: '📊',
+      items: [
+        { name: 'Métricas', view: 'metricas', desc: 'Visualiza estadísticas del sistema' },
+        { name: 'Reportes Académicos', view: 'reportes', desc: 'Genera reportes de asistencias, notas, matrículas' }
+      ]
+    }
+  ];
+
+  const handleMenuClick = (view) => {
+    setCurrentView(view);
+    setSidebarOpen(false);
+  };
+
+  const renderContent = () => {
+    switch(currentView) {
+      case 'usuarios':
+        return <div className="welcome-section"><h2>👥 Gestión de Usuarios</h2><p>Módulo en construcción. Usa la ruta /usuarios para acceder.</p><button className="btn-primary" onClick={() => navigate('/usuarios')}>Ir a Usuarios</button></div>;
+      case 'facultades':
+        return <div className="welcome-section"><h2>🏛️ Facultades</h2><p>Módulo en construcción. Usa la ruta /facultades para acceder.</p><button className="btn-primary" onClick={() => navigate('/facultades')}>Ir a Facultades</button></div>;
+      case 'programas':
+        return <div className="welcome-section"><h2>📚 Programas</h2><p>Módulo en construcción. Usa la ruta /programas para acceder.</p><button className="btn-primary" onClick={() => navigate('/programas')}>Ir a Programas</button></div>;
+      case 'cursos':
+        return <div className="welcome-section"><h2>📖 Cursos</h2><p>Módulo en construcción. Usa la ruta /cursos para acceder.</p><button className="btn-primary" onClick={() => navigate('/cursos')}>Ir a Cursos</button></div>;
+      case 'prerequisitos':
+        return <div className="welcome-section"><h2>🔗 Prerequisitos</h2><p>Módulo en construcción. Usa la ruta /prerequisitos para acceder.</p><button className="btn-primary" onClick={() => navigate('/prerequisitos')}>Ir a Prerequisitos</button></div>;
+      case 'gestion-semestre':
+        return <GestionSemestre user={user} />;
+      case 'vincular-profesor-materia':
+        return <VincularProfesorMateria user={user} />;
+      case 'horarios':
+        return <Horarios user={user} />;
+      case 'salones':
+        return <Salones user={user} />;
+      case 'admin-mapa-salones':
+        return <AdminMapaSalones user={user} />;
+      case 'admin-mapa-salones-visual':
+        return <AdminMapaSalonesVisual user={user} />;
+      case 'metricas':
+        return <Metricas user={user} />;
+      case 'reportes':
+        return <Reportes user={user} />;
+      default:
+        return (
+          <div className="welcome-section">
+            <h2>Panel de Control Administrador</h2>
+            <p>Bienvenido al Sistema de Gestión Universitaria SOMOSPENSADORES</p>
+            <p>Selecciona una opción del menú lateral para comenzar</p>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="dashboard">
-      <header className="dashboard-header">
-        <h1>🏫 Universidad SOMOSPENSADORES</h1>
-        <div className="user-info">
-          <span>{getWelcomeMessage()} {user.nombres}</span>
-          <span className={`user-role ${user.tipo}`}>{user.tipo.toUpperCase()}</span>
-          <button onClick={handleLogout}>Cerrar Sesión</button>
+      {/* Overlay para cerrar el menú en móvil */}
+      {sidebarOpen && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
+      
+      {/* Sidebar */}
+      <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
+        <div className="sidebar-header">
+          <button className="close-sidebar" onClick={toggleSidebar}>✕</button>
+          <h3>Panel Administrador</h3>
         </div>
-      </header>
-      <main className="dashboard-main">
-        <div className="welcome-section">
-          <h2>Panel de Control Administrador</h2>
-          <p>Bienvenido al Sistema de Gestión Universitaria SOMOSPENSADORES</p>
-          <p>Selecciona una opción del menú superior para comenzar</p>
-          <div className="feature-cards">
-            <Link to="/usuarios" className="feature-card">
-              <h3>👥 Nueva Gestión de Usuarios</h3>
-              <p>Administra estudiantes, docentes y administradores con la nueva interfaz</p>
-            </Link>
-            <Link to="/facultades" className="feature-card">
-              <h3>🏛️ Facultades Académicas</h3>
-              <p>Crea, edita y elimina facultades académicas</p>
-            </Link>
-            <Link to="/programas" className="feature-card">
-              <h3>📚 Programas Académicos</h3>
-              <p>Gestiona programas y planes de estudio</p>
-            </Link>
-            <Link to="/cursos" className="feature-card">
-              <h3>📖 Cursos</h3>
-              <p>Administra la oferta académica de cursos</p>
-            </Link>
-            <Link to="/vincular-profesor-materia" className="feature-card">
-              <h3>🔗 Vincular Profesores</h3>
-              <p>Vincula docentes con las materias que impartirán</p>
-            </Link>
-            <Link to="/horarios" className="feature-card">
-              <h3>🕐 Horarios</h3>
-              <p>Asigna horarios a cursos y docentes</p>
-            </Link>
-            <Link to="/salones" className="feature-card">
-              <h3>🏫 Salones</h3>
-              <p>Administra aulas y espacios universitarios</p>
-            </Link>
-            <Link to="/admin-mapa-salones" className="feature-card">
-              <h3>🗺️ Mapa de Salones (Tabla)</h3>
-              <p>Gestiona salones y coordenadas en vista tabular</p>
-            </Link>
-            <Link to="/admin-mapa-salones-visual" className="feature-card">
-              <h3>🗺️ Mapa de Salones (Visual)</h3>
-              <p>Gestiona salones de forma visual e interactiva en el mapa</p>
-            </Link>
-            <Link to="/metricas" className="feature-card">
-              <h3>📊 Métricas</h3>
-              <p>Visualiza estadísticas y datos globales del sistema</p>
-            </Link>
+        <nav className="sidebar-nav">
+          {menuSections.map((section, idx) => (
+            <div key={idx} className="sidebar-section">
+              <button 
+                className="sidebar-section-title"
+                onClick={() => toggleSection(idx)}
+              >
+                <span>{section.icon} {section.title}</span>
+                <span className={`arrow ${expandedSections[idx] ? 'arrow-down' : ''}`}>›</span>
+              </button>
+              <div className={`sidebar-section-content ${expandedSections[idx] ? 'expanded' : ''}`}>
+                {section.items.map((item, itemIdx) => (
+                  <button
+                    key={itemIdx} 
+                    className="sidebar-link"
+                    onClick={() => handleMenuClick(item.view)}
+                  >
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <div className="dashboard-content">
+        <header className="dashboard-header">
+          <div className="header-left">
+            <button className="menu-toggle" onClick={toggleSidebar}>
+              ☰
+            </button>
+            <h1>🏫 Universidad SOMOSPENSADORES</h1>
           </div>
-        </div>
-      </main>
+          <div className="user-info">
+            <span>{getWelcomeMessage()} {user.nombres}</span>
+            <span className={`user-role ${user.tipo}`}>{user.tipo.toUpperCase()}</span>
+            <button onClick={handleLogout}>Cerrar Sesión</button>
+          </div>
+        </header>
+        <main className="dashboard-main">
+          {renderContent()}
+        </main>
+      </div>
     </div>
   );
 };

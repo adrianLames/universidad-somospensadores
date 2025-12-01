@@ -48,7 +48,9 @@ const Metricas = () => {
           fetch(`${API_BASE}/horarios.php`),
           fetch(`${API_BASE}/matriculas.php`)
         ]);
-        const cursos = await cursosRes.json();
+        
+        const cursosData = await cursosRes.json();
+        const cursos = cursosData.success ? cursosData.data : (Array.isArray(cursosData) ? cursosData : []);
         const salones = await salonesRes.json();
         const horarios = await horariosRes.json();
         const matriculas = await matriculasRes.json();

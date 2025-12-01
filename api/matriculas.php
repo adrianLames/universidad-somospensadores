@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/cors.php';
+include_once __DIR__ . '/init_api.php';
 include 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -20,7 +20,87 @@ switch ($method) {
             break;
         }
 
-        // Verificar que el curso exista y esté activo
+        // 1. Verificar que el curso esté activo para el semestre actual
+        $semestre_academico = $anio . '-' . $semestre;
+        $query = "SELECT sa.* FROM semestres_activos sa 
+                  WHERE sa.curso_id = ? 
+                  AND sa.semestre_academico = ? 
+                  AND sa.activo = 1
+                  AND CURDATE() BETWEEN sa.fecha_inicio_matricula AND sa.fecha_fin_matricula";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("is", $curso_id, $semestre_academico);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            http_response_code(400);
+            echo json_encode([
+                "success" => false, 
+                "message" => "Este curso no está disponible para matrícula en el periodo actual o el periodo de matrícula ha cerrado"
+            ]);
+            break;
+        }
+        
+        $semestre_activo = $result->fetch_assoc();
+
+        // 2. Verificar cupos disponibles
+        if ($semestre_activo['cupos_disponibles'] !== null) {
+            $query_cupos = "SELECT COUNT(*) as total FROM matriculas 
+                            WHERE curso_id = ? AND semestre = ? AND anio = ? AND estado = 'activa'";
+            $stmt_cupos = $conn->prepare($query_cupos);
+            $stmt_cupos->bind_param("isi", $curso_id, $semestre, $anio);
+            $stmt_cupos->execute();
+            $result_cupos = $stmt_cupos->get_result();
+            $cupos_ocupados = $result_cupos->fetch_assoc()['total'];
+            
+            if ($cupos_ocupados >= $semestre_activo['cupos_disponibles']) {
+                http_response_code(400);
+                echo json_encode([
+                    "success" => false, 
+                    "message" => "No hay cupos disponibles para este curso"
+                ]);
+                break;
+            }
+        }
+
+        // 3. Verificar prerequisitos del curso
+        $query_prereq = "SELECT p.prerequisito_id, c.nombre 
+                         FROM prerequisitos p
+                         INNER JOIN cursos c ON p.prerequisito_id = c.id
+                         WHERE p.curso_id = ?";
+        $stmt_prereq = $conn->prepare($query_prereq);
+        $stmt_prereq->bind_param("i", $curso_id);
+        $stmt_prereq->execute();
+        $result_prereq = $stmt_prereq->get_result();
+        
+        $prerequisitos_faltantes = [];
+        
+        while ($prereq = $result_prereq->fetch_assoc()) {
+            // Verificar si el estudiante ha aprobado este prerequisito
+            $query_calif = "SELECT estado FROM calificaciones 
+                            WHERE estudiante_id = ? 
+                            AND curso_id = ? 
+                            AND estado = 'aprobado'";
+            $stmt_calif = $conn->prepare($query_calif);
+            $stmt_calif->bind_param("ii", $estudiante_id, $prereq['prerequisito_id']);
+            $stmt_calif->execute();
+            $result_calif = $stmt_calif->get_result();
+            
+            if ($result_calif->num_rows === 0) {
+                $prerequisitos_faltantes[] = $prereq['nombre'];
+            }
+        }
+        
+        if (count($prerequisitos_faltantes) > 0) {
+            http_response_code(400);
+            echo json_encode([
+                "success" => false, 
+                "message" => "No cumples con los prerequisitos. Debes aprobar: " . implode(', ', $prerequisitos_faltantes)
+            ]);
+            break;
+        }
+
+        // 4. Verificar que el curso exista y esté activo
         $query = "SELECT id, nombre FROM cursos WHERE id = ? AND activo = 1";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("i", $curso_id);
@@ -33,7 +113,7 @@ switch ($method) {
             break;
         }
 
-        // Verificar si ya existe una matrícula activa del mismo curso (sin importar periodo)
+        // 5. Verificar si ya existe una matrícula activa del mismo curso
         $query = "SELECT id FROM matriculas WHERE estudiante_id = ? AND curso_id = ? AND estado = 'activa'";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ii", $estudiante_id, $curso_id);
@@ -46,7 +126,7 @@ switch ($method) {
             break;
         }
 
-        // Verificar si ya existe una matrícula (activa o cancelada) con la misma combinación de periodo
+        // 6. Verificar si existe matrícula en el mismo periodo
         $query = "SELECT id, estado FROM matriculas WHERE estudiante_id = ? AND curso_id = ? AND semestre = ? AND anio = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("iisi", $estudiante_id, $curso_id, $semestre, $anio);
@@ -76,7 +156,7 @@ switch ($method) {
             }
         }
 
-        // Si no existe matrícula previa (ni activa ni cancelada), crear una nueva
+        // 7. Crear nueva matrícula
         $query = "INSERT INTO matriculas (estudiante_id, curso_id, semestre, anio) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("iisi", $estudiante_id, $curso_id, $semestre, $anio);
@@ -92,6 +172,9 @@ switch ($method) {
 
     case 'GET':
         $estudiante_id = isset($_GET['estudiante_id']) ? intval($_GET['estudiante_id']) : null;
+        $programa_id = isset($_GET['programa_id']) ? intval($_GET['programa_id']) : null;
+        $jornada = isset($_GET['jornada']) ? $_GET['jornada'] : null;
+        
         if ($estudiante_id) {
             $query = "SELECT m.*, 
                              c.nombre as curso_nombre, 
@@ -112,25 +195,37 @@ switch ($method) {
             }
             echo json_encode($matriculas);
         } else {
-            // Si no se pasa estudiante_id, devolver todas las matrículas activas
+            // Si no se pasa estudiante_id, devolver todas las matrículas activas con filtros opcionales
             $query = "SELECT m.*, 
                              c.nombre as curso_nombre, 
                              c.codigo as curso_codigo,
                              c.creditos as curso_creditos,
+                             c.programa_id,
+                             c.jornada,
                              u.nombres, 
                              u.apellidos,
                              u.identificacion
                       FROM matriculas m 
                       INNER JOIN cursos c ON m.curso_id = c.id 
                       INNER JOIN usuarios u ON m.estudiante_id = u.id
-                      WHERE m.estado = 'activa'
-                      ORDER BY m.fecha_matricula DESC";
+                      WHERE m.estado = 'activa'";
+            
+            if ($programa_id) {
+                $query .= " AND c.programa_id = " . intval($programa_id);
+            }
+            
+            if ($jornada) {
+                $query .= " AND c.jornada = '" . $conn->real_escape_string($jornada) . "'";
+            }
+            
+            $query .= " ORDER BY m.fecha_matricula DESC";
+            
             $result = $conn->query($query);
             $matriculas = [];
             while ($row = $result->fetch_assoc()) {
                 $matriculas[] = $row;
             }
-            echo json_encode($matriculas);
+            echo json_encode(['success' => true, 'data' => $matriculas]);
         }
         break;
 

@@ -1,9 +1,19 @@
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
+
+// Importar componentes
+import MisCursos from './MisCursos';
+import Asistencias from './Asistencias';
+import Calificaciones from './Calificaciones';
+import EstudiantesPorCurso from './EstudiantesPorCurso';
+import AsignacionProfesores from './AsignacionProfesores';
 
 const DashboardProfesor = ({ user, onLogout }) => {
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedSections, setExpandedSections] = useState({});
+  const [currentView, setCurrentView] = useState('home');
 
   const handleLogout = () => {
     onLogout();
@@ -17,41 +27,121 @@ const DashboardProfesor = ({ user, onLogout }) => {
     return '¡Buenas noches!';
   };
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const menuSections = [
+    {
+      title: 'Mis Cursos',
+      icon: '📚',
+      items: [
+        { name: 'Cursos Asignados', view: 'mis-cursos', desc: 'Visualiza todos los cursos que impartes' },
+        { name: 'Estudiantes por Materia', view: 'estudiantes-por-curso', desc: 'Visualiza estudiantes matriculados' },
+        { name: 'Asignación de Profesores', view: 'asignacion-profesores', desc: 'Consulta y gestiona cursos asignados' }
+      ]
+    },
+    {
+      title: 'Evaluación',
+      icon: '📝',
+      items: [
+        { name: 'Asistencias', view: 'asistencias', desc: 'Registra y controla la asistencia' },
+        { name: 'Calificaciones', view: 'calificaciones', desc: 'Ingresa y gestiona las calificaciones' }
+      ]
+    }
+  ];
+
+  const handleMenuClick = (view) => {
+    setCurrentView(view);
+    setSidebarOpen(false);
+  };
+
+  const renderContent = () => {
+    switch(currentView) {
+      case 'mis-cursos':
+        return <MisCursos user={user} />;
+      case 'asistencias':
+        return <Asistencias user={user} />;
+      case 'calificaciones':
+        return <Calificaciones user={user} />;
+      case 'estudiantes-por-curso':
+        return <EstudiantesPorCurso user={user} />;
+      case 'asignacion-profesores':
+        return <AsignacionProfesores user={user} />;
+      default:
+        return (
+          <div className="welcome-section">
+            <h2>Panel de Control Profesor</h2>
+            <p>Bienvenido al Sistema de Gestión Universitaria SOMOSPENSADORES</p>
+            <p>Selecciona una opción del menú lateral para comenzar</p>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="dashboard">
-      <header className="dashboard-header">
-        <h1>🏫 Universidad SOMOSPENSADORES</h1>
-        <div className="user-info">
-          <span>{getWelcomeMessage()} {user.nombres}</span>
-          <span className={`user-role ${user.tipo}`}>{user.tipo.toUpperCase()}</span>
-          <button onClick={handleLogout}>Cerrar Sesión</button>
+      {/* Overlay para cerrar el menú en móvil */}
+      {sidebarOpen && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
+      
+      {/* Sidebar */}
+      <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
+        <div className="sidebar-header">
+          <button className="close-sidebar" onClick={toggleSidebar}>✕</button>
+          <h3>Panel Profesor</h3>
         </div>
-      </header>
-      <main className="dashboard-main">
-        <div className="welcome-section">
-          <h2>Panel de Control Profesor</h2>
-          <p>Bienvenido al Sistema de Gestión Universitaria SOMOSPENSADORES</p>
-          <p>Selecciona una opción del menú superior para comenzar</p>
-          <div className="feature-cards">
-            <Link to="/asistencias" className="feature-card">
-              <h3>✅ Asistencias</h3>
-              <p>Registra y controla la asistencia de estudiantes</p>
-            </Link>
-            <Link to="/calificaciones" className="feature-card">
-              <h3>📊 Calificaciones</h3>
-              <p>Ingresa y gestiona las calificaciones</p>
-            </Link>
-            <Link to="/estudiantes-por-curso" className="feature-card">
-              <h3>👥 Estudiantes por Materia</h3>
-              <p>Visualiza todos los estudiantes matriculados en tus cursos</p>
-            </Link>
-            <Link to="/asignacion-profesores" className="feature-card">
-              <h3>📘 Asignación de Profesores</h3>
-              <p>Consulta y gestiona los cursos asignados</p>
-            </Link>
+        <nav className="sidebar-nav">
+          {menuSections.map((section, idx) => (
+            <div key={idx} className="sidebar-section">
+              <button 
+                className="sidebar-section-title"
+                onClick={() => toggleSection(idx)}
+              >
+                <span>{section.icon} {section.title}</span>
+                <span className={`arrow ${expandedSections[idx] ? 'arrow-down' : ''}`}>›</span>
+              </button>
+              <div className={`sidebar-section-content ${expandedSections[idx] ? 'expanded' : ''}`}>
+                {section.items.map((item, itemIdx) => (
+                  <button
+                    key={itemIdx} 
+                    className="sidebar-link"
+                    onClick={() => handleMenuClick(item.view)}
+                  >
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <div className="dashboard-content">
+        <header className="dashboard-header">
+          <div className="header-left">
+            <button className="menu-toggle" onClick={toggleSidebar}>
+              ☰
+            </button>
+            <h1>🏫 Universidad SOMOSPENSADORES</h1>
           </div>
-        </div>
-      </main>
+          <div className="user-info">
+            <span>{getWelcomeMessage()} {user.nombres}</span>
+            <span className={`user-role ${user.tipo}`}>{user.tipo.toUpperCase()}</span>
+            <button onClick={handleLogout}>Cerrar Sesión</button>
+          </div>
+        </header>
+        <main className="dashboard-main">
+          {renderContent()}
+        </main>
+      </div>
     </div>
   );
 };

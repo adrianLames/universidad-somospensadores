@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/cors.php';
+include_once __DIR__ . '/init_api.php';
 include 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -37,7 +37,7 @@ switch($method) {
         while($row = $result->fetch_assoc()) {
             $programas[] = $row;
         }
-        echo json_encode($programas);
+        echo json_encode(['success' => true, 'data' => $programas]);
         break;
         
     case 'POST':

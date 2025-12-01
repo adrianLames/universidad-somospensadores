@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/cors.php';
+include_once __DIR__ . '/init_api.php';
 include 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -10,6 +10,35 @@ try {
     }
 
     switch($method) {
+        case 'GET':
+            $docente_id = isset($_GET['docente_id']) ? intval($_GET['docente_id']) : null;
+            
+            if ($docente_id) {
+                $query = "SELECT ad.*, 
+                                 c.nombre as curso_nombre, 
+                                 c.codigo as curso_codigo,
+                                 c.creditos as curso_creditos,
+                                 c.programa_id,
+                                 c.activo
+                          FROM asignacion_docentes ad 
+                          INNER JOIN cursos c ON ad.curso_id = c.id 
+                          WHERE ad.docente_id = ?
+                          ORDER BY ad.anio DESC, ad.semestre DESC";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param("i", $docente_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $vinculaciones = [];
+                while ($row = $result->fetch_assoc()) {
+                    $vinculaciones[] = $row;
+                }
+                echo json_encode($vinculaciones);
+            } else {
+                http_response_code(400);
+                echo json_encode(["error" => "ID de docente no proporcionado"]);
+            }
+            break;
+            
         case 'POST':
             $data = json_decode(file_get_contents("php://input"), true);
             if (!$data || !isset($data['usuario_id']) || !isset($data['curso_id'])) {

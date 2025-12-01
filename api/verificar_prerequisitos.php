@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/cors.php';
+include_once __DIR__ . '/init_api.php';
 require_once 'config.php';
 
 header('Content-Type: application/json');

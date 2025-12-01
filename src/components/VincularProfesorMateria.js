@@ -54,7 +54,7 @@ function VincularProfesorMateria() {
     (async () => {
       try {
         const profs = await apiRequest('usuarios.php?tipo=docente');
-        setProfesores(profs);
+        setProfesores(Array.isArray(profs) ? profs : []);
       } catch (e) {
         setProfesores([]);
       }
@@ -68,7 +68,7 @@ function VincularProfesorMateria() {
 
       try {
         const mats = await apiRequest('cursos.php');
-        setMaterias(mats);
+        setMaterias(Array.isArray(mats) ? mats : []);
       } catch (e) {
         setMaterias([]);
       }
@@ -86,7 +86,7 @@ function VincularProfesorMateria() {
         url += `?usuario_id=${usuarioActual.id}`;
       }
       const res = await apiRequest(url);
-      setVinculaciones(res.data || []);
+      setVinculaciones(Array.isArray(res.data) ? res.data : Array.isArray(res) ? res : []);
     } catch (e) {
       setVinculaciones([]);
     }
@@ -117,7 +117,7 @@ function VincularProfesorMateria() {
         // si no hay programa seleccionado, dejar materias generales
         try {
           const mats = await apiRequest('cursos.php');
-          setMaterias(mats);
+          setMaterias(Array.isArray(mats) ? mats : []);
         } catch (e) {
           setMaterias([]);
         }

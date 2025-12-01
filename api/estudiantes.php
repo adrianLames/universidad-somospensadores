@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/cors.php';
+include_once __DIR__ . '/init_api.php';
 include 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -8,19 +8,35 @@ switch($method) {
     case 'GET':
         // Obtener todos los estudiantes con información del usuario
         $sql = "SELECT e.*, u.identificacion, u.nombres, u.apellidos, u.email, u.telefono, 
-                   u.fecha_nacimiento, u.direccion, u.facultad_id, f.nombre as facultad_nombre, p.nombre as programa_nombre
+                   u.fecha_nacimiento, u.direccion, u.facultad_id, u.programa_id, u.jornada,
+                   f.nombre as facultad_nombre, p.nombre as programa_nombre
             FROM estudiantes e 
             INNER JOIN usuarios u ON e.usuario_id = u.id 
             LEFT JOIN facultades f ON u.facultad_id = f.id
             LEFT JOIN programas p ON u.programa_id = p.id
-            WHERE u.activo = 1 AND e.estado_estudiante != 'retirado'
-            ORDER BY u.nombres, u.apellidos";
+            WHERE u.activo = 1 AND e.estado_estudiante != 'retirado'";
+        
+        // Aplicar filtros si existen
+        if (isset($_GET['programa_id']) && !empty($_GET['programa_id'])) {
+            $programa_id = intval($_GET['programa_id']);
+            $sql .= " AND u.programa_id = $programa_id";
+        }
+        
+        if (isset($_GET['jornada']) && !empty($_GET['jornada'])) {
+            $jornada = $conn->real_escape_string($_GET['jornada']);
+            $sql .= " AND u.jornada = '$jornada'";
+        }
+        
+        $sql .= " ORDER BY u.nombres, u.apellidos";
+        
         $result = $conn->query($sql);
         $estudiantes = [];
         while($row = $result->fetch_assoc()) {
             $estudiantes[] = $row;
         }
-        echo json_encode($estudiantes);
+        
+        // Retornar en formato estándar
+        echo json_encode(['success' => true, 'data' => $estudiantes]);
         break;
         
     case 'POST':

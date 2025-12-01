@@ -33,34 +33,46 @@ const Calificaciones = ({ user }) => {
       const response = await fetch(`${API_BASE}/calificaciones.php?docente_id=${user.id}`);
       if (!response.ok) {
         console.error('API response not ok:', response.status);
+        setCalificaciones([]);
         return;
       }
       const data = await response.json();
       console.log('📊 Calificaciones del docente:', data);
-      setCalificaciones(data);
+      // Asegurar que siempre sea un array
+      setCalificaciones(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching calificaciones:', error);
+      setCalificaciones([]);
     }
   };
 
   const fetchCalificacionesEstudiante = async () => {
     try {
       const response = await fetch(`${API_BASE}/calificaciones.php?estudiante_id=${user.id}`);
+      if (!response.ok) {
+        console.error('API response not ok:', response.status);
+        setCalificaciones([]);
+        return;
+      }
       const data = await response.json();
-      setCalificaciones(data);
+      // Asegurar que siempre sea un array
+      setCalificaciones(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching calificaciones:', error);
+      setCalificaciones([]);
     }
   };
 
   const fetchCursosDocente = async () => {
     try {
       const response = await fetch(`${API_BASE}/cursos.php?docente_id=${user.id}`);
-      const data = await response.json();
+      const result = await response.json();
+      const data = result.success ? result.data : (Array.isArray(result) ? result : []);
       console.log('📚 Cursos del docente (ID: ' + user.id + '):', data);
       setCursos(data);
     } catch (error) {
       console.error('Error fetching cursos:', error);
+      setCursos([]);
     }
   };
 

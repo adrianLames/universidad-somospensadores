@@ -663,3 +663,282 @@
     max-height: 150px;
   }
 }
+
+/* Custom Campus Map Styles */
+.mapa-visual-campus {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.15);
+  border: 1px solid #3a3a3a;
+}
+
+.campus-plano h3 {
+  color: #f0d070;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  text-align: center;
+}
+
+.edificios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.edificio-bloque {
+  background: #1a1a1a;
+  border-radius: 10px;
+  padding: 15px;
+  border: 2px solid #3a3a3a;
+  transition: all 0.3s ease;
+}
+
+.edificio-bloque:hover {
+  border-color: #d4af37;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.edificio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #3a3a3a;
+}
+
+.edificio-header h4 {
+  margin: 0;
+  color: #d4af37;
+  font-size: 18px;
+}
+
+.salon-count {
+  background: #d4af37;
+  color: #1a1a1a;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.salones-en-edificio {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.salon-marcador {
+  background: #2a2a2a;
+  border-left: 4px solid #4ECDC4;
+  border-radius: 6px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.salon-marcador:hover {
+  background: #3a3a3a;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.salon-marcador.selected {
+  background: #3a3a3a;
+  border-left-color: #d4af37;
+  box-shadow: 0 0 0 2px #d4af37;
+}
+
+.salon-codigo {
+  font-weight: 700;
+  font-size: 14px;
+  color: #f0d070;
+  margin-bottom: 5px;
+}
+
+.salon-info-mini {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #b0b0b0;
+}
+
+.clases-badge {
+  background: #FF6B6B;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.salon-detalle-completo {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.15);
+  border: 1px solid #3a3a3a;
+}
+
+.detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #3a3a3a;
+}
+
+.detalle-header h3 {
+  margin: 0;
+  color: #f0d070;
+  font-size: 22px;
+}
+
+.btn-cerrar {
+  background: rgba(255, 107, 107, 0.2);
+  border: 2px solid #ff6b6b;
+  color: #ff6b6b;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.btn-cerrar:hover {
+  background: #ff6b6b;
+  color: white;
+  transform: rotate(90deg);
+}
+
+.info-item {
+  margin-bottom: 12px;
+  color: #e0e0e0;
+  font-size: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.info-item strong {
+  color: #d4af37;
+  min-width: 100px;
+}
+
+.panel-inicial {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 30px 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.15);
+  border: 1px solid #3a3a3a;
+  text-align: center;
+  color: #b0b0b0;
+}
+
+.panel-inicial h3 {
+  color: #f0d070;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.panel-inicial p {
+  color: #b0b0b0;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.stats-resumen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.stat-item {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #3a3a3a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  border-color: #d4af37;
+  transform: translateY(-3px);
+}
+
+.stat-item strong {
+  color: #f0d070;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.stat-item span {
+  color: #b0b0b0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mapa-contenedor-principal {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 1200px) {
+  .edificios-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .mapa-contenedor-principal {
+    grid-template-columns: 1fr;
+  }
+  
+  .salon-detalle-completo {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .edificios-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .salones-en-edificio {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+  
+  .campus-plano h3 {
+    font-size: 18px;
+  }
+  
+  .edificio-header h4 {
+    font-size: 16px;
+  }
+}

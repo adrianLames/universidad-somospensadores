@@ -1,8 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-include_once __DIR__ . '/cors.php';
+include_once __DIR__ . '/init_api.php';
 include 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -11,6 +8,7 @@ switch($method) {
     case 'GET':
         $docente_id = isset($_GET['docente_id']) ? $_GET['docente_id'] : '';
         $programa_id = isset($_GET['programa_id']) ? $_GET['programa_id'] : '';
+        $jornada = isset($_GET['jornada']) ? $_GET['jornada'] : '';
         $activo_only = isset($_GET['activo']) ? intval($_GET['activo']) : 0;
 
         if($docente_id) {
@@ -23,22 +21,45 @@ switch($method) {
             $stmt->bind_param("i", $docente_id);
             $stmt->execute();
             $result = $stmt->get_result();
-        } else if($programa_id) {
-            $sql = "SELECT c.*, p.nombre as programa_nombre
+        } else if($programa_id || $jornada) {
+            $sql = "SELECT c.*, p.nombre as programa_nombre, f.nombre as facultad_nombre
                 FROM cursos c 
                 LEFT JOIN programas p ON c.programa_id = p.id 
-                WHERE c.programa_id = ?";
+                LEFT JOIN facultades f ON p.facultad_id = f.id
+                WHERE 1=1";
+            
+            $params = [];
+            $types = '';
+            
+            if ($programa_id) {
+                $sql .= " AND c.programa_id = ?";
+                $params[] = $programa_id;
+                $types .= 'i';
+            }
+            
+            if ($jornada) {
+                $sql .= " AND c.jornada = ?";
+                $params[] = $jornada;
+                $types .= 's';
+            }
+            
             if ($activo_only) {
                 $sql .= " AND c.activo = 1";
             }
+            
+            $sql .= " ORDER BY c.codigo";
+            
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $programa_id);
+            if (count($params) > 0) {
+                $stmt->bind_param($types, ...$params);
+            }
             $stmt->execute();
             $result = $stmt->get_result();
         } else {
-            $sql = "SELECT c.*, p.nombre as programa_nombre
+            $sql = "SELECT c.*, p.nombre as programa_nombre, f.nombre as facultad_nombre
                 FROM cursos c 
-                LEFT JOIN programas p ON c.programa_id = p.id";
+                LEFT JOIN programas p ON c.programa_id = p.id
+                LEFT JOIN facultades f ON p.facultad_id = f.id";
             if ($activo_only) {
                 $sql .= " WHERE c.activo = 1";
             }
@@ -50,7 +71,7 @@ switch($method) {
         while($row = $result->fetch_assoc()) {
             $cursos[] = $row;
         }
-        echo json_encode($cursos);
+        echo json_encode(['success' => true, 'data' => $cursos]);
         break;
         
     case 'POST':

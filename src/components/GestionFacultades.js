@@ -20,7 +20,8 @@ const GestionFacultades = () => {
     try {
       const res = await fetch(`${API_BASE}/facultades.php`);
       const data = await res.json();
-      setFacultades(Array.isArray(data) ? data : []);
+      const facultadesData = data.success ? data.data : (Array.isArray(data) ? data : []);
+      setFacultades(facultadesData);
     } catch {
       setFacultades([]);
     }

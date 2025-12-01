@@ -57,7 +57,8 @@
     const fetchCursos = async () => {
       try {
         const response = await fetch(`${API_BASE}/cursos.php`);
-        const data = await response.json();
+        const result = await response.json();
+        const data = result.success ? result.data : (Array.isArray(result) ? result : []);
         setCursos(data);
       } catch (error) {
         console.error('Error fetching cursos:', error);

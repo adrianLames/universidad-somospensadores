@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/cors.php';
+include_once __DIR__ . '/init_api.php';
 include 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -86,23 +86,43 @@ switch($method) {
         $data = json_decode(file_get_contents("php://input"), true);
         $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
         
-        $sql = "INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, telefono, fecha_nacimiento, direccion, facultad_id, programa_id, password_hash) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssssis", 
-            $data['tipo'],
-            $data['identificacion'],
-            $data['nombres'],
-            $data['apellidos'],
-            $data['email'],
-            $data['telefono'],
-            $data['fecha_nacimiento'],
-            $data['direccion'],
-            $data['facultad_id'],
-            $data['programa_id'],
-            $password_hash
-        );
-        
+        // Incluir jornada si está presente y es válida
+        if (isset($data['jornada']) && in_array($data['jornada'], ['diurna', 'nocturna'])) {
+            $sql = "INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, telefono, fecha_nacimiento, direccion, facultad_id, programa_id, password_hash, jornada) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssssssssss", 
+                $data['tipo'],
+                $data['identificacion'],
+                $data['nombres'],
+                $data['apellidos'],
+                $data['email'],
+                $data['telefono'],
+                $data['fecha_nacimiento'],
+                $data['direccion'],
+                $data['facultad_id'],
+                $data['programa_id'],
+                $password_hash,
+                $data['jornada']
+            );
+        } else {
+            $sql = "INSERT INTO usuarios (tipo, identificacion, nombres, apellidos, email, telefono, fecha_nacimiento, direccion, facultad_id, programa_id, password_hash) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssssssis", 
+                $data['tipo'],
+                $data['identificacion'],
+                $data['nombres'],
+                $data['apellidos'],
+                $data['email'],
+                $data['telefono'],
+                $data['fecha_nacimiento'],
+                $data['direccion'],
+                $data['facultad_id'],
+                $data['programa_id'],
+                $password_hash
+            );
+        }
 
         if($stmt->execute()) {
             $usuario_id = $conn->insert_id;
@@ -152,43 +172,85 @@ switch($method) {
         $activo = isset($data['activo']) ? (int)$data['activo'] : 0;
         $facultad_id = isset($data['facultad_id']) && $data['facultad_id'] !== '' ? (int)$data['facultad_id'] : null;
         $programa_id = isset($data['programa_id']) && $data['programa_id'] !== '' ? (int)$data['programa_id'] : null;
+        $jornada = isset($data['jornada']) && in_array($data['jornada'], ['diurna', 'nocturna']) ? $data['jornada'] : null;
 
         if(isset($data['password']) && !empty($data['password'])) {
             $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
-            $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, password_hash=?, activo=? WHERE id=?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssssssssssii",
-                $data['tipo'],
-                $data['identificacion'],
-                $data['nombres'],
-                $data['apellidos'],
-                $data['email'],
-                $data['telefono'],
-                $data['fecha_nacimiento'],
-                $data['direccion'],
-                $facultad_id,
-                $programa_id,
-                $password_hash,
-                $activo,
-                $id
-            );
+            if (isset($data['jornada']) && in_array($data['jornada'], ['diurna', 'nocturna'])) {
+                $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, password_hash=?, activo=?, jornada=? WHERE id=?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("sssssssssisssi",
+                    $data['tipo'],
+                    $data['identificacion'],
+                    $data['nombres'],
+                    $data['apellidos'],
+                    $data['email'],
+                    $data['telefono'],
+                    $data['fecha_nacimiento'],
+                    $data['direccion'],
+                    $facultad_id,
+                    $programa_id,
+                    $password_hash,
+                    $activo,
+                    $data['jornada'],
+                    $id
+                );
+            } else {
+                $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, password_hash=?, activo=? WHERE id=?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssssssssissii",
+                    $data['tipo'],
+                    $data['identificacion'],
+                    $data['nombres'],
+                    $data['apellidos'],
+                    $data['email'],
+                    $data['telefono'],
+                    $data['fecha_nacimiento'],
+                    $data['direccion'],
+                    $facultad_id,
+                    $programa_id,
+                    $password_hash,
+                    $activo,
+                    $id
+                );
+            }
         } else {
-            $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, activo=? WHERE id=?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssssssssii",
-                $data['tipo'],
-                $data['identificacion'],
-                $data['nombres'],
-                $data['apellidos'],
-                $data['email'],
-                $data['telefono'],
-                $data['fecha_nacimiento'],
-                $data['direccion'],
-                $facultad_id,
-                $programa_id,
-                $activo,
-                $id
-            );
+            if (isset($data['jornada']) && in_array($data['jornada'], ['diurna', 'nocturna'])) {
+                $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, activo=?, jornada=? WHERE id=?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssssssssisssi",
+                    $data['tipo'],
+                    $data['identificacion'],
+                    $data['nombres'],
+                    $data['apellidos'],
+                    $data['email'],
+                    $data['telefono'],
+                    $data['fecha_nacimiento'],
+                    $data['direccion'],
+                    $facultad_id,
+                    $programa_id,
+                    $activo,
+                    $data['jornada'],
+                    $id
+                );
+            } else {
+                $sql = "UPDATE usuarios SET tipo=?, identificacion=?, nombres=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=?, direccion=?, facultad_id=?, programa_id=?, activo=? WHERE id=?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssssssssisii",
+                    $data['tipo'],
+                    $data['identificacion'],
+                    $data['nombres'],
+                    $data['apellidos'],
+                    $data['email'],
+                    $data['telefono'],
+                    $data['fecha_nacimiento'],
+                    $data['direccion'],
+                    $facultad_id,
+                    $programa_id,
+                    $activo,
+                    $id
+                );
+            }
         }
         
         if($stmt->execute()) {

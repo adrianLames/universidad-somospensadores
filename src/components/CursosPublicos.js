@@ -15,7 +15,11 @@ const CursosPublicos = () => {
   const fetchCursosPublicos = async () => {
     try {
       const response = await fetch(`${API_BASE}/cursos.php`);
-      const data = await response.json();
+      const result = await response.json();
+      
+      // Manejar nuevo formato {success: true, data: [...]}
+      const data = result.success ? result.data : (Array.isArray(result) ? result : []);
+      
       // Filtrar solo cursos públicos y activos
       const cursosPublicos = data.filter(curso => 
         (curso.es_publico === 1 || curso.es_publico === true || curso.es_publico === '1') &&
@@ -24,6 +28,7 @@ const CursosPublicos = () => {
       setCursos(cursosPublicos);
     } catch (error) {
       console.error('Error fetching cursos públicos:', error);
+      setCursos([]);
     } finally {
       setLoading(false);
     }

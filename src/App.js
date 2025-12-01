@@ -21,11 +21,16 @@ import VincularProfesorMateria from './components/VincularProfesorMateria';
 import Salones from './components/Salones';
 import EstudiantesPorCurso from './components/EstudiantesPorCurso';
 import Metricas from './components/Metricas';
+import Reportes from './components/Reportes';
+import MisCursos from './components/MisCursos';
+import DetalleCurso from './components/DetalleCurso';
 import MapaSalonesLeaflet from './components/MapaSalonesLeaflet';
 import MapaSalonesPlano from './components/MapaSalonesPlano';
 import AdminMapaSalones from './components/AdminMapaSalones';
 import AdminMapaSalonesVisual from './components/AdminMapaSalonesVisual';
 import RegistroPublico from './components/RegistroPublico';
+import GestionPrerequisitos from './components/GestionPrerequisitos';
+import GestionSemestre from './components/GestionSemestre';
 
 import EditarUsuarios from './components/EditarUsuarios';
 import { API_BASE } from './config/api';
@@ -125,6 +130,11 @@ function App() {
             <Route path="/mapa-salones" element={<MapaSalonesLeaflet />} />
             <Route path="/mapa-salones-plano" element={<MapaSalonesPlano />} />
             <Route path="/metricas" element={<Metricas />} />
+            <Route path="/reportes" element={<Reportes user={user} />} />
+            <Route path="/mis-cursos" element={<MisCursos user={user} />} />
+            <Route path="/curso/:cursoId" element={<DetalleCurso user={user} />} />
+            <Route path="/prerequisitos" element={<GestionPrerequisitos user={user} />} />
+            <Route path="/gestion-semestre" element={<GestionSemestre user={user} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         )}

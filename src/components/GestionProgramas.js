@@ -30,7 +30,8 @@ const GestionProgramas = ({ user }) => {
     try {
       const res = await fetch(`${API_BASE}/facultades.php`);
       const data = await res.json();
-      setFacultades(Array.isArray(data) ? data : []);
+      const facultadesData = data.success ? data.data : (Array.isArray(data) ? data : []);
+      setFacultades(facultadesData);
     } catch {
       setFacultades([]);
     }
@@ -40,9 +41,11 @@ const GestionProgramas = ({ user }) => {
     try {
       const response = await fetch(`${API_BASE}/programas.php?all=1`); // Cambia la API para devolver todos
       const data = await response.json();
-      setProgramas(data);
+      const programasData = data.success ? data.data : (Array.isArray(data) ? data : []);
+      setProgramas(programasData);
     } catch (error) {
       console.error('Error fetching programas:', error);
+      setProgramas([]);
     }
   };
 

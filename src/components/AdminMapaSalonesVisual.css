@@ -367,3 +367,135 @@
     width: 100%;
   }
 }
+
+/* Estilos adicionales para vista de estudiantes */
+.badge-clases {
+  background: #4ECDC4;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-disponible {
+  background: #667eea;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.salon-horarios-detalle {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #3a3a3a;
+}
+
+.salon-horarios-detalle h5 {
+  margin: 0 0 8px 0;
+  color: #d4af37;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.horarios-lista-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.horario-mini {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2a2a2a;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.dia-horario {
+  color: #f0d070;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.hora-horario {
+  color: #b0b0b0;
+  font-size: 10px;
+}
+
+.mas-horarios {
+  color: #b0b0b0;
+  font-style: italic;
+  text-align: center;
+  display: block;
+  margin-top: 4px;
+}
+
+.horarios-popup {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #3a3a3a;
+}
+
+.horarios-popup p {
+  margin: 4px 0;
+  font-weight: 600;
+}
+
+.horarios-popup small {
+  color: #4ECDC4;
+  font-weight: 500;
+}
+
+.leyenda-mapa {
+  margin-top: 16px;
+  padding: 12px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid #3a3a3a;
+}
+
+.leyenda-mapa h5 {
+  margin: 0 0 10px 0;
+  color: #d4af37;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.leyenda-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #e0e0e0;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.sin-resultados {
+  text-align: center;
+  padding: 40px 20px;
+  color: #b0b0b0;
+  font-style: italic;
+}
+
+.sin-resultados p {
+  margin: 0;
+}
+

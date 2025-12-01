@@ -15,13 +15,28 @@ const Matriculas = ({ user }) => {
   });
   const [loading, setLoading] = useState(false);
   const [selectedCurso, setSelectedCurso] = useState(null);
+  const [semestreActual, setSemestreActual] = useState('');
+  const [periodoMatricula, setPeriodoMatricula] = useState({ abierto: false, mensaje: '' });
 
   useEffect(() => {
+    calcularSemestreActual();
     fetchMatriculas();
-    fetchCursos();
+    fetchCursosActivos();
     fetchNoAprobadas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Calcular semestre actual
+  const calcularSemestreActual = () => {
+    const fecha = new Date();
+    const mes = fecha.getMonth() + 1;
+    const anio = fecha.getFullYear();
+    // Semestre 1: Enero-Junio, Semestre 2: Julio-Diciembre
+    const periodo = mes <= 6 ? '1' : '2';
+    const semestre = `${anio}-${periodo}`;
+    setSemestreActual(semestre);
+    setCurrentMatricula(prev => ({ ...prev, semestre }));
+  };
 
   // Obtener materias matriculadas sin aprobar
   const fetchNoAprobadas = async () => {
@@ -62,42 +77,95 @@ const Matriculas = ({ user }) => {
     }
   };
 
-  const fetchCursos = async () => {
+  const fetchCursosActivos = async () => {
     try {
-      // Solicitar solo cursos activos
-      const response = await fetch(`${API_BASE}/cursos.php?activo=1`);
+      if (!semestreActual) {
+        calcularSemestreActual();
+        return;
+      }
+
+      // Obtener cursos activos del semestre actual
+      const response = await fetch(`${API_BASE}/semestres_activos.php?semestre=${semestreActual}&activo=1`);
       const data = await response.json();
 
-      if (!Array.isArray(data)) {
-        console.error('La respuesta de cursos no es un array:', data);
+      if (!data.success) {
+        console.error('Error en respuesta de semestres activos:', data);
+        setCursos([]);
+        setPeriodoMatricula({ 
+          abierto: false, 
+          mensaje: 'No hay cursos disponibles para matrícula en este momento' 
+        });
+        return;
+      }
+
+      // Verificar si estamos en periodo de matrícula
+      const hoy = new Date();
+      const cursosDisponibles = data.data.filter(curso => {
+        const inicio = new Date(curso.fecha_inicio_matricula);
+        const fin = new Date(curso.fecha_fin_matricula);
+        const enPeriodo = hoy >= inicio && hoy <= fin;
+        
+        // Filtrar también por jornada del estudiante
+        if (user.jornada) {
+          return enPeriodo && curso.jornada === user.jornada;
+        }
+        
+        return enPeriodo;
+      });
+
+      if (cursosDisponibles.length === 0) {
+        setPeriodoMatricula({ 
+          abierto: false, 
+          mensaje: data.data.length > 0 
+            ? 'El periodo de matrícula está cerrado' 
+            : 'No hay cursos activos para el semestre actual' 
+        });
         setCursos([]);
         return;
       }
 
-      // Obtener profesores asignados para cada curso
-      const cursosConProfesores = await Promise.all(
-        data.map(async (curso) => {
+      setPeriodoMatricula({ abierto: true, mensaje: '' });
+
+      // Obtener información completa de los cursos y profesores
+      const cursosConDetalles = await Promise.all(
+        cursosDisponibles.map(async (semestreActivo) => {
           try {
+            // Obtener información del curso
+            const cursoResponse = await fetch(`${API_BASE}/cursos.php?id=${semestreActivo.curso_id}`);
+            const cursoData = await cursoResponse.json();
+            const curso = cursoData.success ? cursoData.data[0] : null;
+
+            if (!curso) return null;
+
+            // Obtener profesor asignado
             const profesorResponse = await fetch(`${API_BASE}/asignacion_docentes.php?curso_id=${curso.id}`);
             const profesorData = await profesorResponse.json();
+
             return {
               ...curso,
+              semestre_activo_id: semestreActivo.id,
+              cupos_disponibles: semestreActivo.cupos_disponibles,
+              fecha_inicio_matricula: semestreActivo.fecha_inicio_matricula,
+              fecha_fin_matricula: semestreActivo.fecha_fin_matricula,
               profesor: profesorData.data && profesorData.data.length > 0 ? profesorData.data[0] : null
             };
           } catch (err) {
-            console.error(`Error obteniendo profesor para curso ${curso.id}:`, err);
-            return {
-              ...curso,
-              profesor: null
-            };
+            console.error(`Error obteniendo detalles para curso ${semestreActivo.curso_id}:`, err);
+            return null;
           }
         })
       );
 
-      setCursos(cursosConProfesores);
+      const cursosValidos = cursosConDetalles.filter(c => c !== null);
+      setCursos(cursosValidos);
+
     } catch (error) {
-      console.error('Error fetching cursos:', error);
+      console.error('Error fetching cursos activos:', error);
       setCursos([]);
+      setPeriodoMatricula({ 
+        abierto: false, 
+        mensaje: 'Error al cargar cursos disponibles' 
+      });
     }
   };
 
@@ -113,7 +181,7 @@ const Matriculas = ({ user }) => {
       if (prereqData.data && prereqData.data.length > 0) {
         const noAprobados = prereqData.data.filter(p => !p.aprobado);
         if (noAprobados.length > 0) {
-          alert(`No puedes matricular este curso. Debes aprobar primero: ${noAprobados.map(p => p.nombre).join(', ')}`);
+          alert(`❌ No cumples con los prerequisitos\n\nDebes aprobar primero:\n${noAprobados.map(p => `• ${p.nombre}`).join('\n')}`);
           setLoading(false);
           return;
         }
@@ -143,7 +211,7 @@ const Matriculas = ({ user }) => {
         await fetchMatriculas();
         await fetchNoAprobadas();
         resetForm();
-        alert('Matrícula realizada exitosamente');
+        alert('✅ Matrícula realizada exitosamente');
       } else {
         alert(result.message || result.error || 'Error al realizar la matrícula');
       }
@@ -220,31 +288,44 @@ const Matriculas = ({ user }) => {
     <div className="matriculas">
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h2>🎓 Gestión de Matrículas</h2>
-        <BackHomeButton label="Inicio" />
+        <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
+          {user.jornada && (
+            <div style={{
+              padding: '0.5rem 1rem',
+              background: user.jornada === 'diurna' ? '#f39c12' : '#3498db',
+              color: '#fff',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              fontSize: '0.9rem'
+            }}>
+              {user.jornada === 'diurna' ? '☀️ Diurna' : '🌙 Nocturna'}
+            </div>
+          )}
+          <BackHomeButton label="Inicio" />
+        </div>
       </div>
       
       {user.tipo === 'estudiante' && (
         <>
-          <button 
-            className="btn-primary"
-            onClick={() => setShowForm(true)}
-            disabled={cursos.length === 0}
-          >
-            ➕ Nueva Matrícula
-          </button>
-          {cursos.length === 0 && (
+          {!periodoMatricula.abierto ? (
             <div style={{
               background: '#fff3cd', 
               border: '1px solid #ffc107', 
               padding: '15px', 
-              borderRadius: '5px',
-              marginTop: '10px'
+              borderRadius: '8px',
+              marginBottom: '15px'
             }}>
               <p style={{margin: 0, color: '#856404'}}>
-                ⚠️ <strong>No hay cursos disponibles para matricular.</strong><br/>
-                Por favor contacta con el administrador para activar cursos en el sistema.
+                ⚠️ <strong>{periodoMatricula.mensaje}</strong>
               </p>
             </div>
+          ) : (
+            <button 
+              className="btn-primary"
+              onClick={() => setShowForm(true)}
+            >
+              ➕ Nueva Matrícula
+            </button>
           )}
         </>
       )}
@@ -284,33 +365,54 @@ const Matriculas = ({ user }) => {
               </div>
               
               {currentMatricula.curso_id && prerequisitos.length > 0 && (
-                <div className="form-group prerequisitos-info">
-                  <label>Prerequisitos del curso:</label>
+                <div className="form-group prerequisitos-info" style={{
+                  background: '#f8f9fa',
+                  padding: '15px',
+                  borderRadius: '8px',
+                  border: '1px solid #dee2e6'
+                }}>
+                  <label style={{color: '#495057', marginBottom: '10px', display: 'block'}}>
+                    📋 Prerequisitos del curso:
+                  </label>
                   <ul style={{margin: '5px 0', paddingLeft: '20px'}}>
                     {prerequisitos.map(p => (
-                      <li key={p.id} style={{color: p.aprobado ? 'green' : 'red'}}>
+                      <li key={p.id} style={{
+                        color: p.aprobado ? '#28a745' : '#dc3545',
+                        fontWeight: '500',
+                        marginBottom: '5px'
+                      }}>
                         {p.nombre} - {p.aprobado ? '✅ Aprobado' : '❌ No aprobado'}
                       </li>
                     ))}
                   </ul>
+                  {prerequisitos.some(p => !p.aprobado) && (
+                    <p style={{
+                      color: '#dc3545',
+                      fontSize: '0.9em',
+                      marginTop: '10px',
+                      fontWeight: '500'
+                    }}>
+                      ⚠️ Debes aprobar todos los prerequisitos antes de matricular este curso
+                    </p>
+                  )}
                 </div>
               )}
               
               <div className="form-group">
                 <label>Periodo (Año-Semestre):</label>
-                <select
-                  value={currentMatricula.semestre}
-                  onChange={(e) => setCurrentMatricula({...currentMatricula, semestre: e.target.value})}
-                  required
-                  disabled={loading}
-                >
-                  <option value="">Seleccionar periodo</option>
-                  {getSemestres().map(semestre => (
-                    <option key={semestre} value={semestre}>
-                      {semestre.replace('-1', ' - Primer Semestre').replace('-2', ' - Segundo Semestre')}
-                    </option>
-                  ))}
-                </select>
+                <input 
+                  type="text" 
+                  value={currentMatricula.semestre.replace('-1', ' - Primer Semestre').replace('-2', ' - Segundo Semestre')}
+                  disabled
+                  style={{
+                    background: '#e9ecef',
+                    color: '#495057',
+                    fontWeight: '500'
+                  }}
+                />
+                <small style={{color: '#6c757d', marginTop: '5px'}}>
+                  El periodo se asigna automáticamente al semestre actual
+                </small>
               </div>
               <div className="form-actions">
                 <button type="submit" disabled={loading}>

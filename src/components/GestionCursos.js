@@ -8,10 +8,6 @@ const GestionCursos = ({ user }) => {
   const [filtroPrograma, setFiltroPrograma] = useState('');
   const [filtroJornada, setFiltroJornada] = useState('');
   const [programas, setProgramas] = useState([]);
-  const [prerequisitos, setPrerequisitos] = useState([]); // Prerequisitos del curso seleccionado
-  const [esDeCursosMap, setEsDeCursosMap] = useState({}); // Mapeo curso_id -> array de nombres
-  const [allCursos, setAllCursos] = useState([]); // Para el select múltiple
-  const [selectedPrereqs, setSelectedPrereqs] = useState([]); // IDs seleccionados en el form
   const [showForm, setShowForm] = useState(false);
   const [currentCurso, setCurrentCurso] = useState({
     id: null,
@@ -32,30 +28,7 @@ const GestionCursos = ({ user }) => {
   useEffect(() => {
     fetchCursos();
     fetchProgramas();
-    fetchAllCursos();
-    fetchEsDeCursosTodos();
   }, []);
-
-  // Traer para todos los cursos: en cuáles es prerequisito
-  const fetchEsDeCursosTodos = async () => {
-    try {
-      const response = await fetch(`${API_BASE}/prerequisitos.php`);
-      const data = await response.json();
-      if (data && data.success && Array.isArray(data.data)) {
-        // Agrupar por prerequisito_id
-        const map = {};
-        data.data.forEach(row => {
-          if (!map[row.prerequisito_id]) map[row.prerequisito_id] = [];
-          map[row.prerequisito_id].push(row.curso_nombre);
-        });
-        setEsDeCursosMap(map);
-      } else {
-        setEsDeCursosMap({});
-      }
-    } catch {
-      setEsDeCursosMap({});
-    }
-  };
 
   // Filtrar cursos por programa y jornada
   let cursosFiltrados = cursos;
@@ -66,21 +39,11 @@ const GestionCursos = ({ user }) => {
     cursosFiltrados = cursosFiltrados.filter(c => String(c.jornada) === String(filtroJornada));
   }
 
-  // Traer todos los cursos para el select de prerequisitos
-  const fetchAllCursos = async () => {
-    try {
-      const response = await fetch(`${API_BASE}/cursos.php`);
-      const data = await response.json();
-      setAllCursos(data);
-    } catch (error) {
-      setAllCursos([]);
-    }
-  };
-
   const fetchCursos = async () => {
     try {
       const response = await fetch(`${API_BASE}/cursos.php`);
-      const data = await response.json();
+      const result = await response.json();
+      const data = result.success ? result.data : (Array.isArray(result) ? result : []);
       setCursos(data);
     } catch (error) {
       console.error('Error fetching cursos:', error);
@@ -91,9 +54,11 @@ const GestionCursos = ({ user }) => {
     try {
       const response = await fetch(`${API_BASE}/programas.php`);
       const data = await response.json();
-      setProgramas(data);
+      const programasData = data.success ? data.data : (Array.isArray(data) ? data : []);
+      setProgramas(programasData);
     } catch (error) {
       console.error('Error fetching programas:', error);
+      setProgramas([]);
     }
   };
 
@@ -110,24 +75,6 @@ const GestionCursos = ({ user }) => {
       setCurrentCurso(c => ({ ...c, facultad_id: '' }));
     }
   }, [currentCurso.programa_id, programas]);
-
-  const fetchPrerequisitos = async (cursoId) => {
-    try {
-      // Prerequisitos de este curso
-      const response = await fetch(`${API_BASE}/prerequisitos.php?curso_id=${cursoId}`);
-      const data = await response.json();
-      if (data && data.success) {
-        setPrerequisitos(data.data);
-        setSelectedPrereqs(data.data.map(p => p.prerequisito_id));
-      } else {
-        setPrerequisitos([]);
-        setSelectedPrereqs([]);
-      }
-    } catch (error) {
-      setPrerequisitos([]);
-      setSelectedPrereqs([]);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -155,16 +102,7 @@ const GestionCursos = ({ user }) => {
       });
 
       if (response.ok) {
-        // Guardar prerequisitos si hay seleccionados
-        if (selectedPrereqs.length > 0) {
-          await fetch(`${API_BASE}/prerequisitos.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ curso_id: currentCurso.id || (await response.json()).id, prerequisitos: selectedPrereqs })
-          });
-        }
         await fetchCursos();
-        await fetchAllCursos(); // Recargar lista de cursos para el select
         resetForm();
         alert('Curso guardado exitosamente');
       } else {
@@ -192,7 +130,6 @@ const GestionCursos = ({ user }) => {
       es_prerequisito: true,
       es_publico: false
     });
-    setSelectedPrereqs([]);
     setShowForm(false);
   };
 
@@ -202,7 +139,6 @@ const GestionCursos = ({ user }) => {
       activo: curso.activo === undefined ? true : Boolean(Number(curso.activo)),
       jornada: curso.jornada || 'diurna',
     });
-    fetchPrerequisitos(curso.id);
     setShowForm(true);
   };
 
@@ -225,11 +161,6 @@ const GestionCursos = ({ user }) => {
         alert('Error de conexión');
       }
     }
-  };
-
-  const handleCursoSelect = (cursoId) => {
-    setSelectedCurso(cursoId);
-    fetchPrerequisitos(cursoId);
   };
 
   // Tarjetas resumen
@@ -354,67 +285,34 @@ const GestionCursos = ({ user }) => {
                 </select>
               </div>
               <div className="form-group">
-                <label style={{ fontWeight: 'bold', color: '#1a3c7b' }}>
+                <label style={{ fontWeight: 'bold' }}>
                   ¿Activo?
                 </label>
-                <input
-                  type="checkbox"
-                  checked={!!currentCurso.activo}
-                  onChange={e => setCurrentCurso({...currentCurso, activo: e.target.checked})}
-                  disabled={loading}
-                  style={{ marginLeft: 8 }}
-                />
-              </div>
-              <div className="form-group">
-                <label>Prerequisitos:</label>
-                <div style={{
-                  border: '1px solid #b5c6e0',
-                  borderRadius: 6,
-                  padding: '0.5em 0.7em',
-                  background: '#f8fafd',
-                  maxHeight: 160,
-                  overflowY: 'auto',
-                  marginTop: 2
-                }}>
-                  {allCursos
-                    .filter(c =>
-                      Number(c.es_prerequisito) === 1 &&
-                      (!currentCurso.id || c.id !== currentCurso.id) &&
-                      (String(c.programa_id) === String(currentCurso.programa_id))
-                    )
-                    .map(curso => (
-                      <label key={curso.id} style={{ display: 'flex', alignItems: 'center', marginBottom: 4, cursor: 'pointer', fontWeight: 500, color: '#1a3c7b', gap: '0.5em' }}>
-                        {curso.nombre}
-                        <input
-                          type="checkbox"
-                          checked={selectedPrereqs.includes(String(curso.id))}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              setSelectedPrereqs(prev => [...prev, String(curso.id)]);
-                            } else {
-                              setSelectedPrereqs(prev => prev.filter(id => id !== String(curso.id)));
-                            }
-                          }}
-                          disabled={loading}
-                          style={{ marginLeft: 8 }}
-                        />
-                      </label>
-                    ))}
-                  {allCursos.filter(c =>
-                    Number(c.es_prerequisito) === 1 &&
-                    (!currentCurso.id || c.id !== currentCurso.id) &&
-                    (String(c.programa_id) === String(currentCurso.programa_id))
-                  ).length === 0 && (
-                    <span style={{ color: '#888' }}>No hay cursos elegibles como prerequisito.</span>
-                  )}
+                <div style={{ display: 'flex', gap: '1em', marginTop: 4 }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.3em', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={!!currentCurso.activo}
+                      onChange={e => setCurrentCurso({ ...currentCurso, activo: true })}
+                      disabled={loading}
+                    /> Sí
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.3em', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={!currentCurso.activo}
+                      onChange={e => setCurrentCurso({ ...currentCurso, activo: false })}
+                      disabled={loading}
+                    /> No
+                  </label>
                 </div>
               </div>
               <div className="form-group">
-                <label style={{ fontWeight: 'bold', color: '#1a3c7b' }}>
+                <label style={{ fontWeight: 'bold' }}>
                   ¿Este curso puede ser prerequisito?
                 </label>
                 <div style={{ display: 'flex', gap: '1em', marginTop: 4 }}>
-                  <label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.3em', cursor: 'pointer' }}>
                     <input
                       type="checkbox"
                       checked={!!currentCurso.es_prerequisito}
@@ -422,7 +320,7 @@ const GestionCursos = ({ user }) => {
                       disabled={loading}
                     /> Sí
                   </label>
-                  <label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.3em', cursor: 'pointer' }}>
                     <input
                       type="checkbox"
                       checked={!currentCurso.es_prerequisito}
@@ -433,16 +331,27 @@ const GestionCursos = ({ user }) => {
                 </div>
               </div>
               <div className="form-group">
-                <label style={{ fontWeight: 'bold', color: '#1a3c7b' }}>
+                <label style={{ fontWeight: 'bold' }}>
                   ¿Curso público? (Accesible para usuarios públicos)
                 </label>
-                <input
-                  type="checkbox"
-                  checked={!!currentCurso.es_publico}
-                  onChange={e => setCurrentCurso({...currentCurso, es_publico: e.target.checked})}
-                  disabled={loading}
-                  style={{ marginLeft: 8 }}
-                />
+                <div style={{ display: 'flex', gap: '1em', marginTop: 4 }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.3em', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={!!currentCurso.es_publico}
+                      onChange={e => setCurrentCurso({ ...currentCurso, es_publico: true })}
+                      disabled={loading}
+                    /> Sí
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.3em', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={!currentCurso.es_publico}
+                      onChange={e => setCurrentCurso({ ...currentCurso, es_publico: false })}
+                      disabled={loading}
+                    /> No
+                  </label>
+                </div>
               </div>
               <div className="form-actions">
                 <button type="submit" disabled={loading}>
@@ -474,8 +383,6 @@ const GestionCursos = ({ user }) => {
                 <th>Activo</th>
                 <th>Público</th>
                 <th>Fecha Creación</th>
-                <th>¿Puede ser prerequisito?</th>
-                <th>Es prerequisito de</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -495,12 +402,6 @@ const GestionCursos = ({ user }) => {
                     }
                   </td>
                   <td>{curso.fecha_creacion ? new Date(curso.fecha_creacion).toLocaleDateString() : '-'}</td>
-                  <td>{curso.es_prerequisito === 1 || curso.es_prerequisito === true || curso.es_prerequisito === '1' ? 'Sí' : 'No'}</td>
-                  <td>
-                    {Array.isArray(esDeCursosMap[curso.id]) && esDeCursosMap[curso.id].length > 0
-                      ? esDeCursosMap[curso.id].join(', ')
-                      : <span style={{ color: '#888' }}>-</span>}
-                  </td>
                   <td>
                     <div className="action-buttons">
                       <button onClick={() => editCurso(curso)}>✏️ Editar</button>
@@ -513,21 +414,6 @@ const GestionCursos = ({ user }) => {
           </table>
         )}
       </div>
-
-      {selectedCurso && (
-        <div className="prerequisitos">
-          <h2>Prerequisitos</h2>
-          {prerequisitos.length > 0 ? (
-            <ul>
-              {prerequisitos.map(prerequisito => (
-                <li key={prerequisito.id}>{prerequisito.prerequisito_nombre}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>Este curso no tiene prerequisitos.</p>
-          )}
-        </div>
-      )}
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { apiRequest } from '../config/api';
 import {
   generarCoordenadas,
@@ -11,13 +13,32 @@ import {
 } from '../utils/mapaSalonesUtils';
 import './MapaSalones.css';
 
-const MapaSalones = () => {
-  // Coordenadas de la Universidad del Valle - Sede Santander de Quilichao
-  const UNIVERSIDAD_VALLE_COORDS = {
-    lat: 3.022922,
-    lng: -76.482656
-  };
+// Coordenadas de la Universidad del Valle (Meléndez)
+const UNIVERSIDAD_VALLE_COORDS = {
+  lat: 3.3749,
+  lng: -76.5321
+};
 
+// Fix para los iconos de Leaflet
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Crear iconos personalizados por color
+const createCustomIcon = (color) => {
+  return L.divIcon({
+    className: 'custom-div-icon',
+    html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12]
+  });
+};
+
+const MapaSalones = () => {
   const [salones, setSalones] = useState([]);
   const [horarios, setHorarios] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -37,8 +58,14 @@ const MapaSalones = () => {
         const salonesData = await apiRequest('salones.php');
         const horariosData = await apiRequest('horarios.php');
 
-        setSalones(salonesData || []);
-        setHorarios(horariosData || []);
+        // Agregar coordenadas a cada salón
+        const salonesConCoordenadas = (Array.isArray(salonesData) ? salonesData : []).map((salon, index) => ({
+          ...salon,
+          coordenadas: generarCoordenadas(index, UNIVERSIDAD_VALLE_COORDS)
+        }));
+
+        setSalones(salonesConCoordenadas);
+        setHorarios(Array.isArray(horariosData) ? horariosData : []);
         setError(null);
       } catch (err) {
         console.error('Error al cargar datos:', err);
@@ -143,175 +170,196 @@ const MapaSalones = () => {
 
       <div className="mapa-contenedor-principal">
         <div className="mapa-google">
-          {!process.env.REACT_APP_GOOGLE_MAPS_API_KEY || error ? (
-            <div className="mapa-error-config">
-              <div className="error-content">
-                <h3>⚠️ Error cargando Google Maps</h3>
-                <p>Necesitas una API Key válida de Google Maps. Sigue estos pasos:</p>
-                <ol>
-                  <li>Ve a: <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer">Google Cloud Console</a></li>
-                  <li>Crea un NUEVO proyecto</li>
-                  <li>Habilita "Maps JavaScript API"</li>
-                  <li>Crea una API Key en Credenciales</li>
-                  <li>Reemplaza la clave en el archivo <code>.env</code>:
-                    <br/><code>REACT_APP_GOOGLE_MAPS_API_KEY=Tu_Nueva_Clave_Aqui</code>
-                  </li>
-                  <li>Reinicia: <code>npm start</code></li>
-                </ol>
-                <p><strong>Error detectado:</strong> {error}</p>
-              </div>
-            </div>
-          ) : (
-            <LoadScript 
-              googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-              onError={() => setError('Error al cargar Google Maps API. Verifica que tu API Key sea válida.')}
-            >
-              <GoogleMap
-                mapContainerStyle={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '8px'
-                }}
-                center={UNIVERSIDAD_VALLE_COORDS}
-                zoom={16}
-                options={{
-                  disableDefaultUI: false,
-                  zoomControl: true,
-                  mapTypeControl: true,
-                  fullscreenControl: true,
-                  streetViewControl: true
-                }}
-              >
-                {salonesFiltrados.map((salon, index) => {
-                  const coords = generarCoordenadas(index, UNIVERSIDAD_VALLE_COORDS);
-                  const color = obtenerColorMarcador(salon, horarios, filtro.diaSemana);
-                  const markerInfo = obtenerInfoMarcadorCompleta(salon);
-
-                  return (
-                    <Marker
-                      key={salon.id}
-                      position={coords}
-                      title={`${salon.codigo} - ${salon.edificio}`}
-                      onClick={() => setSelectedMarker({ ...markerInfo, position: coords })}
-                      icon={{
-                        path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z',
-                        scale: 2,
-                        fillColor: color,
-                        fillOpacity: 1,
-                        strokeColor: '#fff',
-                        strokeWeight: 2
-                      }}
-                    />
-                  );
-                })}
-
-                {selectedMarker && selectedMarker.position && (
-                  <InfoWindow
-                    position={selectedMarker.position}
-                    onCloseClick={() => setSelectedMarker(null)}
-                    options={{
-                      maxWidth: 400,
-                      disableAutoPan: false
-                    }}
-                  >
+          <MapContainer
+            center={[UNIVERSIDAD_VALLE_COORDS.lat, UNIVERSIDAD_VALLE_COORDS.lng]}
+            zoom={17}
+            style={{ height: '100%', width: '100%', borderRadius: '8px' }}
+            zoomControl={true}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            
+            {salonesFiltrados.map((salon) => {
+              const color = obtenerColorMarcador(salon, horarios, filtro.diaSemana);
+              const customIcon = createCustomIcon(color);
+              
+              return (
+                <Marker
+                  key={salon.id}
+                  position={[salon.coordenadas.lat, salon.coordenadas.lng]}
+                  icon={customIcon}
+                  eventHandlers={{
+                    click: () => {
+                      setSelectedMarker(obtenerInfoMarcadorCompleta(salon));
+                    }
+                  }}
+                >
+                  <Popup>
                     <div className="info-window-contenido">
                       <div className="info-header">
-                        <h3>{selectedMarker.codigo}</h3>
-                        <span className="edificio-tag">{selectedMarker.edificio}</span>
+                        <h3>{salon.codigo}</h3>
+                        <span className="edificio-tag">{salon.edificio}</span>
                       </div>
 
                       <div className="info-details">
-                        <p><strong>Tipo:</strong> {selectedMarker.tipo}</p>
-                        <p><strong>Capacidad:</strong> {selectedMarker.capacidad} personas</p>
-                        <p><strong>Ubicación:</strong> {selectedMarker.ubicacion || 'No especificada'}</p>
-                        <p><strong>Estado:</strong> <span className={`estado ${selectedMarker.estado?.toLowerCase()}`}>{selectedMarker.estado}</span></p>
-
-                        {selectedMarker.equipamiento && (
-                          <p><strong>Equipamiento:</strong> {selectedMarker.equipamiento}</p>
+                        <p><strong>Tipo:</strong> {salon.tipo}</p>
+                        <p><strong>Capacidad:</strong> {salon.capacidad} personas</p>
+                        <p><strong>Ubicación:</strong> {salon.ubicacion || 'No especificada'}</p>
+                        <p>
+                          <strong>Estado:</strong>{' '}
+                          <span className={`estado ${salon.estado?.toLowerCase()}`}>
+                            {salon.estado}
+                          </span>
+                        </p>
+                        {salon.equipamiento && (
+                          <p><strong>Equipamiento:</strong> {salon.equipamiento}</p>
                         )}
                       </div>
 
                       <div className="info-horarios">
-                        <h4>📅 Clases Programadas</h4>
-                        {selectedMarker.horarios && selectedMarker.horarios.length > 0 ? (
+                        <h4>📅 Clases Programadas ({filtro.diaSemana})</h4>
+                        {horarios.filter(h => h.salon_id === salon.id && h.dia_semana === filtro.diaSemana).length > 0 ? (
                           <div className="horarios-list">
-                            {selectedMarker.horarios.map((horario, idx) => (
-                              <div key={idx} className="horario-item">
-                                <div className="horario-dia">
-                                  {horario.dia_semana}
+                            {horarios
+                              .filter(h => h.salon_id === salon.id && h.dia_semana === filtro.diaSemana)
+                              .map((horario, idx) => (
+                                <div key={idx} className="horario-item">
+                                  <div className="horario-dia">{horario.dia_semana}</div>
+                                  <div className="horario-info">
+                                    <p className="horario-tiempo">
+                                      🕐 {horario.hora_inicio} - {horario.hora_fin}
+                                    </p>
+                                    <p className="curso-nombre">{horario.curso_nombre}</p>
+                                    <p className="profesor-nombre">
+                                      👨‍🏫 {horario.docente_nombres} {horario.docente_apellidos}
+                                    </p>
+                                  </div>
                                 </div>
-                                <div className="horario-info">
-                                  <p className="horario-tiempo">
-                                    🕐 {horario.hora_inicio} - {horario.hora_fin}
-                                  </p>
-                                  <p className="curso-nombre">
-                                    {horario.curso_nombre}
-                                  </p>
-                                  <p className="profesor-nombre">
-                                    👨‍🏫 {horario.docente_nombres} {horario.docente_apellidos}
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
+                              ))}
                           </div>
                         ) : (
-                          <p className="sin-clases">No hay clases programadas</p>
+                          <p className="sin-clases">No hay clases programadas para {filtro.diaSemana}</p>
                         )}
                       </div>
                     </div>
-                  </InfoWindow>
-                )}
-              </GoogleMap>
-            </LoadScript>
-          )}
+                  </Popup>
+                </Marker>
+              );
+            })}
+          </MapContainer>
         </div>
 
         <div className="mapa-panel-info">
-          <div className="panel-header">
-            <h3>📋 Salones en el Campus ({salonesFiltrados.length})</h3>
-          </div>
+          {selectedMarker ? (
+            <div className="salon-detalle-completo">
+              <div className="detalle-header">
+                <div>
+                  <h3>{selectedMarker.codigo}</h3>
+                  <span className="edificio-tag">{selectedMarker.edificio}</span>
+                </div>
+                <button className="btn-cerrar" onClick={() => setSelectedMarker(null)}>✕</button>
+              </div>
 
-          <div className="salones-lista">
-            {salonesFiltrados.length > 0 ? (
-              salonesFiltrados.map((salon) => {
-                const horariosDelSalon = filtrarHorariosPorDia(
-                  horarios.filter(h => h.salon_id === salon.id),
-                  filtro.diaSemana
-                );
+              <div className="info-details">
+                <div className="info-item">
+                  <strong>Tipo:</strong> {selectedMarker.tipo}
+                </div>
+                <div className="info-item">
+                  <strong>Capacidad:</strong> {selectedMarker.capacidad} personas
+                </div>
+                <div className="info-item">
+                  <strong>Ubicación:</strong> {selectedMarker.ubicacion || 'No especificada'}
+                </div>
+                <div className="info-item">
+                  <strong>Estado:</strong> 
+                  <span className={`estado ${selectedMarker.estado?.toLowerCase()}`}>
+                    {selectedMarker.estado}
+                  </span>
+                </div>
 
-                return (
-                  <div
-                    key={salon.id}
-                    className={`salon-card ${horariosDelSalon.length > 0 ? 'con-clases' : ''}`}
-                    onClick={() => setSelectedMarker(obtenerInfoMarcadorCompleta(salon))}
-                  >
-                    <div className="salon-card-header">
-                      <h4>{salon.codigo}</h4>
-                      <span className="capacidad-badge">{salon.capacidad}</span>
-                    </div>
-                    <p className="salon-edificio">{salon.edificio}</p>
-                    <p className="salon-tipo">{salon.tipo}</p>
-
-                    {horariosDelSalon.length > 0 && (
-                      <div className="clases-resumen">
-                        <p className="clases-count">
-                          📚 {horariosDelSalon.length} clase(s) hoy
-                        </p>
-                      </div>
-                    )}
-
-                    <div className="salon-estado">
-                      <span className={`estado-badge ${salon.estado?.toLowerCase()}`}>
-                        {salon.estado}
-                      </span>
-                    </div>
+                {selectedMarker.equipamiento && (
+                  <div className="info-item">
+                    <strong>Equipamiento:</strong> {selectedMarker.equipamiento}
                   </div>
-                );
-              })
-            ) : (
-              <p className="sin-resultados">No hay salones que coincidan con los filtros</p>
-            )}
-          </div>
+                )}
+              </div>
+
+              <div className="info-horarios">
+                <h4>📅 Clases Programadas ({filtro.diaSemana})</h4>
+                {selectedMarker.horarios && selectedMarker.horarios.length > 0 ? (
+                  <div className="horarios-list">
+                    {selectedMarker.horarios
+                      .filter(h => h.dia_semana === filtro.diaSemana)
+                      .map((horario, idx) => (
+                      <div key={idx} className="horario-item">
+                        <div className="horario-tiempo">
+                          🕐 {horario.hora_inicio} - {horario.hora_fin}
+                        </div>
+                        <div className="horario-curso">
+                          {horario.curso_nombre}
+                        </div>
+                        <div className="horario-profesor">
+                          👨‍🏫 {horario.docente_nombres} {horario.docente_apellidos}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="sin-clases">No hay clases programadas para {filtro.diaSemana}</p>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="panel-inicial">
+              <div className="panel-header">
+                <h3>📋 Salones en el Campus</h3>
+              </div>
+
+              <div className="salones-lista">
+                {salonesFiltrados.length > 0 ? (
+                  salonesFiltrados.map((salon) => {
+                    const horariosDelSalon = filtrarHorariosPorDia(
+                      horarios.filter(h => h.salon_id === salon.id),
+                      filtro.diaSemana
+                    );
+
+                    return (
+                      <div
+                        key={salon.id}
+                        className={`salon-card ${horariosDelSalon.length > 0 ? 'con-clases' : ''}`}
+                        onClick={() => setSelectedMarker(obtenerInfoMarcadorCompleta(salon))}
+                      >
+                        <div className="salon-card-header">
+                          <h4>{salon.codigo}</h4>
+                          <span className="capacidad-badge">{salon.capacidad}</span>
+                        </div>
+                        <p className="salon-edificio">{salon.edificio}</p>
+                        <p className="salon-tipo">{salon.tipo}</p>
+
+                        {horariosDelSalon.length > 0 && (
+                          <div className="clases-resumen">
+                            <p className="clases-count">
+                              📚 {horariosDelSalon.length} clase(s) hoy
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="salon-estado">
+                          <span className={`estado-badge ${salon.estado?.toLowerCase()}`}>
+                            {salon.estado}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="sin-resultados">No hay salones que coincidan con los filtros</p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

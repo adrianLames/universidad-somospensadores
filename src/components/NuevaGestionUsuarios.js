@@ -7,6 +7,7 @@ const tipos = [
   { value: 'estudiante', label: 'Estudiante' },
   { value: 'docente', label: 'Docente' },
   { value: 'admin', label: 'Administrador' },
+  { value: 'publico', label: 'Público' },
 ];
 
 const NuevaGestionUsuarios = () => {
@@ -267,8 +268,19 @@ const NuevaGestionUsuarios = () => {
                   {programas.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
                 </select>
               </label>
+              <label>Jornada
+                <select name="jornada" value={editForm.jornada || ''} onChange={handleEditChange}>
+                  <option value="">Selecciona jornada</option>
+                  <option value="diurna">☀️ Diurna</option>
+                  <option value="nocturna">🌙 Nocturna</option>
+                </select>
+              </label>
               <label>Activo
                 <input name="activo" type="checkbox" checked={String(editForm.activo) === '1' || editForm.activo === 1 || editForm.activo === true} onChange={e => handleEditChange({ target: { name: 'activo', value: e.target.checked ? 1 : 0 } })} />
+              </label>
+              <label style={{borderTop: '2px solid #d4af37', paddingTop: '1rem', marginTop: '1rem'}}>
+                Nueva Contraseña (dejar en blanco para no cambiar)
+                <input name="password" type="password" value={editForm.password || ''} onChange={handleEditChange} placeholder="Ingrese nueva contraseña" />
               </label>
             </div>
             <div className="modal-actions" style={{marginTop:'1rem'}}>
@@ -279,8 +291,10 @@ const NuevaGestionUsuarios = () => {
         </div>
       )}
       <div className="nueva-gestion-usuarios">
-        <button className="btn-salir" onClick={goHome} style={{position:'absolute', left: 30, top: 30, zIndex: 10}}>⟵ Salir al inicio</button>
-        <button className="btn-agregar" onClick={openAgregar} style={{float:'right', marginTop:10, marginBottom:10}}>+ Agregar usuario</button>
+        <div className="header-actions">
+          <button className="btn-salir" onClick={goHome}>⟵ Salir al inicio</button>
+          <button className="btn-agregar" onClick={openAgregar}>+ Agregar usuario</button>
+        </div>
         {/* Dashboard header: cards */}
         <div className="dashboard-cards">
           {(() => {
@@ -378,6 +392,14 @@ const NuevaGestionUsuarios = () => {
                   </select>
                 </div>
                 <div className="form-group">
+                  <label>Jornada:</label>
+                  <select name="jornada" value={nuevoUsuario.jornada || 'diurna'} onChange={handleNuevoChange}>
+                    <option value="">Selecciona jornada</option>
+                    <option value="diurna">☀️ Diurna</option>
+                    <option value="nocturna">🌙 Nocturna</option>
+                  </select>
+                </div>
+                <div className="form-group">
                   <label>Contraseña:</label>
                   <input name="password" type="password" value={nuevoUsuario.password} onChange={handleNuevoChange} required />
                 </div>
@@ -418,6 +440,7 @@ const NuevaGestionUsuarios = () => {
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Tipo</th>
+                    <th>Jornada</th>
                     <th>Activo</th>
                     <th>Acciones</th>
                   </tr>
@@ -430,6 +453,9 @@ const NuevaGestionUsuarios = () => {
                       <td>{u.email}</td>
                       <td>
                         {u.tipo}
+                      </td>
+                      <td style={{textAlign:'center'}}>
+                        {u.jornada ? (u.jornada === 'diurna' ? '☀️ Diurna' : '🌙 Nocturna') : '-'}
                       </td>
                       <td style={{textAlign:'center'}}>
                         {String(u.activo) === '1' ? (

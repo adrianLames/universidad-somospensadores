@@ -66,63 +66,263 @@
 }
 
 .pensum-container {
-  padding: 2rem;
+  padding: 2.5rem;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  min-height: 100vh;
 }
+
+.pensum-container h2 {
+  color: #ffffff;
+  margin-bottom: 2.5rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  padding-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.pensum-container h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #d4af37 0%, #f0d070 50%, transparent 100%);
+  border-radius: 2px;
+}
+
 .pensum-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2.5rem;
 }
+
 .pensum-curso {
-  min-width: 180px;
-  min-height: 90px;
-  border-radius: 8px;
-  color: #e0e0e0;
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  min-height: 180px;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  font-size: 1rem;
-  transition: transform 0.2s;
-  background: #1a1a1a;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
 }
+
+.pensum-curso::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, currentColor 0%, transparent 100%);
+}
+
+.pensum-curso::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at center, currentColor 0%, transparent 70%);
+  opacity: 0.1;
+  border-radius: 50%;
+}
+
+.pensum-curso:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
 .pensum-curso.aprobado {
+  background: linear-gradient(135deg, #1a3a2a 0%, #0f2518 100%);
   border: 2px solid #2ecc71;
+  color: #2ecc71;
 }
+
+.pensum-curso.aprobado:hover {
+  box-shadow: 0 12px 32px rgba(46, 204, 113, 0.4);
+}
+
 .pensum-curso.cursando {
+  background: linear-gradient(135deg, #3a3020 0%, #2a2010 100%);
   border: 2px solid #d4af37;
+  color: #d4af37;
 }
+
+.pensum-curso.cursando:hover {
+  box-shadow: 0 12px 32px rgba(212, 175, 55, 0.4);
+}
+
 .pensum-curso.pendiente {
+  background: linear-gradient(135deg, #3a1a1a 0%, #2a0f0f 100%);
   border: 2px solid #ff6b6b;
+  color: #ff6b6b;
 }
-.pensum-estado {
-  margin-top: 0.5rem;
-  font-size: 0.9em;
-  font-weight: bold;
+
+.pensum-curso.pendiente:hover {
+  box-shadow: 0 12px 32px rgba(255, 107, 107, 0.4);
+}
+
+.pensum-curso strong {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.95;
+  margin-bottom: 0.8rem;
+  font-weight: 800;
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+}
+
+.pensum-curso .curso-nombre {
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.pensum-prerequisito {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-top: 0.8rem;
+  font-size: 0.82rem;
+  border-left: 4px solid currentColor;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s;
+}
+
+.pensum-prerequisito:hover {
+  background: rgba(0, 0, 0, 0.5);
+  transform: translateX(4px);
+}
+
+.pensum-prerequisito strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+  font-size: 0.75rem;
+  background: transparent;
+  padding: 0;
   letter-spacing: 1px;
 }
-.pensum-prerequisito {
-  margin-top: 0.5rem;
-  font-size: 0.85em;
+
+.pensum-prerequisito span {
   color: #e0e0e0;
-  background: #3a3a3a;
-  border-radius: 4px;
-  padding: 2px 6px;
-  display: inline-block;
+  line-height: 1.5;
+  display: block;
+  margin-top: 0.3rem;
 }
+
+.pensum-estado {
+  margin-top: 1rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  align-self: center;
+  border: 1px solid currentColor;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 .leyenda {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 2rem;
+  margin-top: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+  border-radius: 16px;
+  border: 1px solid #3a3a3a;
+  justify-content: center;
+  flex-wrap: wrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
+
 .leyenda span {
-  display: inline-block;
-  padding: 0.3em 1em;
-  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
   color: #ffffff;
-  font-size: 0.95em;
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  gap: 0.8rem;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.leyenda span:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  border-color: currentColor;
+}
+
+.leyenda span::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 12px currentColor;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 12px currentColor;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px currentColor;
+    transform: scale(1.1);
+  }
+}
+
+@media (max-width: 1024px) {
+  .pensum-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pensum-container {
+    padding: 1.5rem;
+  }
+  
+  .pensum-container h2 {
+    font-size: 1.8rem;
+  }
+  
+  .pensum-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .leyenda {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .pensum-curso {
+    min-height: 160px;
+  }
 }
 

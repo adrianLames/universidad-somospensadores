@@ -29,27 +29,42 @@ const Asistencias = ({ user }) => {
   const fetchAsistenciasDocente = async () => {
     try {
       const response = await fetch(`${API_BASE}/asistencias.php?docente_id=${user.id}`);
+      if (!response.ok) {
+        console.error('API response not ok:', response.status);
+        setAsistencias([]);
+        return;
+      }
       const data = await response.json();
-      setAsistencias(data);
+      // Asegurar que siempre sea un array
+      setAsistencias(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching asistencias:', error);
+      setAsistencias([]);
     }
   };
 
   const fetchAsistenciasEstudiante = async () => {
     try {
       const response = await fetch(`${API_BASE}/asistencias.php?estudiante_id=${user.id}`);
+      if (!response.ok) {
+        console.error('API response not ok:', response.status);
+        setAsistencias([]);
+        return;
+      }
       const data = await response.json();
-      setAsistencias(data);
+      // Asegurar que siempre sea un array
+      setAsistencias(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching asistencias:', error);
+      setAsistencias([]);
     }
   };
 
   const fetchCursosDocente = async () => {
     try {
       const response = await fetch(`${API_BASE}/cursos.php?docente_id=${user.id}`);
-      const data = await response.json();
+      const result = await response.json();
+      const data = result.success ? result.data : (Array.isArray(result) ? result : []);
       setCursos(data);
     } catch (error) {
       console.error('Error fetching cursos:', error);
@@ -59,10 +74,17 @@ const Asistencias = ({ user }) => {
   const fetchEstudiantesPorCurso = async (cursoId) => {
     try {
       const response = await fetch(`${API_BASE}/usuarios.php?tipo=estudiante&curso_id=${cursoId}`);
+      if (!response.ok) {
+        console.error('API response not ok:', response.status);
+        setEstudiantes([]);
+        return;
+      }
       const data = await response.json();
-      setEstudiantes(data);
+      // Asegurar que siempre sea un array
+      setEstudiantes(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching estudiantes:', error);
+      setEstudiantes([]);
     }
   };
 
