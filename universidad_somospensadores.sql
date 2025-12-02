@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-11-2025 a las 05:28:21
+-- Tiempo de generación: 02-12-2025 a las 18:42:27
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -154,7 +154,7 @@ CREATE TABLE `cursos` (
 --
 
 INSERT INTO `cursos` (`id`, `codigo`, `nombre`, `descripcion`, `creditos`, `programa_id`, `prerequisito_id`, `activo`, `fecha_creacion`, `facultad_id`, `jornada`, `es_prerequisito`) VALUES
-(11, '111023C_AL', 'Algebra Lineal', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
+(11, '111023C_AL', 'Algebra Lineal', NULL, 3, 5, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
 (17, '750090C', 'Matemáticas Discretas II', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
 (18, '750088C', 'Análisis y Diseño de Algoritmos', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
 (19, '204130C_ED', 'Estructuras de Datos', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
@@ -321,7 +321,7 @@ CREATE TABLE `horarios` (
 --
 
 INSERT INTO `horarios` (`id`, `salon_id`, `dia_semana`, `hora_inicio`, `hora_fin`, `docente_id`, `curso_id`, `color`) VALUES
-(56, 2, 'Martes', '08:00:00', '10:00:00', 2, 1, '#dcedc8'),
+(56, 2, 'Martes', '08:00:00', '10:00:00', 2, 11, '#dcedc8'),
 (57, 1, 'Lunes', '08:00:00', '10:00:00', 4, 1, '#dcedc8'),
 (59, 3, 'Miércoles', '01:00:00', '07:00:00', 4, 2, '#ffe0b2'),
 (62, 3, 'Lunes', '08:00:00', '10:00:00', 4, 2, '#ffe0b2');
@@ -349,7 +349,8 @@ CREATE TABLE `matriculas` (
 INSERT INTO `matriculas` (`id`, `estudiante_id`, `curso_id`, `semestre`, `anio`, `fecha_matricula`, `estado`) VALUES
 (17, 13, 11, '1', '2025', '2025-11-25 23:04:31', 'activa'),
 (18, 14, 11, '1', '2025', '2025-11-25 23:04:31', 'activa'),
-(19, 15, 11, '1', '2025', '2025-11-25 23:04:31', 'activa');
+(19, 15, 11, '1', '2025', '2025-11-25 23:04:31', 'activa'),
+(52, 12, 11, '1', '2025', '2025-12-02 17:06:40', 'activa');
 
 -- --------------------------------------------------------
 
@@ -384,7 +385,8 @@ INSERT INTO `pendientes` (`id`, `tipo`, `identificacion`, `nombres`, `apellidos`
 (4, 'estudiante', '56', 'sa', 'si', 'sk@gmail.com', '7744558899', '2025-11-06', 1, 4, '$2y$10$ukH7U55pmXwigx.kK9PWJ.Jl3m5bp6F3igcGfOnT/2v9e2xWjdrLi', 'calle 8', 'aprobado', '2025-11-18 22:18:01'),
 (5, 'docente', '78987', 'Andres David', 'Villa Romero', 'andresd8888@gmail.com', '999888', '2025-10-16', 1, 4, '$2y$10$gr0sS5vBcC8.8toC6.4GLeq1YD.IcKx9/e4C8/C20AdGHNbtLMczu', 'calle 0', 'aprobado', '2025-11-18 22:31:14'),
 (6, 'docente', '9999', 'jaider', 'lames', 'lames@gmail.com', '87896', '2025-11-14', 2, 5, '$2y$10$ftTJ0nEoBkpZ5XkREHjMh.cIgzcSYVX9iVLQICsMGMVHWQeSvQfby', 'calle 8', 'aprobado', '2025-11-18 22:35:37'),
-(7, 'estudiante', '7894516', 'jaide', 'lames ', 'jaider@gmail.com', '59874568', '2025-11-12', 2, 5, '$2y$10$pNWjOzrYSBjRIf6Cl9FpBOWIYZXzTkV3V5X.Ij296WpVPzfzDmQKC', 'calle', 'aprobado', '2025-11-22 00:51:34');
+(7, 'estudiante', '7894516', 'jaide', 'lames ', 'jaider@gmail.com', '59874568', '2025-11-12', 2, 5, '$2y$10$pNWjOzrYSBjRIf6Cl9FpBOWIYZXzTkV3V5X.Ij296WpVPzfzDmQKC', 'calle', 'aprobado', '2025-11-22 00:51:34'),
+(8, '', '465488', 'prueba', 'mart', 'prueba@gmail.com', '', NULL, NULL, NULL, '$2y$10$A9BFuBWJ80/ZpfR0Nxtncu2yzcuGIZzcFwetPcAmB/oNpJ5paqbMe', NULL, 'aprobado', '2025-11-26 19:29:18');
 
 -- --------------------------------------------------------
 
@@ -468,6 +470,8 @@ CREATE TABLE `salones` (
   `latitud` double DEFAULT 3.022922,
   `longitud` double DEFAULT -76.482656,
   `visible` tinyint(4) DEFAULT 1,
+  `coord_x` int(11) DEFAULT NULL,
+  `coord_y` int(11) DEFAULT NULL,
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
   `ubicacion` varchar(100) DEFAULT NULL,
   `recursos` varchar(200) DEFAULT NULL,
@@ -478,11 +482,12 @@ CREATE TABLE `salones` (
 -- Volcado de datos para la tabla `salones`
 --
 
-INSERT INTO `salones` (`id`, `codigo`, `edificio`, `capacidad`, `tipo`, `equipamiento`, `activo`, `latitud`, `longitud`, `visible`, `fecha_creacion`, `ubicacion`, `recursos`, `estado`) VALUES
-(1, '1A', 'CENTRAL', 30, 'aula', '5 MESAS 5 ASIENTOS ', 1, 3.022988296577766, -76.48311232193213, 1, '2025-11-21 19:17:52', NULL, NULL, 'Disponible'),
-(2, '2A', 'bloque tecnico', 30, 'aula', '5 mesas 5 sillas ', 1, 3.0226856468017056, -76.48314178594288, 1, '2025-11-21 21:13:54', NULL, NULL, 'Disponible'),
-(3, '3A', 'Campus carvajal', 30, 'aula', '5 mesas 5 Sillas', 1, 3.023119389696045, -76.48310702600438, 1, '2025-11-21 21:42:47', NULL, NULL, 'Disponible'),
-(4, 'A4', 'Ingenieria', 36, 'aula', '36 sillas 36 mesas', 1, 3.0228329292176555, -76.48311763263227, 1, '2025-11-25 20:40:59', '', 'Proyector, WiFi', 'Disponible');
+INSERT INTO `salones` (`id`, `codigo`, `edificio`, `capacidad`, `tipo`, `equipamiento`, `activo`, `latitud`, `longitud`, `visible`, `coord_x`, `coord_y`, `fecha_creacion`, `ubicacion`, `recursos`, `estado`) VALUES
+(1, '1A', 'CENTRAL', 30, 'aula', '5 MESAS 5 ASIENTOS ', 1, 3.023001713123767, -76.48312032102758, 1, 300, 400, '2025-11-21 19:17:52', NULL, NULL, 'Disponible'),
+(2, '2A', 'bloque tecnico', 30, 'aula', '5 mesas 5 sillas ', 1, 3.0226856468017056, -76.48314178594288, 1, 200, 150, '2025-11-21 21:13:54', NULL, NULL, 'Ocupado'),
+(3, '3A', 'Campus carvajal', 30, 'aula', '5 mesas 5 Sillas', 1, 3.023119389696045, -76.48310702600438, 1, 600, 200, '2025-11-21 21:42:47', NULL, NULL, 'Disponible'),
+(4, 'A4', 'Ingenieria', 36, 'aula', '36 sillas 36 mesas', 1, 3.0228329292176555, -76.48311763263227, 1, 450, 350, '2025-11-25 20:40:59', '', 'Proyector, WiFi', 'Disponible'),
+(5, 'Biblioteca', 'Central', 30, '', '', 1, 3.022922, -76.482656, 1, 800, 500, '2025-12-02 16:17:42', '', '', 'Disponible');
 
 -- --------------------------------------------------------
 
@@ -559,7 +564,8 @@ INSERT INTO `usuarios` (`id`, `tipo`, `jornada`, `identificacion`, `nombres`, `a
 (14, 'estudiante', 'nocturna', '2000002', 'María', 'García', 'maria.garcia@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31'),
 (15, 'estudiante', 'nocturna', '2000003', 'Juan', 'Rodríguez', 'juan.rodriguez@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31'),
 (16, 'estudiante', 'nocturna', '2000004', 'Ana', 'Martínez', 'ana.martinez@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31'),
-(17, 'estudiante', 'nocturna', '2000005', 'Pedro', 'Silva', 'pedro.silva@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31');
+(17, 'estudiante', 'nocturna', '2000005', 'Pedro', 'Silva', 'pedro.silva@uni.edu', NULL, NULL, NULL, 1, 8, '$2y$10$dKVTR1pB/A296MlOj49dtONvomhYlm4IAOKw4BtKJZZKX4UlImHQe', 1, '2025-11-25 23:04:31'),
+(18, '', 'diurna', '465488', 'prueba', 'mart', 'prueba@gmail.com', '', NULL, NULL, NULL, NULL, '$2y$10$A9BFuBWJ80/ZpfR0Nxtncu2yzcuGIZzcFwetPcAmB/oNpJ5paqbMe', 1, '2025-11-26 19:30:08');
 
 --
 -- Índices para tablas volcadas
@@ -790,13 +796,13 @@ ALTER TABLE `horarios`
 -- AUTO_INCREMENT de la tabla `matriculas`
 --
 ALTER TABLE `matriculas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `pendientes`
 --
 ALTER TABLE `pendientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `prerequisitos`
@@ -814,7 +820,7 @@ ALTER TABLE `programas`
 -- AUTO_INCREMENT de la tabla `salones`
 --
 ALTER TABLE `salones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `semestres_activos`
@@ -832,7 +838,7 @@ ALTER TABLE `tareas`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Restricciones para tablas volcadas
