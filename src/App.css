@@ -33,6 +33,10 @@ body {
   background: linear-gradient(135deg, var(--accent-lighter) 0%, var(--bg-light) 100%);
   min-height: 100vh;
   color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .App {
