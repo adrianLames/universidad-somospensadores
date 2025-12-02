@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './GestionProgramas.css';
-import BackHomeButton from './BackHomeButton';
 
 const GestionProgramas = ({ user }) => {
   const [programas, setProgramas] = useState([]);
@@ -131,7 +130,6 @@ const GestionProgramas = ({ user }) => {
     <div className="gestion-programas">
       <div className="page-header">
         <h2>📚 Gestión de Programas Académicos</h2>
-        <BackHomeButton className="small-btn right" label="Inicio" />
       </div>
       
       <button 

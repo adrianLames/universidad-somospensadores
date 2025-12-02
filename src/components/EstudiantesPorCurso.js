@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './EstudiantesPorCurso.css';
-import BackHomeButton from './BackHomeButton';
 
 const EstudiantesPorCurso = ({ user }) => {
   const [cursos, setCursos] = useState([]);
@@ -80,7 +79,6 @@ const EstudiantesPorCurso = ({ user }) => {
     <div className="estudiantes-por-curso">
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '2rem'}}>
         <h2>👥 Estudiantes Matriculados por Materia</h2>
-        <BackHomeButton label="Inicio" />
       </div>
 
       {loading ? (

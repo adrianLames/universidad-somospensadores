@@ -80,7 +80,6 @@ const DashboardAdmin = ({ user, onLogout }) => {
       items: [
         { name: 'Salones', view: 'salones', desc: 'Administra aulas y espacios universitarios' },
         { name: 'Mapa de Salones (Tabla)', view: 'admin-mapa-salones', desc: 'Gestiona salones en vista tabular' },
-        { name: 'Mapa de Salones (Visual)', view: 'admin-mapa-salones-visual', desc: 'Gestiona salones de forma visual' },
         { name: 'Mapa de Salones (Plano)', view: 'admin-mapa-salones-plano', desc: 'Gestiona posiciones en el plano del campus' }
       ]
     },

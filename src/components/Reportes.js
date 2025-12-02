@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './Reportes.css';
-import BackHomeButton from './BackHomeButton';
 
 const Reportes = ({ user }) => {
   const [tipoReporte, setTipoReporte] = useState('');
@@ -243,7 +242,6 @@ const Reportes = ({ user }) => {
           </span>
           <h2 style={{ margin: 0, fontWeight: 700 }}>Reportes Académicos</h2>
         </div>
-        <BackHomeButton className="small-btn right" label="Inicio" />
       </div>
 
       <div className="filtros-panel">

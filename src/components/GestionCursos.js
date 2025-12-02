@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './GestionCursos.css';
-import BackHomeButton from './BackHomeButton';
 
 const GestionCursos = ({ user }) => {
   const [cursos, setCursos] = useState([]);
@@ -178,7 +177,6 @@ const GestionCursos = ({ user }) => {
           </span>
           <h2 style={{margin:0, fontWeight:700}}>Gestión de Cursos</h2>
         </div>
-        <BackHomeButton className="small-btn right" label="Inicio" />
       </div>
       <div className="cursos-resumen-cards" style={{display:'flex', gap:'2rem', margin:'1.2rem 0', justifyContent:'center'}}>
         <div className="resumen-card"><div>Total Cursos</div><div className="resumen-value">{totalCursos}</div></div>

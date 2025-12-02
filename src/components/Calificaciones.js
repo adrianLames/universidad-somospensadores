@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './Calificaciones.css';
-import BackHomeButton from './BackHomeButton';
 
 const Calificaciones = ({ user }) => {
   const [calificaciones, setCalificaciones] = useState([]);
@@ -258,7 +257,6 @@ const Calificaciones = ({ user }) => {
     <div className="calificaciones">
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem'}}>
         <h2>📊 {user.tipo === 'docente' ? 'Registro de Calificaciones' : 'Mis Calificaciones'}</h2>
-        <BackHomeButton label="Inicio" />
       </div>
       
       {user && user.tipo === 'docente' && (

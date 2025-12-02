@@ -7,25 +7,37 @@ import {
   obtenerDiaActual
 } from '../utils/mapaSalonesUtils';
 import './MapaSalonesPlano.css';
-import BackHomeButton from './BackHomeButton';
 
-const MapaSalonesPlano = () => {
+const MapaSalonesPlano = ({ user }) => {
   const [salones, setSalones] = useState([]);
   const [horarios, setHorarios] = useState([]);
   const [selectedSalon, setSelectedSalon] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imagenCargada, setImagenCargada] = useState(false);
+  const [posicionesGuardadas, setPosicionesGuardadas] = useState({});
   const [filtro, setFiltro] = useState({
     edificio: 'todos',
     diaSemana: obtenerDiaActual(),
     tipo: 'todos'
   });
-  const [scale, setScale] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const containerRef = useRef(null);
+  const [zoom, setZoom] = useState(1);
+  const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: 1200, height: 800 });
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+  const svgRef = useRef(null);
+
+  // Cargar posiciones guardadas del localStorage
+  useEffect(() => {
+    const posicionesLS = localStorage.getItem('admin-mapa-posiciones');
+    if (posicionesLS) {
+      try {
+        setPosicionesGuardadas(JSON.parse(posicionesLS));
+      } catch (error) {
+        console.error('Error al cargar posiciones:', error);
+      }
+    }
+  }, []);
 
   // Cargar salones y horarios
   useEffect(() => {
@@ -34,7 +46,7 @@ const MapaSalonesPlano = () => {
         setLoading(true);
         const salonesData = await apiRequest('salones.php');
         const horariosData = await apiRequest('horarios.php');
-
+        
         setSalones(Array.isArray(salonesData) ? salonesData : []);
         setHorarios(Array.isArray(horariosData) ? horariosData : []);
         setError(null);
@@ -63,40 +75,77 @@ const MapaSalonesPlano = () => {
   const tipos = ['todos', ...new Set(salones.map(s => s.tipo).filter(Boolean))];
 
   // Funciones de zoom
-  const handleZoomIn = () => setScale(prev => Math.min(prev + 0.2, 3));
-  const handleZoomOut = () => setScale(prev => Math.max(prev - 0.2, 0.5));
-  const handleResetZoom = () => {
-    setScale(1);
-    setPosition({ x: 0, y: 0 });
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 0.2, 3));
   };
 
-  // Funciones de arrastre
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 0.2, 0.5));
+  };
+
+  const handleResetZoom = () => {
+    setZoom(1);
+    setViewBox({ x: 0, y: 0, width: 1200, height: 800 });
+  };
+
+  // Funciones de pan/arrastre
   const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setDragStart({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y
-    });
+    setIsPanning(true);
+    setPanStart({ x: e.clientX, y: e.clientY });
   };
 
   const handleMouseMove = (e) => {
-    if (isDragging) {
-      setPosition({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y
-      });
-    }
+    if (!isPanning) return;
+
+    const dx = (e.clientX - panStart.x) / zoom;
+    const dy = (e.clientY - panStart.y) / zoom;
+
+    setViewBox(prev => ({
+      ...prev,
+      x: prev.x - dx,
+      y: prev.y - dy
+    }));
+
+    setPanStart({ x: e.clientX, y: e.clientY });
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
+    setIsPanning(false);
+  };
+
+  // Obtener posición del marcador (igual que en AdminMapaSalonesPlano)
+  const getSalonPosicion = (salon) => {
+    if (posicionesGuardadas[salon.id]) {
+      return posicionesGuardadas[salon.id];
+    }
+    // Posición por defecto basada en coordenadas del salón
+    // Usamos el ID del salón como seed para que sea consistente
+    const baseX = 600;
+    const baseY = 400;
+    const offsetX = ((salon.id * 37) % 400) - 200; // Seed basado en ID
+    const offsetY = ((salon.id * 73) % 300) - 150; // Seed basado en ID
+    return { x: baseX + offsetX, y: baseY + offsetY };
   };
 
   // Click en marcador
   const handleMarkerClick = (salon, e) => {
     e.stopPropagation();
-    const horariosDelSalon = horarios.filter(h => h.salon_id === salon.id);
-    const horariosDelDia = filtrarHorariosPorDia(horariosDelSalon, filtro.diaSemana);
+    let horariosDelSalon = horarios.filter(h => h.salon_id === salon.id);
+    let horariosDelDia = filtrarHorariosPorDia(horariosDelSalon, filtro.diaSemana);
+    
+    // Filtrar según tipo de usuario
+    if (user && user.tipo === 'estudiante' && user.programa_id) {
+      // Estudiantes solo ven clases de su programa
+      horariosDelDia = horariosDelDia.filter(h => 
+        h.curso_programa_id === parseInt(user.programa_id)
+      );
+    } else if (user && user.tipo === 'docente') {
+      // Docentes solo ven sus clases asignadas
+      horariosDelDia = horariosDelDia.filter(h => 
+        h.docente_id === parseInt(user.id)
+      );
+    }
+    // Admin ve todo
     
     setSelectedSalon({
       ...salon,
@@ -119,7 +168,6 @@ const MapaSalonesPlano = () => {
           <h1>🏫 Plano del Campus - Salones</h1>
           <p className="mapa-subtitle">Mapa interactivo con ubicación de salones y horarios</p>
         </div>
-        <BackHomeButton label="Volver al Inicio" />
       </div>
 
       {error && (
@@ -135,7 +183,7 @@ const MapaSalonesPlano = () => {
             <p>Para visualizar el plano del campus con los salones:</p>
             <ol>
               <li>Convierte el archivo <code>campusV1.dwg</code> a imagen PNG/JPG</li>
-              <li>Guarda la imagen como: <code>public/images/campus-plano.png</code></li>
+              <li>Guarda la imagen como: <code>public/images/campus-plano.jpg</code></li>
               <li>Consulta el archivo <code>CONVERSION_PLANO.md</code> para instrucciones detalladas</li>
             </ol>
             <p className="nota-temporal">
@@ -208,55 +256,86 @@ const MapaSalonesPlano = () => {
 
           <div 
             className="plano-canvas-container"
-            ref={containerRef}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
           >
-            <div 
-              className="plano-canvas"
+            <svg
+              ref={svgRef}
+              className="mapa-svg"
+              viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width / zoom} ${viewBox.height / zoom}`}
+              preserveAspectRatio="xMidYMid meet"
               style={{
-                transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+                width: '100%',
+                height: '100%',
+                cursor: isPanning ? 'grabbing' : 'grab'
               }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
             >
+              <defs>
+                <filter id="shadow">
+                  <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.3"/>
+                </filter>
+              </defs>
+
               {/* Imagen del plano */}
-              <img 
-                src="/images/campus-plano.png" 
-                alt="Plano del Campus"
+              <image
+                href="/images/campus-plano.jpg"
+                x="0"
+                y="0"
+                width="1200"
+                height="800"
+                preserveAspectRatio="xMidYMid slice"
                 onLoad={() => setImagenCargada(true)}
-                onError={() => {
-                  setImagenCargada(false);
-                  console.warn('No se pudo cargar la imagen del plano');
-                }}
-                draggable={false}
+                onError={() => setImagenCargada(false)}
               />
 
               {/* Marcadores de salones */}
               {imagenCargada && salonesFiltrados.map((salon) => {
-                // Solo mostrar si tiene coordenadas
-                if (!salon.coord_x || !salon.coord_y) return null;
-
-                const color = obtenerColorMarcador(salon, horarios, filtro.diaSemana);
-                
-                return (
-                  <div
-                    key={salon.id}
-                    className="salon-marker"
-                    style={{
-                      left: `${salon.coord_x}px`,
-                      top: `${salon.coord_y}px`,
-                      backgroundColor: color,
-                    }}
-                    onClick={(e) => handleMarkerClick(salon, e)}
-                    title={`${salon.codigo} - ${salon.edificio}`}
-                  >
-                    <span className="marker-label">{salon.codigo}</span>
-                  </div>
-                );
-              })}
-            </div>
+                  const pos = getSalonPosicion(salon);
+                  const color = obtenerColorMarcador(salon, horarios, filtro.diaSemana);
+                  const isSelected = selectedSalon?.id === salon.id;
+                  
+                  return (
+                    <g
+                      key={salon.id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleMarkerClick(salon, e);
+                      }}
+                      style={{ cursor: 'pointer', pointerEvents: 'all' }}
+                    >
+                      {/* Círculo del marcador */}
+                      <circle
+                        cx={pos.x}
+                        cy={pos.y}
+                        r={isSelected ? 20 : 16}
+                        fill={color}
+                        stroke="#fff"
+                        strokeWidth={isSelected ? 4 : 3}
+                        opacity="0.95"
+                        filter="url(#shadow)"
+                      />
+                      
+                      {/* Etiqueta con código del salón */}
+                      <text
+                        x={pos.x}
+                        y={pos.y - 28}
+                        textAnchor="middle"
+                        fill="#ffffff"
+                        fontSize="12"
+                        fontWeight="700"
+                        pointerEvents="none"
+                        stroke="#000000"
+                        strokeWidth="3"
+                        paintOrder="stroke"
+                      >
+                        {salon.codigo}
+                      </text>
+                    </g>
+                  );
+                })}
+            </svg>
           </div>
 
           {/* Información del salón seleccionado */}

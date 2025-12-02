@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { apiRequest } from '../config/api';
-import BackHomeButton from './BackHomeButton';
 import './AdminMapaSalonesVisual.css';
 
 // Hook para capturar clicks en el mapa
@@ -208,8 +207,6 @@ const AdminMapaSalonesVisual = ({ user }) => {
 
   return (
     <div className="admin-visual-container">
-      <BackHomeButton />
-
       <div className="admin-visual-header">
         <h1>🗺️ Administración Visual - Mapa de Salones</h1>
         <p>Arrastra los marcadores para ajustar las posiciones de los salones</p>

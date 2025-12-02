@@ -1,7 +1,6 @@
   import React, { useState, useEffect } from 'react';
   import { API_BASE } from '../config/api';
   import './Horarios.css';
-  import BackHomeButton from './BackHomeButton';
 
   const Horarios = ({ user }) => {
         // Estado para paneles desplegables de salones
@@ -143,6 +142,7 @@
         });
         if (response.ok) {
           await fetchHorarios();
+          await fetchSalones(); // Recargar salones para actualizar el estado
           resetForm();
           alert('Horario asignado exitosamente');
         } else {
@@ -179,6 +179,7 @@
           });
           if (response.ok) {
             await fetchHorarios();
+            await fetchSalones(); // Recargar salones para actualizar el estado
             alert('Horario eliminado correctamente');
           } else {
             const errorData = await response.json();
@@ -252,7 +253,6 @@
         <div className="page-header">
           <h2>Asignación de Horarios</h2>
           <p>Gestiona y organiza los horarios de clases, profesores y aulas</p>
-          <BackHomeButton className="small-btn right" label="Inicio" />
         </div>
         <div style={{display: 'flex', gap: '2rem', alignItems: 'flex-start'}}>
           <div style={{flex: 1}}>

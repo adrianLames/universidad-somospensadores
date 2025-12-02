@@ -7,12 +7,12 @@ export const MARKER_COLORS = {
 };
 
 export const DIAS_SEMANA = [
-  'LUNES',
-  'MARTES',
-  'MIÉRCOLES',
-  'JUEVES',
-  'VIERNES',
-  'SÁBADO'
+  'Lunes',
+  'Martes',
+  'Miércoles',
+  'Jueves',
+  'Viernes',
+  'Sábado'
 ];
 
 export const ESTADOS_SALON = {
@@ -79,7 +79,9 @@ export const obtenerInfoMarcador = (salon, horarios) => {
  * @returns {Array} Horarios del día especificado
  */
 export const filtrarHorariosPorDia = (horarios, diaSemana) => {
-  return horarios.filter(h => h.dia_semana === diaSemana);
+  return horarios.filter(h => 
+    h.dia_semana?.toLowerCase() === diaSemana?.toLowerCase()
+  );
 };
 
 /**
@@ -112,7 +114,7 @@ export const agruparHorariosPorSalon = (horarios) => {
  * @returns {string} Nombre del día en español
  */
 export const obtenerDiaActual = () => {
-  const dias = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'];
+  const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   return dias[new Date().getDay()];
 };
 

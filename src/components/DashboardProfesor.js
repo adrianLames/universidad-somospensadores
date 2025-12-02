@@ -8,6 +8,7 @@ import Asistencias from './Asistencias';
 import Calificaciones from './Calificaciones';
 import EstudiantesPorCurso from './EstudiantesPorCurso';
 import AsignacionProfesores from './AsignacionProfesores';
+import MapaSalonesPlano from './MapaSalonesPlano';
 
 const DashboardProfesor = ({ user, onLogout }) => {
   const navigate = useNavigate();
@@ -55,6 +56,13 @@ const DashboardProfesor = ({ user, onLogout }) => {
         { name: 'Asistencias', view: 'asistencias', desc: 'Registra y controla la asistencia' },
         { name: 'Calificaciones', view: 'calificaciones', desc: 'Ingresa y gestiona las calificaciones' }
       ]
+    },
+    {
+      title: 'Campus',
+      icon: '🗺️',
+      items: [
+        { name: 'Mapa de Salones', view: 'mapa-plano', desc: 'Visualiza salones y tus horarios de clase' }
+      ]
     }
   ];
 
@@ -75,6 +83,8 @@ const DashboardProfesor = ({ user, onLogout }) => {
         return <EstudiantesPorCurso user={user} />;
       case 'asignacion-profesores':
         return <AsignacionProfesores user={user} />;
+      case 'mapa-plano':
+        return <MapaSalonesPlano user={user} />;
       default:
         return (
           <div className="welcome-section">

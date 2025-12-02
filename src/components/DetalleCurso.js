@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { API_BASE } from '../config/api';
+import { mostrarExito, mostrarError } from '../utils/notificaciones';
 import './DetalleCurso.css';
-import BackHomeButton from './BackHomeButton';
 
 const DetalleCurso = ({ user }) => {
   const { cursoId } = useParams();
@@ -92,7 +92,7 @@ const DetalleCurso = ({ user }) => {
       });
 
       if (response.ok) {
-        alert('Tarea creada exitosamente');
+        mostrarExito('Tarea creada exitosamente');
         setShowModalTarea(false);
         setNuevaTarea({
           titulo: '',
@@ -102,11 +102,11 @@ const DetalleCurso = ({ user }) => {
         });
         fetchTareas();
       } else {
-        alert('Error al crear la tarea');
+        mostrarError('Error al crear la tarea');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error de conexión');
+      mostrarError('Error de conexión');
     }
   };
 
@@ -118,7 +118,7 @@ const DetalleCurso = ({ user }) => {
         });
         
         if (response.ok) {
-          alert('Tarea eliminada');
+          mostrarExito('Tarea eliminada');
           fetchTareas();
         }
       } catch (error) {
@@ -150,15 +150,15 @@ const DetalleCurso = ({ user }) => {
       });
 
       if (response.ok) {
-        alert('Calificación guardada exitosamente');
+        mostrarExito('Calificación guardada exitosamente');
         setCalificacion({ estudiante_id: '', nota: '', comentarios: '' });
         fetchEntregas(tareaSeleccionada.id);
       } else {
-        alert('Error al guardar la calificación');
+        mostrarError('Error al guardar la calificación');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error de conexión');
+      mostrarError('Error de conexión');
     }
   };
 
@@ -175,14 +175,14 @@ const DetalleCurso = ({ user }) => {
       });
 
       if (response.ok) {
-        alert('Tarea entregada exitosamente');
+        mostrarExito('Tarea entregada exitosamente');
         fetchTareas();
       } else {
-        alert('Error al entregar la tarea');
+        mostrarError('Error al entregar la tarea');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error de conexión');
+      mostrarError('Error de conexión');
     }
   };
 
@@ -214,7 +214,6 @@ const DetalleCurso = ({ user }) => {
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' 
       }}>
         <div className="curso-header-content">
-          <BackHomeButton className="btn-back-white" label="← Volver" />
           <h1>{curso.nombre}</h1>
           <p className="curso-codigo">{curso.codigo}</p>
           <div className="curso-meta">

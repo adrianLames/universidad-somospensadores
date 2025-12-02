@@ -29,6 +29,7 @@ import AdminMapaSalonesVisual from './components/AdminMapaSalonesVisual';
 import RegistroPublico from './components/RegistroPublico';
 import GestionPrerequisitos from './components/GestionPrerequisitos';
 import GestionSemestre from './components/GestionSemestre';
+import NotificacionesProvider from './components/NotificacionesProvider';
 
 import EditarUsuarios from './components/EditarUsuarios';
 import NuevaGestionUsuarios from './components/NuevaGestionUsuarios';
@@ -101,44 +102,46 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="App">
-        {!user ? (
-          <Login onLogin={handleLogin} />
-        ) : (
-          <Routes>
-            <Route path="/" element={getDashboardComponent()} />
-            <Route path="/cursos" element={user && user.tipo === 'publico' ? <CursosPublicos /> : <GestionCursos user={user} />} />
-            <Route path="/cursos-publicos" element={<CursosPublicos />} />
-            <Route path="/registro-publico" element={<RegistroPublico />} />
-            <Route path="/usuarios" element={<NuevaGestionUsuarios user={user} />} />
-            <Route path="/facultades" element={<GestionFacultades />} />
-            <Route path="/programas" element={<GestionProgramas user={user} />} />
-            <Route path="/matriculas" element={<Matriculas user={user} />} />
-            <Route path="/asistencias" element={<Asistencias user={user} />} />
-            <Route path="/calificaciones" element={<Calificaciones user={user} />} />
-            <Route path="/horarios" element={<Horarios user={user} />} />
-            <Route path="/asignacion-profesores" element={<ProfesorMaterias profesorId={user?.id} />} />
-            <Route path="/estudiantes-por-curso" element={<EstudiantesPorCurso user={user} />} />
-            <Route path="/vincular-profesor-materia" element={<VincularProfesorMateria />} />
-            <Route path="/pensum" element={<Pensum user={user} />} />
-            <Route path="/editar-usuarios" element={<EditarUsuarios />} />
-            <Route path="/salones" element={<Salones />} />
-            <Route path="/admin-mapa-salones" element={<AdminMapaSalones user={user} />} />
-            <Route path="/admin-mapa-salones-visual" element={<AdminMapaSalonesVisual user={user} />} />
-            <Route path="/mapa-salones" element={<MapaSalonesLeaflet />} />
-            <Route path="/mapa-salones-plano" element={<MapaSalonesPlano />} />
-            <Route path="/metricas" element={<Metricas />} />
-            <Route path="/reportes" element={<Reportes user={user} />} />
-            <Route path="/mis-cursos" element={<MisCursos user={user} />} />
-            <Route path="/curso/:cursoId" element={<DetalleCurso user={user} />} />
-            <Route path="/prerequisitos" element={<GestionPrerequisitos user={user} />} />
-            <Route path="/gestion-semestre" element={<GestionSemestre user={user} />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        )}
-      </div>
-    </Router>
+    <NotificacionesProvider>
+      <Router>
+        <div className="App">
+          {!user ? (
+            <Login onLogin={handleLogin} />
+          ) : (
+            <Routes>
+              <Route path="/" element={getDashboardComponent()} />
+              <Route path="/cursos" element={user && user.tipo === 'publico' ? <CursosPublicos /> : <GestionCursos user={user} />} />
+              <Route path="/cursos-publicos" element={<CursosPublicos />} />
+              <Route path="/registro-publico" element={<RegistroPublico />} />
+              <Route path="/usuarios" element={<NuevaGestionUsuarios user={user} />} />
+              <Route path="/facultades" element={<GestionFacultades />} />
+              <Route path="/programas" element={<GestionProgramas user={user} />} />
+              <Route path="/matriculas" element={<Matriculas user={user} />} />
+              <Route path="/asistencias" element={<Asistencias user={user} />} />
+              <Route path="/calificaciones" element={<Calificaciones user={user} />} />
+              <Route path="/horarios" element={<Horarios user={user} />} />
+              <Route path="/asignacion-profesores" element={<ProfesorMaterias profesorId={user?.id} />} />
+              <Route path="/estudiantes-por-curso" element={<EstudiantesPorCurso user={user} />} />
+              <Route path="/vincular-profesor-materia" element={<VincularProfesorMateria />} />
+              <Route path="/pensum" element={<Pensum user={user} />} />
+              <Route path="/editar-usuarios" element={<EditarUsuarios />} />
+              <Route path="/salones" element={<Salones />} />
+              <Route path="/admin-mapa-salones" element={<AdminMapaSalones user={user} />} />
+              <Route path="/admin-mapa-salones-visual" element={<AdminMapaSalonesVisual user={user} />} />
+              <Route path="/mapa-salones" element={<MapaSalonesLeaflet />} />
+              <Route path="/mapa-salones-plano" element={<MapaSalonesPlano />} />
+              <Route path="/metricas" element={<Metricas />} />
+              <Route path="/reportes" element={<Reportes user={user} />} />
+              <Route path="/mis-cursos" element={<MisCursos user={user} />} />
+              <Route path="/curso/:cursoId" element={<DetalleCurso user={user} />} />
+              <Route path="/prerequisitos" element={<GestionPrerequisitos user={user} />} />
+              <Route path="/gestion-semestre" element={<GestionSemestre user={user} />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          )}
+        </div>
+      </Router>
+    </NotificacionesProvider>
   );
 }
 

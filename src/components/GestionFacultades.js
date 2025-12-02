@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../config/api';
-import BackHomeButton from './BackHomeButton';
 import './GestionFacultades.css';
 
 const GestionFacultades = () => {
@@ -83,7 +82,6 @@ const GestionFacultades = () => {
     <div className="gestion-facultades">
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: 16 }}>
         <h2 style={{ margin: 0 }}>Gestión de Facultades Académicas</h2>
-        <BackHomeButton />
       </div>
       <form onSubmit={handleSubmit} className="facultad-form">
         <input

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './Dashboard.css';
-import BackHomeButton from './BackHomeButton';
 
 const CursosPublicos = () => {
   const [cursos, setCursos] = useState([]);
@@ -62,7 +61,6 @@ const CursosPublicos = () => {
           </span>
           <h2 style={{margin:0, fontWeight:700, color: '#f0d070'}}>Cursos Públicos Disponibles</h2>
         </div>
-        <BackHomeButton className="small-btn right" label="Inicio" />
       </div>
 
       {cursos.length === 0 ? (

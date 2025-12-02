@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../config/api';
 import './Matriculas.css';
-import BackHomeButton from './BackHomeButton';
 
 const Matriculas = ({ user }) => {
   const [matriculas, setMatriculas] = useState([]);
@@ -288,21 +287,18 @@ const Matriculas = ({ user }) => {
     <div className="matriculas">
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h2>🎓 Gestión de Matrículas</h2>
-        <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
-          {user.jornada && (
-            <div style={{
-              padding: '0.5rem 1rem',
-              background: user.jornada === 'diurna' ? '#f39c12' : '#3498db',
-              color: '#fff',
-              borderRadius: '8px',
-              fontWeight: 'bold',
-              fontSize: '0.9rem'
-            }}>
-              {user.jornada === 'diurna' ? '☀️ Diurna' : '🌙 Nocturna'}
-            </div>
-          )}
-          <BackHomeButton label="Inicio" />
-        </div>
+        {user.jornada && (
+          <div style={{
+            padding: '0.5rem 1rem',
+            background: user.jornada === 'diurna' ? '#f39c12' : '#3498db',
+            color: '#fff',
+            borderRadius: '8px',
+            fontWeight: 'bold',
+            fontSize: '0.9rem'
+          }}>
+            {user.jornada === 'diurna' ? '☀️ Diurna' : '🌙 Nocturna'}
+          </div>
+        )}
       </div>
       
       {user.tipo === 'estudiante' && (

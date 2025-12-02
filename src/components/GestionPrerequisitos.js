@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { API_BASE } from '../config/api';
 import './GestionPrerequisitos.css';
-import BackHomeButton from './BackHomeButton';
 
 const GestionPrerequisitos = ({ user }) => {
   const [cursos, setCursos] = useState([]);
@@ -243,7 +242,6 @@ const GestionPrerequisitos = ({ user }) => {
           <span className="icon">🔗</span>
           <h2>Gestión de Prerequisitos</h2>
         </div>
-        <BackHomeButton className="small-btn right" label="Inicio" />
       </div>
 
       {/* Estadísticas */}

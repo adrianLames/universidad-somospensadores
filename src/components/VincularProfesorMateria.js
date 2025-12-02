@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './VincularProfesorMateria.css';
 import { apiRequest, getFacultades, getProgramasByFacultad, getCursosByPrograma } from '../config/api';
-import BackHomeButton from './BackHomeButton';
 
 // Obtener usuario autenticado desde localStorage (ajusta según tu contexto de auth)
 const getUsuarioActual = () => {
@@ -157,7 +156,6 @@ function VincularProfesorMateria() {
       <div className="vincular-profesor-materia-card">
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <h2 style={{margin: '0 0 0.5rem 0', color: '#1766c2'}}>Vincular Profesor con Materia</h2>
-          <BackHomeButton className="small-btn" label="Inicio" />
         </div>
         <p>Asocie profesores con las materias que impartirán durante el semestre académico</p>
         <form onSubmit={handleVincular}>

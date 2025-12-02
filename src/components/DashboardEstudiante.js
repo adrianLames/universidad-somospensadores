@@ -86,7 +86,7 @@ const DashboardEstudiante = ({ user, onLogout }) => {
       case 'mapa-visual':
         return <MapaSalonesVisualEstudiante />;
       case 'mapa-plano':
-        return <MapaSalonesPlano />;
+        return <MapaSalonesPlano user={user} />;
       case 'pensum':
         return <Pensum user={user} />;
       default:

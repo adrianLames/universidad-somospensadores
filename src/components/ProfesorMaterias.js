@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './ProfesorMaterias.css';
-import BackHomeButton from './BackHomeButton';
 import { API_BASE } from '../config/api';
 
 const ProfesorMaterias = ({ profesorId }) => {
@@ -149,7 +148,6 @@ const ProfesorMaterias = ({ profesorId }) => {
         <div className="profesor-materias">
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem'}}>
                     <h1>Materias Asignadas</h1>
-                    <BackHomeButton label="Inicio" />
                 </div>
             {/* If componente usado sin prop `profesorId`, permitir elegir docente */}
 

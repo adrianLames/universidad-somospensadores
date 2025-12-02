@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../config/api';
-import BackHomeButton from './BackHomeButton';
 import './AdminMapaSalones.css';
 
 const AdminMapaSalones = ({ user }) => {
@@ -131,8 +130,6 @@ const AdminMapaSalones = ({ user }) => {
 
   return (
     <div className="admin-mapa-container">
-      <BackHomeButton />
-      
       <div className="admin-mapa-header">
         <h1>⚙️ Administración - Mapa de Salones</h1>
         <p>Gestiona la visibilidad y posiciones de los salones en el mapa para estudiantes</p>

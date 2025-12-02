@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './AsignacionProfesores.css';
-import BackHomeButton from './BackHomeButton';
 import { apiRequest } from '../config/api';
 
 const AsignacionProfesores = () => {
@@ -124,7 +123,6 @@ const AsignacionProfesores = () => {
         <div className="asignacion-profesores">
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <h1>Asignación de Profesores</h1>
-                    <BackHomeButton label="Inicio" />
                 </div>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

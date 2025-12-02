@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE } from '../config/api';
 import './MisCursos.css';
-import BackHomeButton from './BackHomeButton';
 
 const MisCursos = ({ user }) => {
   const navigate = useNavigate();
@@ -112,7 +111,6 @@ const MisCursos = ({ user }) => {
       <div className="mis-cursos-header">
         <div className="header-content">
           <h1>📚 Mis Cursos</h1>
-          <BackHomeButton className="btn-back-home" label="Inicio" />
         </div>
         <p className="header-subtitle">
           {user.tipo === 'estudiante' 
