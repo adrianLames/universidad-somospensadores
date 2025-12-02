@@ -1,5 +1,5 @@
 // Configuración de la API
-export const API_BASE = 'http://localhost/universidad-somospensadores/api';
+export const API_BASE = 'http://localhost/universidad-somospensadores-main/api';
 
 // Funciones auxiliares para las peticiones
 export const apiRequest = async (endpoint, options = {}) => {

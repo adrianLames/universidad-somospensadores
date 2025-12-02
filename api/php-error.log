@@ -13,3 +13,13 @@ Stack trace:
 #0 C:\xampp\htdocs\universidad-somospensadores-main\api\estudiantes.php(32): mysqli->query('SELECT e.*, u.i...')
 #1 {main}
   thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\estudiantes.php on line 32
+[02-Dec-2025 16:27:56 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 70
+[02-Dec-2025 16:27:56 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:70
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 70
+[02-Dec-2025 16:27:56 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 70
+[02-Dec-2025 16:27:56 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:70
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 70

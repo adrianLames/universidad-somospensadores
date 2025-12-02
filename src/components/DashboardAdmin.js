@@ -9,8 +9,14 @@ import Horarios from './Horarios';
 import Salones from './Salones';
 import AdminMapaSalones from './AdminMapaSalones';
 import AdminMapaSalonesVisual from './AdminMapaSalonesVisual';
+import AdminMapaSalonesPlano from './AdminMapaSalonesPlano';
 import Metricas from './Metricas';
 import Reportes from './Reportes';
+import NuevaGestionUsuarios from './NuevaGestionUsuarios';
+import GestionFacultades from './GestionFacultades';
+import GestionProgramas from './GestionProgramas';
+import GestionCursos from './GestionCursos';
+import GestionPrerequisitos from './GestionPrerequisitos';
 
 const DashboardAdmin = ({ user, onLogout }) => {
   const navigate = useNavigate();
@@ -74,7 +80,8 @@ const DashboardAdmin = ({ user, onLogout }) => {
       items: [
         { name: 'Salones', view: 'salones', desc: 'Administra aulas y espacios universitarios' },
         { name: 'Mapa de Salones (Tabla)', view: 'admin-mapa-salones', desc: 'Gestiona salones en vista tabular' },
-        { name: 'Mapa de Salones (Visual)', view: 'admin-mapa-salones-visual', desc: 'Gestiona salones de forma visual' }
+        { name: 'Mapa de Salones (Visual)', view: 'admin-mapa-salones-visual', desc: 'Gestiona salones de forma visual' },
+        { name: 'Mapa de Salones (Plano)', view: 'admin-mapa-salones-plano', desc: 'Gestiona posiciones en el plano del campus' }
       ]
     },
     {
@@ -95,15 +102,15 @@ const DashboardAdmin = ({ user, onLogout }) => {
   const renderContent = () => {
     switch(currentView) {
       case 'usuarios':
-        return <div className="welcome-section"><h2>👥 Gestión de Usuarios</h2><p>Módulo en construcción. Usa la ruta /usuarios para acceder.</p><button className="btn-primary" onClick={() => navigate('/usuarios')}>Ir a Usuarios</button></div>;
+        return <NuevaGestionUsuarios user={user} />;
       case 'facultades':
-        return <div className="welcome-section"><h2>🏛️ Facultades</h2><p>Módulo en construcción. Usa la ruta /facultades para acceder.</p><button className="btn-primary" onClick={() => navigate('/facultades')}>Ir a Facultades</button></div>;
+        return <GestionFacultades user={user} />;
       case 'programas':
-        return <div className="welcome-section"><h2>📚 Programas</h2><p>Módulo en construcción. Usa la ruta /programas para acceder.</p><button className="btn-primary" onClick={() => navigate('/programas')}>Ir a Programas</button></div>;
+        return <GestionProgramas user={user} />;
       case 'cursos':
-        return <div className="welcome-section"><h2>📖 Cursos</h2><p>Módulo en construcción. Usa la ruta /cursos para acceder.</p><button className="btn-primary" onClick={() => navigate('/cursos')}>Ir a Cursos</button></div>;
+        return <GestionCursos user={user} />;
       case 'prerequisitos':
-        return <div className="welcome-section"><h2>🔗 Prerequisitos</h2><p>Módulo en construcción. Usa la ruta /prerequisitos para acceder.</p><button className="btn-primary" onClick={() => navigate('/prerequisitos')}>Ir a Prerequisitos</button></div>;
+        return <GestionPrerequisitos user={user} />;
       case 'gestion-semestre':
         return <GestionSemestre user={user} />;
       case 'vincular-profesor-materia':
@@ -116,6 +123,8 @@ const DashboardAdmin = ({ user, onLogout }) => {
         return <AdminMapaSalones user={user} />;
       case 'admin-mapa-salones-visual':
         return <AdminMapaSalonesVisual user={user} />;
+      case 'admin-mapa-salones-plano':
+        return <AdminMapaSalonesPlano user={user} />;
       case 'metricas':
         return <Metricas user={user} />;
       case 'reportes':

@@ -8,6 +8,7 @@ import Matriculas from './Matriculas';
 import Calificaciones from './Calificaciones';
 import Asistencias from './Asistencias';
 import MapaSalonesVisualEstudiante from './MapaSalonesVisualEstudiante';
+import MapaSalonesPlano from './MapaSalonesPlano';
 import Pensum from './Pensum';
 
 const DashboardEstudiante = ({ user, onLogout }) => {
@@ -61,7 +62,8 @@ const DashboardEstudiante = ({ user, onLogout }) => {
       title: 'Campus',
       icon: '🗺️',
       items: [
-        { name: 'Mapa Visual del Campus', view: 'mapa-visual', desc: 'Explora el campus visualmente' }
+        { name: 'Mapa Visual del Campus', view: 'mapa-visual', desc: 'Explora el campus visualmente' },
+        { name: 'Mapa Plano del Campus', view: 'mapa-plano', desc: 'Visualiza salones en el plano' }
       ]
     }
   ];
@@ -83,6 +85,8 @@ const DashboardEstudiante = ({ user, onLogout }) => {
         return <Asistencias user={user} />;
       case 'mapa-visual':
         return <MapaSalonesVisualEstudiante />;
+      case 'mapa-plano':
+        return <MapaSalonesPlano />;
       case 'pensum':
         return <Pensum user={user} />;
       default:
