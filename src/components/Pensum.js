@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { API_BASE } from '../config/api';
 import './Pensum.css';
 
@@ -13,15 +13,10 @@ const Pensum = ({ user }) => {
   const [calificaciones, setCalificaciones] = useState([]);
   const [matriculas, setMatriculas] = useState([]);
   const [prerequisitosMap, setPrerequisitosMap] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
 
-  useEffect(() => {
-    fetchCursos();
-    fetchCalificaciones();
-    fetchMatriculas();
-    fetchPrerequisitos();
-  }, []);
-
-  const fetchCursos = async () => {
+  const fetchCursos = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/cursos.php`);
       const data = await res.json();
@@ -43,40 +38,30 @@ const Pensum = ({ user }) => {
         return true;
       });
       
-      // Eliminar duplicados por código (tomar solo el primero de cada código)
-      const cursosUnicos = [];
-      const codigosVistos = new Set();
-      
-      cursosFiltrados.forEach(curso => {
-        // Extraer código base (sin sufijos como _PROG1, _AL, etc.)
-        const codigoBase = curso.codigo.split('_')[0];
-        const key = `${codigoBase}-${curso.nombre}`;
-        
-        if (!codigosVistos.has(key)) {
-          codigosVistos.add(key);
-          cursosUnicos.push(curso);
-        }
-      });
-      
-      setCursos(cursosUnicos);
+      // Ya no necesitamos eliminar duplicados porque los códigos ahora son únicos
+      // con sufijos _D (diurna) y _N (nocturna)
+      setCursos(cursosFiltrados);
     } catch (error) {
       console.error('Error fetching cursos:', error);
       setCursos([]);
     }
-  };
+  }, [user.jornada]);
 
-  const fetchCalificaciones = async () => {
+  const fetchCalificaciones = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/calificaciones.php?estudiante_id=${user.id}`);
-      const data = await res.json();
+      const result = await res.json();
+      // El API retorna {success, data}
+      const data = result.success ? result.data : (Array.isArray(result) ? result : []);
+      console.log('📊 Calificaciones del estudiante:', data);
       setCalificaciones(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching calificaciones:', error);
       setCalificaciones([]);
     }
-  };
+  }, [user.id]);
 
-  const fetchMatriculas = async () => {
+  const fetchMatriculas = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/matriculas.php?estudiante_id=${user.id}`);
       const data = await res.json();
@@ -85,9 +70,9 @@ const Pensum = ({ user }) => {
       console.error('Error fetching matriculas:', error);
       setMatriculas([]);
     }
-  };
+  }, [user.id]);
 
-  const fetchPrerequisitos = async () => {
+  const fetchPrerequisitos = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/prerequisitos.php`);
       const data = await res.json();
@@ -107,34 +92,114 @@ const Pensum = ({ user }) => {
     } catch (error) {
       console.error('Error fetching prerequisitos:', error);
     }
-  };
+  }, []);
+
+  const refreshData = useCallback(async () => {
+    setLoading(true);
+    try {
+      await Promise.all([
+        fetchCursos(),
+        fetchCalificaciones(),
+        fetchMatriculas(),
+        fetchPrerequisitos()
+      ]);
+      setLastUpdate(new Date());
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchCursos, fetchCalificaciones, fetchMatriculas, fetchPrerequisitos]);
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
+
+  // Actualizar automáticamente cuando la ventana recupera el foco
+  useEffect(() => {
+    const handleFocus = () => {
+      console.log('🔄 Pensum: Ventana enfocada, actualizando datos...');
+      refreshData();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [refreshData]);
+
+  // Actualizar cada 30 segundos cuando el componente está montado
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log('🔄 Pensum: Actualización automática (30s)');
+      refreshData();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [refreshData]);
 
   // Estado de cada curso: aprobado, cursando, pendiente
   const getEstado = (curso) => {
     // Comparar como string y número para evitar problemas de tipo
     const calif = calificaciones.find(c => String(c.curso_id) === String(curso.id));
-    if (calif && calif.estado === 'aprobado') return 'aprobado';
-    if (matriculas.find(m => String(m.curso_id) === String(curso.id) && m.estado === 'activa')) return 'cursando';
+    
+    // Si tiene calificación aprobada, mostrar como aprobado
+    if (calif && calif.estado === 'aprobado') {
+      return 'aprobado';
+    }
+    
+    // Si está matriculado activamente (sin aprobar), mostrar como cursando
+    const matricula = matriculas.find(m => String(m.curso_id) === String(curso.id) && m.estado === 'activa');
+    if (matricula) {
+      return 'cursando';
+    }
+    
+    // Si no está matriculado ni aprobado, está pendiente
     return 'pendiente';
   };
 
   return (
     <div className="pensum-container">
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'}}>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem'}}>
         <h2>Pensum / Malla Curricular</h2>
-        {user.jornada && (
-          <div style={{
-            padding: '0.5rem 1rem',
-            background: user.jornada === 'diurna' ? '#f39c12' : '#3498db',
-            color: '#fff',
-            borderRadius: '8px',
-            fontWeight: 'bold',
-            fontSize: '0.95rem'
-          }}>
-            {user.jornada === 'diurna' ? '☀️ Jornada Diurna' : '🌙 Jornada Nocturna'}
-          </div>
-        )}
+        <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
+          <button 
+            onClick={refreshData}
+            disabled={loading}
+            style={{
+              padding: '0.5rem 1rem',
+              background: loading ? '#95a5a6' : '#27ae60',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontWeight: 'bold',
+              fontSize: '0.9rem',
+              transition: 'all 0.3s'
+            }}
+          >
+            {loading ? '🔄 Actualizando...' : '🔄 Actualizar'}
+          </button>
+          {user.jornada && (
+            <div style={{
+              padding: '0.5rem 1rem',
+              background: user.jornada === 'diurna' ? '#f39c12' : '#3498db',
+              color: '#fff',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              fontSize: '0.95rem'
+            }}>
+              {user.jornada === 'diurna' ? '☀️ Jornada Diurna' : '🌙 Jornada Nocturna'}
+            </div>
+          )}
+        </div>
       </div>
+      {lastUpdate && (
+        <div style={{
+          fontSize: '0.85rem',
+          color: '#95a5a6',
+          marginBottom: '1rem',
+          textAlign: 'right'
+        }}>
+          Última actualización: {lastUpdate.toLocaleTimeString('es-CO')}
+        </div>
+      )}
       {cursos.length === 0 ? (
         <div style={{
           textAlign: 'center',

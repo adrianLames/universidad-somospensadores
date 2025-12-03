@@ -15,14 +15,24 @@ try {
             
             if ($docente_id) {
                 $query = "SELECT ad.*, 
+                                 c.id as curso_id,
                                  c.nombre as curso_nombre, 
                                  c.codigo as curso_codigo,
                                  c.creditos as curso_creditos,
+                                 c.jornada,
                                  c.programa_id,
-                                 c.activo
+                                 c.activo,
+                                 p.nombre as programa_nombre,
+                                 (SELECT COUNT(*) 
+                                  FROM matriculas m 
+                                  WHERE m.curso_id = c.id 
+                                  AND m.estado = 'activa'
+                                  AND m.anio = ad.anio
+                                  AND m.semestre = ad.semestre) as total_estudiantes
                           FROM asignacion_docentes ad 
                           INNER JOIN cursos c ON ad.curso_id = c.id 
-                          WHERE ad.docente_id = ?
+                          LEFT JOIN programas p ON c.programa_id = p.id
+                          WHERE ad.usuario_id = ?
                           ORDER BY ad.anio DESC, ad.semestre DESC";
                 $stmt = $conn->prepare($query);
                 $stmt->bind_param("i", $docente_id);

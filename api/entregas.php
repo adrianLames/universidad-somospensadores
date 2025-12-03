@@ -10,11 +10,11 @@ try {
             // Obtener entregas de una tarea con calificaciones
             $stmt = $pdo->prepare("
                 SELECT e.*, 
-                       CONCAT(est.nombres, ' ', est.apellidos) as estudiante_nombre,
-                       est.identificacion,
+                       CONCAT(u.nombres, ' ', u.apellidos) as estudiante_nombre,
+                       u.identificacion,
                        c.nota, c.comentarios, c.fecha_calificacion
                 FROM entregas e
-                LEFT JOIN estudiantes est ON e.estudiante_id = est.id
+                LEFT JOIN usuarios u ON e.estudiante_id = u.id
                 LEFT JOIN calificaciones c ON c.estudiante_id = e.estudiante_id 
                     AND c.tarea_id = e.tarea_id
                 WHERE e.tarea_id = ?

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { API_BASE } from '../config/api';
 import './Calificaciones.css';
 
@@ -17,17 +17,7 @@ const Calificaciones = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
-  useEffect(() => {
-    if (user && user.tipo === 'docente') {
-      fetchCalificacionesDocente();
-      fetchCursosDocente();
-    } else if (user && user.tipo === 'estudiante') {
-      fetchCalificacionesEstudiante();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id, user.tipo]);
-
-  const fetchCalificacionesDocente = async () => {
+  const fetchCalificacionesDocente = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE}/calificaciones.php?docente_id=${user.id}`);
       if (!response.ok) {
@@ -35,17 +25,18 @@ const Calificaciones = ({ user }) => {
         setCalificaciones([]);
         return;
       }
-      const data = await response.json();
-      console.log('📊 Calificaciones del docente:', data);
-      // Asegurar que siempre sea un array
+      const result = await response.json();
+      console.log('📊 Calificaciones del docente:', result);
+      // El API retorna {success, data}
+      const data = result.success ? result.data : (Array.isArray(result) ? result : []);
       setCalificaciones(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching calificaciones:', error);
       setCalificaciones([]);
     }
-  };
+  }, [user.id]);
 
-  const fetchCalificacionesEstudiante = async () => {
+  const fetchCalificacionesEstudiante = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE}/calificaciones.php?estudiante_id=${user.id}`);
       if (!response.ok) {
@@ -53,18 +44,19 @@ const Calificaciones = ({ user }) => {
         setCalificaciones([]);
         return;
       }
-      const data = await response.json();
-      // Asegurar que siempre sea un array
+      const result = await response.json();
+      // El API retorna {success, data}
+      const data = result.success ? result.data : (Array.isArray(result) ? result : []);
       setCalificaciones(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching calificaciones:', error);
       setCalificaciones([]);
     }
-  };
+  }, [user.id]);
 
-  const fetchCursosDocente = async () => {
+  const fetchCursosDocente = useCallback(async () => {
     try {
-      const response = await fetch(`${API_BASE}/cursos.php?docente_id=${user.id}`);
+      const response = await fetch(`${API_BASE}/vinculaciones.php?docente_id=${user.id}`);
       const result = await response.json();
       const data = result.success ? result.data : (Array.isArray(result) ? result : []);
       console.log('📚 Cursos del docente (ID: ' + user.id + '):', data);
@@ -73,13 +65,22 @@ const Calificaciones = ({ user }) => {
       console.error('Error fetching cursos:', error);
       setCursos([]);
     }
-  };
+  }, [user.id]);
+
+  useEffect(() => {
+    if (user && user.tipo === 'docente') {
+      fetchCalificacionesDocente();
+      fetchCursosDocente();
+    } else if (user && user.tipo === 'estudiante') {
+      fetchCalificacionesEstudiante();
+    }
+  }, [user.tipo, fetchCalificacionesDocente, fetchCursosDocente, fetchCalificacionesEstudiante]);
 
   const fetchEstudiantesPorCurso = async (cursoId) => {
     try {
       console.log('🔍 Buscando estudiantes para curso:', cursoId);
-      // Usar el nuevo endpoint de calificaciones que retorna todos los estudiantes matriculados
-      const url = `${API_BASE}/calificaciones.php?curso_id=${cursoId}`;
+      // Usar matriculas.php para obtener estudiantes matriculados
+      const url = `${API_BASE}/matriculas.php?curso_id=${cursoId}`;
       console.log('URL:', url);
       const response = await fetch(url);
       console.log('Response status:', response.status);
@@ -87,25 +88,27 @@ const Calificaciones = ({ user }) => {
       
       if (!response.ok) {
         console.error('API Error:', response.status, response.statusText);
+        setEstudiantes([]);
+        return;
       }
       
       const data = await response.json();
       console.log('👥 Estudiantes encontrados (raw):', data);
-      console.log('Tipo de data:', typeof data, 'Es array:', Array.isArray(data), 'Longitud:', data.length);
+      console.log('Tipo de data:', typeof data, 'Es array:', Array.isArray(data), 'Longitud:', data?.length);
       
       if (Array.isArray(data) && data.length > 0) {
         // Mapear los campos del API al formato esperado por React
         const estudiantesFormateados = data.map(est => ({
           id: est.estudiante_id,
-          nombres: est.estudiante_nombres,
-          apellidos: est.estudiante_apellidos,
+          nombres: est.nombres,
+          apellidos: est.apellidos,
           email: est.email,
-          ...est // Mantener todos los otros campos también
+          identificacion: est.identificacion
         }));
         console.log('👥 Estudiantes formateados:', estudiantesFormateados);
         setEstudiantes(estudiantesFormateados);
       } else {
-        console.error('Data vacío o no es un array:', data);
+        console.log('No hay estudiantes matriculados en este curso');
         setEstudiantes([]);
       }
     } catch (error) {
@@ -255,30 +258,23 @@ const Calificaciones = ({ user }) => {
 
   return (
     <div className="calificaciones">
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem'}}>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem'}}>
         <h2>📊 {user.tipo === 'docente' ? 'Registro de Calificaciones' : 'Mis Calificaciones'}</h2>
-      </div>
-      
-      {user && user.tipo === 'docente' && (
-        <>
-          <div style={{fontSize: '12px', color: '#d4af37', marginBottom: '1rem'}}>
-            DEBUG: {cursos.length} cursos cargados | Estudiantes: {estudiantes.length} | User: {user.id}
-          </div>
+        {user && user.tipo === 'docente' && (
           <button 
             className="btn-primary"
             onClick={handleOpenForm}
           >
             ➕ Registrar Calificación
           </button>
-        </>
-      )}
+        )}
+      </div>
 
       {showForm && (
         <div className="modal">
           <div className="modal-content">
             <h3>{editingId ? '✏️ Editar Calificación' : '➕ Registrar Calificación'}</h3>
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
               {/* If editing, only allow changing the nota_final. Otherwise show full form to create */}
               {!editingId ? (
                 <>
@@ -365,7 +361,6 @@ const Calificaciones = ({ user }) => {
                 <button type="button" onClick={resetForm} disabled={loading}>
                   ❌ Cancelar
                 </button>
-              </div>
               </div>
             </form>
           </div>

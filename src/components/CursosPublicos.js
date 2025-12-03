@@ -6,6 +6,16 @@ const CursosPublicos = () => {
   const [cursos, setCursos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCurso, setSelectedCurso] = useState(null);
+  const [showInscripcionForm, setShowInscripcionForm] = useState(false);
+  const [inscripcionData, setInscripcionData] = useState({
+    nombres: '',
+    apellidos: '',
+    email: '',
+    identificacion: '',
+    telefono: ''
+  });
+  const [inscripcionLoading, setInscripcionLoading] = useState(false);
+  const [inscripcionMensaje, setInscripcionMensaje] = useState('');
 
   useEffect(() => {
     fetchCursosPublicos();
@@ -16,14 +26,22 @@ const CursosPublicos = () => {
       const response = await fetch(`${API_BASE}/cursos.php`);
       const result = await response.json();
       
+      console.log('📚 Respuesta API cursos.php:', result);
+      
       // Manejar nuevo formato {success: true, data: [...]}
       const data = result.success ? result.data : (Array.isArray(result) ? result : []);
       
+      console.log('📊 Total de cursos recibidos:', data.length);
+      
       // Filtrar solo cursos públicos y activos
-      const cursosPublicos = data.filter(curso => 
-        (curso.es_publico === 1 || curso.es_publico === true || curso.es_publico === '1') &&
-        (curso.activo === 1 || curso.activo === true || curso.activo === '1')
-      );
+      const cursosPublicos = data.filter(curso => {
+        const esPublico = curso.es_publico === 1 || curso.es_publico === true || curso.es_publico === '1';
+        const esActivo = curso.activo === 1 || curso.activo === true || curso.activo === '1';
+        console.log(`Curso ${curso.codigo}: es_publico=${curso.es_publico}, activo=${curso.activo}, pasa filtro=${esPublico && esActivo}`);
+        return esPublico && esActivo;
+      });
+      
+      console.log('✅ Cursos públicos filtrados:', cursosPublicos.length, cursosPublicos);
       setCursos(cursosPublicos);
     } catch (error) {
       console.error('Error fetching cursos públicos:', error);
@@ -35,10 +53,97 @@ const CursosPublicos = () => {
 
   const handleVerDetalle = (curso) => {
     setSelectedCurso(curso);
+    setShowInscripcionForm(false);
+    setInscripcionMensaje('');
   };
 
   const cerrarDetalle = () => {
     setSelectedCurso(null);
+    setShowInscripcionForm(false);
+    setInscripcionData({
+      nombres: '',
+      apellidos: '',
+      email: '',
+      identificacion: '',
+      telefono: ''
+    });
+    setInscripcionMensaje('');
+  };
+
+  const handleInscribirse = () => {
+    setShowInscripcionForm(true);
+    setInscripcionMensaje('');
+  };
+
+  const handleInscripcionChange = (e) => {
+    const { name, value } = e.target;
+    setInscripcionData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmitInscripcion = async (e) => {
+    e.preventDefault();
+    setInscripcionLoading(true);
+    setInscripcionMensaje('');
+
+    try {
+      // Primero, crear o buscar el usuario público
+      const userResponse = await fetch(`${API_BASE}/usuarios.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tipo: 'publico',
+          identificacion: inscripcionData.identificacion,
+          nombres: inscripcionData.nombres,
+          apellidos: inscripcionData.apellidos,
+          email: inscripcionData.email,
+          telefono: inscripcionData.telefono,
+          password: inscripcionData.identificacion // Usar identificación como contraseña por defecto
+        })
+      });
+
+      let userId;
+      if (userResponse.ok) {
+        const userData = await userResponse.json();
+        userId = userData.id || userData.usuario_id;
+      } else {
+        // Si el usuario ya existe, obtener su ID
+        const checkResponse = await fetch(`${API_BASE}/usuarios.php?identificacion=${inscripcionData.identificacion}`);
+        const users = await checkResponse.json();
+        const existingUser = Array.isArray(users) ? users.find(u => u.identificacion === inscripcionData.identificacion) : null;
+        if (existingUser) {
+          userId = existingUser.id;
+        } else {
+          throw new Error('No se pudo crear o encontrar el usuario');
+        }
+      }
+
+      // Luego, crear la matrícula
+      const matriculaResponse = await fetch(`${API_BASE}/matriculas.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          estudiante_id: userId,
+          curso_id: selectedCurso.id,
+          semestre: '1',
+          anio: new Date().getFullYear()
+        })
+      });
+
+      if (matriculaResponse.ok) {
+        setInscripcionMensaje('¡Inscripción exitosa! Revisa tu correo para más información.');
+        setTimeout(() => {
+          cerrarDetalle();
+        }, 3000);
+      } else {
+        const error = await matriculaResponse.json();
+        setInscripcionMensaje(error.message || 'Error al realizar la inscripción');
+      }
+    } catch (error) {
+      console.error('Error en inscripción:', error);
+      setInscripcionMensaje('Error al procesar la inscripción. Por favor intenta nuevamente.');
+    } finally {
+      setInscripcionLoading(false);
+    }
   };
 
   if (loading) {
@@ -128,31 +233,133 @@ const CursosPublicos = () => {
               <button className="close-btn" onClick={cerrarDetalle}>×</button>
             </div>
             <div style={{padding: '1rem', color: '#e0e0e0'}}>
-              <div style={{marginBottom: '1rem'}}>
-                <strong style={{color: '#d4af37'}}>Código:</strong> {selectedCurso.codigo}
-              </div>
-              <div style={{marginBottom: '1rem'}}>
-                <strong style={{color: '#d4af37'}}>Créditos:</strong> {selectedCurso.creditos}
-              </div>
-              <div style={{marginBottom: '1rem'}}>
-                <strong style={{color: '#d4af37'}}>Programa:</strong> {selectedCurso.programa_nombre || 'No especificado'}
-              </div>
-              <div style={{marginBottom: '1rem'}}>
-                <strong style={{color: '#d4af37'}}>Jornada:</strong> {selectedCurso.jornada === 'nocturna' ? 'Nocturna' : 'Diurna'}
-              </div>
-              <div style={{marginBottom: '1rem'}}>
-                <strong style={{color: '#d4af37'}}>Descripción:</strong>
-                <p style={{marginTop: '0.5rem', color: '#b0b0b0'}}>{selectedCurso.descripcion || 'Sin descripción disponible'}</p>
-              </div>
-              <div style={{textAlign: 'center', marginTop: '1.5rem'}}>
-                <button 
-                  className="btn-primary"
-                  onClick={cerrarDetalle}
-                  style={{padding: '0.7rem 2rem'}}
-                >
-                  Cerrar
-                </button>
-              </div>
+              {!showInscripcionForm ? (
+                <>
+                  <div style={{marginBottom: '1rem'}}>
+                    <strong style={{color: '#d4af37'}}>Código:</strong> {selectedCurso.codigo}
+                  </div>
+                  <div style={{marginBottom: '1rem'}}>
+                    <strong style={{color: '#d4af37'}}>Créditos:</strong> {selectedCurso.creditos}
+                  </div>
+                  <div style={{marginBottom: '1rem'}}>
+                    <strong style={{color: '#d4af37'}}>Programa:</strong> {selectedCurso.programa_nombre || 'No especificado'}
+                  </div>
+                  <div style={{marginBottom: '1rem'}}>
+                    <strong style={{color: '#d4af37'}}>Jornada:</strong> {selectedCurso.jornada === 'nocturna' ? 'Nocturna' : 'Diurna'}
+                  </div>
+                  <div style={{marginBottom: '1rem'}}>
+                    <strong style={{color: '#d4af37'}}>Descripción:</strong>
+                    <p style={{marginTop: '0.5rem', color: '#b0b0b0'}}>{selectedCurso.descripcion || 'Sin descripción disponible'}</p>
+                  </div>
+                  <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem'}}>
+                    <button 
+                      className="btn-primary"
+                      onClick={handleInscribirse}
+                      style={{padding: '0.7rem 2rem'}}
+                    >
+                      ✏️ Inscribirse
+                    </button>
+                    <button 
+                      className="btn-secondary"
+                      onClick={cerrarDetalle}
+                      style={{padding: '0.7rem 2rem', background: '#3a3a3a', color: '#d4af37'}}
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h4 style={{color: '#f0d070', marginBottom: '1rem'}}>Formulario de Inscripción</h4>
+                  {inscripcionMensaje && (
+                    <div style={{
+                      padding: '0.8rem',
+                      marginBottom: '1rem',
+                      borderRadius: '6px',
+                      background: inscripcionMensaje.includes('exitosa') ? 'rgba(46, 204, 113, 0.2)' : 'rgba(231, 76, 60, 0.2)',
+                      border: `1px solid ${inscripcionMensaje.includes('exitosa') ? '#2ecc71' : '#e74c3c'}`,
+                      color: inscripcionMensaje.includes('exitosa') ? '#2ecc71' : '#e74c3c'
+                    }}>
+                      {inscripcionMensaje}
+                    </div>
+                  )}
+                  <form onSubmit={handleSubmitInscripcion}>
+                    <div className="form-group" style={{marginBottom: '1rem'}}>
+                      <label style={{display: 'block', marginBottom: '0.5rem', color: '#d4af37'}}>Identificación *</label>
+                      <input
+                        type="text"
+                        name="identificacion"
+                        value={inscripcionData.identificacion}
+                        onChange={handleInscripcionChange}
+                        required
+                        style={{width: '100%', padding: '0.7rem', borderRadius: '6px', border: '1px solid #3a3a3a', background: '#1a1a1a', color: '#e0e0e0'}}
+                      />
+                    </div>
+                    <div className="form-group" style={{marginBottom: '1rem'}}>
+                      <label style={{display: 'block', marginBottom: '0.5rem', color: '#d4af37'}}>Nombres *</label>
+                      <input
+                        type="text"
+                        name="nombres"
+                        value={inscripcionData.nombres}
+                        onChange={handleInscripcionChange}
+                        required
+                        style={{width: '100%', padding: '0.7rem', borderRadius: '6px', border: '1px solid #3a3a3a', background: '#1a1a1a', color: '#e0e0e0'}}
+                      />
+                    </div>
+                    <div className="form-group" style={{marginBottom: '1rem'}}>
+                      <label style={{display: 'block', marginBottom: '0.5rem', color: '#d4af37'}}>Apellidos *</label>
+                      <input
+                        type="text"
+                        name="apellidos"
+                        value={inscripcionData.apellidos}
+                        onChange={handleInscripcionChange}
+                        required
+                        style={{width: '100%', padding: '0.7rem', borderRadius: '6px', border: '1px solid #3a3a3a', background: '#1a1a1a', color: '#e0e0e0'}}
+                      />
+                    </div>
+                    <div className="form-group" style={{marginBottom: '1rem'}}>
+                      <label style={{display: 'block', marginBottom: '0.5rem', color: '#d4af37'}}>Email *</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={inscripcionData.email}
+                        onChange={handleInscripcionChange}
+                        required
+                        style={{width: '100%', padding: '0.7rem', borderRadius: '6px', border: '1px solid #3a3a3a', background: '#1a1a1a', color: '#e0e0e0'}}
+                      />
+                    </div>
+                    <div className="form-group" style={{marginBottom: '1rem'}}>
+                      <label style={{display: 'block', marginBottom: '0.5rem', color: '#d4af37'}}>Teléfono</label>
+                      <input
+                        type="tel"
+                        name="telefono"
+                        value={inscripcionData.telefono}
+                        onChange={handleInscripcionChange}
+                        style={{width: '100%', padding: '0.7rem', borderRadius: '6px', border: '1px solid #3a3a3a', background: '#1a1a1a', color: '#e0e0e0'}}
+                      />
+                    </div>
+                    <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem'}}>
+                      <button 
+                        type="submit"
+                        className="btn-primary"
+                        disabled={inscripcionLoading}
+                        style={{padding: '0.7rem 2rem'}}
+                      >
+                        {inscripcionLoading ? 'Procesando...' : '✔️ Confirmar Inscripción'}
+                      </button>
+                      <button 
+                        type="button"
+                        className="btn-secondary"
+                        onClick={() => setShowInscripcionForm(false)}
+                        disabled={inscripcionLoading}
+                        style={{padding: '0.7rem 2rem', background: '#3a3a3a', color: '#d4af37'}}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
             </div>
           </div>
         </div>

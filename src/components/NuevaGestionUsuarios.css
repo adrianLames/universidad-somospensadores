@@ -465,12 +465,16 @@
   grid-template-columns: 1fr 320px;
   gap: 1.5rem;
   align-items: start;
+  overflow: hidden;
 }
 .main {
   background: transparent;
+  min-width: 0;
+  overflow-x: auto;
 }
 .sidebar {
   position: relative;
+  min-width: 320px;
 }
 .activity-card {
   background: #2a2a2a;

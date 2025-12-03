@@ -23,3 +23,53 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 70
+[03-Dec-2025 02:33:14 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 32
+[03-Dec-2025 02:33:14 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:32
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 32
+[03-Dec-2025 02:33:46 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 70
+[03-Dec-2025 02:33:46 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:70
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 70
+[03-Dec-2025 02:33:46 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 70
+[03-Dec-2025 02:33:46 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:70
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 70
+[03-Dec-2025 02:38:02 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:02 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function beginTransaction() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:105
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:13 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:13 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function beginTransaction() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:105
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:14 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:14 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function beginTransaction() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:105
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:14 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:14 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function beginTransaction() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:105
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:14 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:14 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function beginTransaction() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:105
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:28 Europe/Berlin] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 02:38:28 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function beginTransaction() on null in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php:105
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\semestres_activos.php on line 105
+[03-Dec-2025 03:01:21 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'e.estado_estudiante' in 'where clause' in C:\xampp\htdocs\universidad-somospensadores-main\api\estudiantes.php:32
+Stack trace:
+#0 C:\xampp\htdocs\universidad-somospensadores-main\api\estudiantes.php(32): mysqli->query('SELECT e.*, u.i...')
+#1 {main}
+  thrown in C:\xampp\htdocs\universidad-somospensadores-main\api\estudiantes.php on line 32

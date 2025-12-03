@@ -7,6 +7,10 @@ let notificacionId = 0;
 const NotificacionesProvider = ({ children }) => {
   const [notificaciones, setNotificaciones] = useState([]);
 
+  const eliminarNotificacion = useCallback((id) => {
+    setNotificaciones(prev => prev.filter(notif => notif.id !== id));
+  }, []);
+
   const agregarNotificacion = useCallback((tipo, mensaje, duracion = 4000) => {
     const id = ++notificacionId;
     const nuevaNotificacion = { id, tipo, mensaje, duracion };
@@ -19,11 +23,7 @@ const NotificacionesProvider = ({ children }) => {
         eliminarNotificacion(id);
       }, duracion + 300);
     }
-  }, []);
-
-  const eliminarNotificacion = useCallback((id) => {
-    setNotificaciones(prev => prev.filter(notif => notif.id !== id));
-  }, []);
+  }, [eliminarNotificacion]);
 
   // Exponer funciones globalmente
   React.useEffect(() => {

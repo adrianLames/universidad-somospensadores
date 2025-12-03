@@ -94,13 +94,32 @@ try {
             
             if (isset($data['bulk_insert'])) {
                 // Inserción masiva de cursos para un semestre
-                $semestre = $data['semestre_academico'];
-                $anio = $data['anio'];
-                $periodo = $data['periodo'];
-                $fecha_inicio = $data['fecha_inicio_matricula'];
-                $fecha_fin = $data['fecha_fin_matricula'];
-                $cursos_ids = $data['cursos_ids']; // Array de IDs de cursos
+                $semestre = $data['semestre_academico'] ?? null;
+                $anio = $data['anio'] ?? null;
+                $periodo = $data['periodo'] ?? null;
+                $fecha_inicio = $data['fecha_inicio_matricula'] ?? null;
+                $fecha_fin = $data['fecha_fin_matricula'] ?? null;
+                $cursos_ids = $data['cursos_ids'] ?? []; // Array de IDs de cursos
                 $cupos = $data['cupos_disponibles'] ?? null;
+                
+                // Validar datos requeridos
+                if (!$semestre || !$anio || !$periodo || !$fecha_inicio || !$fecha_fin) {
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false, 
+                        'message' => 'Faltan datos requeridos (semestre, año, periodo, fechas)'
+                    ]);
+                    break;
+                }
+                
+                if (empty($cursos_ids) || !is_array($cursos_ids)) {
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false, 
+                        'message' => 'Debe proporcionar al menos un curso'
+                    ]);
+                    break;
+                }
                 
                 $pdo->beginTransaction();
                 
@@ -117,23 +136,29 @@ try {
                         activo = 1
                     ");
                     
+                    $insertados = 0;
                     foreach ($cursos_ids as $curso_id) {
                         $stmt->execute([
                             $curso_id, $semestre, $anio, $periodo, 
                             $fecha_inicio, $fecha_fin, $cupos
                         ]);
+                        $insertados++;
                     }
                     
                     $pdo->commit();
                     echo json_encode([
                         'success' => true, 
                         'message' => 'Cursos activados para el semestre',
-                        'count' => count($cursos_ids)
+                        'count' => $insertados
                     ]);
                     
                 } catch (Exception $e) {
                     $pdo->rollBack();
-                    throw $e;
+                    http_response_code(500);
+                    echo json_encode([
+                        'success' => false, 
+                        'message' => 'Error al activar cursos: ' . $e->getMessage()
+                    ]);
                 }
                 
             } else {

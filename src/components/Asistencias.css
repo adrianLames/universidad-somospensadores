@@ -48,19 +48,20 @@
   background: #252525;
 }
 .btn-primary {
-  background: #d4af37;
-  color: #1a1a1a;
+  background: #d4af37 !important;
+  color: #000000 !important;
   border: none;
   border-radius: 8px;
   padding: 0.7rem 1.2rem;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 .btn-primary:hover {
-  background: #f0d070;
+  background: #f0d070 !important;
+  color: #000000 !important;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
 }

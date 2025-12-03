@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE } from '../config/api';
 import './MisCursos.css';
@@ -9,15 +9,11 @@ const MisCursos = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [vistaActual, setVistaActual] = useState('actual'); // actual, anteriores, todos
   const [searchTerm, setSearchTerm] = useState('');
+  const [lastUpdate, setLastUpdate] = useState(new Date());
 
-  useEffect(() => {
-    fetchMisCursos();
-  }, [user]);
-
-  const fetchMisCursos = async () => {
+  const fetchMisCursos = useCallback(async () => {
     try {
       setLoading(true);
-      let endpoint = '';
       
       if (user.tipo === 'estudiante') {
         // Obtener matrículas del estudiante
@@ -28,17 +24,40 @@ const MisCursos = ({ user }) => {
       } else if (user.tipo === 'docente') {
         // Obtener cursos asignados al docente
         const response = await fetch(`${API_BASE}/vinculaciones.php?docente_id=${user.id}`);
+        
+        if (!response.ok) {
+          console.error('Error en respuesta:', response.status, response.statusText);
+          setCursos([]);
+          return;
+        }
+        
         const data = await response.json();
         // Asegurar que siempre sea un array
         setCursos(Array.isArray(data) ? data : []);
       }
+      setLastUpdate(new Date());
     } catch (error) {
       console.error('Error fetching cursos:', error);
       setCursos([]); // En caso de error, establecer array vacío
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    fetchMisCursos();
+  }, [fetchMisCursos]);
+
+  // Actualizar cuando la ventana recupera el foco
+  useEffect(() => {
+    const handleFocus = () => {
+      console.log('🔄 MisCursos: Actualizando datos...');
+      fetchMisCursos();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [fetchMisCursos]);
 
   const getColorAleatorio = (index) => {
     const colores = [
@@ -76,7 +95,8 @@ const MisCursos = ({ user }) => {
         if (user.tipo === 'estudiante') {
           return curso.anio === añoActual && curso.estado === 'activa';
         } else {
-          return curso.activo === 1 || curso.activo === '1';
+          // Para docentes: mostrar cursos del año actual, independiente del semestre
+          return curso.anio === añoActual;
         }
       });
     } else if (vistaActual === 'anteriores') {
@@ -85,7 +105,7 @@ const MisCursos = ({ user }) => {
         if (user.tipo === 'estudiante') {
           return curso.anio < añoActual || curso.estado !== 'activa';
         } else {
-          return curso.activo === 0 || curso.activo === '0';
+          return curso.anio < añoActual;
         }
       });
     }
@@ -111,11 +131,34 @@ const MisCursos = ({ user }) => {
       <div className="mis-cursos-header">
         <div className="header-content">
           <h1>📚 Mis Cursos</h1>
+          <button 
+            onClick={fetchMisCursos}
+            disabled={loading}
+            style={{
+              padding: '0.6rem 1.2rem',
+              background: loading ? '#95a5a6' : '#27ae60',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontWeight: 'bold',
+              fontSize: '0.9rem',
+              transition: 'all 0.3s',
+              marginLeft: '1rem'
+            }}
+          >
+            {loading ? '🔄 Actualizando...' : '🔄 Actualizar'}
+          </button>
         </div>
         <p className="header-subtitle">
           {user.tipo === 'estudiante' 
             ? 'Cursos en los que estás matriculado' 
             : 'Cursos que impartes como docente'}
+          {lastUpdate && (
+            <span style={{marginLeft: '1rem', color: '#95a5a6', fontSize: '0.85rem'}}>
+              • Última actualización: {lastUpdate.toLocaleTimeString('es-CO')}
+            </span>
+          )}
         </p>
       </div>
 
@@ -204,6 +247,14 @@ const MisCursos = ({ user }) => {
                 )}
                 {user.tipo === 'docente' && (
                   <>
+                    <div className="curso-info-item">
+                      <span className="info-label">📅 Semestre:</span>
+                      <span className="info-value">{curso.semestre || '-'}</span>
+                    </div>
+                    <div className="curso-info-item">
+                      <span className="info-label">📆 Año:</span>
+                      <span className="info-value">{curso.anio || '-'}</span>
+                    </div>
                     <div className="curso-info-item">
                       <span className="info-label">🕐 Jornada:</span>
                       <span className="info-value">{curso.jornada || '-'}</span>

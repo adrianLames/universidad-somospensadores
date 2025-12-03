@@ -18,37 +18,36 @@ const EstudiantesPorCurso = ({ user }) => {
     setLoading(true);
     try {
       // 1. Obtener cursos asignados al profesor
-      const cursosResponse = await fetch(`${API_BASE}/cursos.php?docente_id=${user.id}`);
+      const cursosResponse = await fetch(`${API_BASE}/vinculaciones.php?docente_id=${user.id}`);
       const cursosData = await cursosResponse.json();
       const cursosArray = Array.isArray(cursosData) ? cursosData : [];
       
       setCursos(cursosArray);
       console.log('📚 Cursos cargados:', cursosArray);
 
-      // 2. Para cada curso, obtener estudiantes
+      // 2. Para cada curso, obtener estudiantes matriculados
       const estudiantesMap = {};
       
       for (const curso of cursosArray) {
         try {
-          const estudiantesResponse = await fetch(`${API_BASE}/calificaciones.php?curso_id=${curso.id}`);
+          const estudiantesResponse = await fetch(`${API_BASE}/matriculas.php?curso_id=${curso.curso_id}`);
           const estudiantesData = await estudiantesResponse.json();
           
           // Mapear los datos del API
           const estudiantesFormateados = Array.isArray(estudiantesData) 
             ? estudiantesData.map(est => ({
                 id: est.estudiante_id,
-                nombres: est.estudiante_nombres,
-                apellidos: est.estudiante_apellidos,
+                nombres: est.nombres,
+                apellidos: est.apellidos,
                 email: est.email,
-                nota_final: est.nota_final,
-                estado: est.estado
+                identificacion: est.identificacion
               }))
             : [];
           
-          estudiantesMap[curso.id] = estudiantesFormateados;
+          estudiantesMap[curso.curso_id] = estudiantesFormateados;
         } catch (error) {
-          console.error(`Error fetching estudiantes for curso ${curso.id}:`, error);
-          estudiantesMap[curso.id] = [];
+          console.error(`Error fetching estudiantes for curso ${curso.curso_id}:`, error);
+          estudiantesMap[curso.curso_id] = [];
         }
       }
       
@@ -92,18 +91,18 @@ const EstudiantesPorCurso = ({ user }) => {
       ) : (
         <div className="cursos-container">
           {cursos.map(curso => {
-            const estudiantes = estudiantesPorCurso[curso.id] || [];
-            const isExpanded = expandedCurso === curso.id;
+            const estudiantes = estudiantesPorCurso[curso.curso_id] || [];
+            const isExpanded = expandedCurso === curso.curso_id;
 
             return (
-              <div key={curso.id} className="curso-card">
+              <div key={curso.curso_id} className="curso-card">
                 <div 
                   className="curso-header"
-                  onClick={() => toggleCurso(curso.id)}
+                  onClick={() => toggleCurso(curso.curso_id)}
                 >
                   <div className="curso-info">
-                    <h3>{curso.codigo} - {curso.nombre}</h3>
-                    <span className="creditos">{curso.creditos} créditos</span>
+                    <h3>{curso.curso_codigo} - {curso.curso_nombre}</h3>
+                    <span className="creditos">{curso.curso_creditos} créditos</span>
                   </div>
                   <div className="curso-stats">
                     <span className="estudiantes-count">
@@ -125,9 +124,8 @@ const EstudiantesPorCurso = ({ user }) => {
                           <tr>
                             <th>#</th>
                             <th>Nombre</th>
+                            <th>Identificación</th>
                             <th>Email</th>
-                            <th>Nota Final</th>
-                            <th>Estado</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -135,28 +133,8 @@ const EstudiantesPorCurso = ({ user }) => {
                             <tr key={est.id}>
                               <td>{index + 1}</td>
                               <td className="nombre">{est.nombres} {est.apellidos}</td>
-                              <td className="email">{est.email}</td>
-                              <td className="nota">
-                                {est.nota_final ? (
-                                  <strong>{est.nota_final}</strong>
-                                ) : (
-                                  <span className="sin-nota">Sin calificar</span>
-                                )}
-                              </td>
-                              <td className="estado">
-                                {est.estado ? (
-                                  <span 
-                                    className="estado-badge"
-                                    style={{backgroundColor: getEstadoColor(est.estado)}}
-                                  >
-                                    {est.estado.toUpperCase()}
-                                  </span>
-                                ) : (
-                                  <span className="estado-badge" style={{backgroundColor: '#95a5a6'}}>
-                                    PENDIENTE
-                                  </span>
-                                )}
-                              </td>
+                              <td>{est.identificacion || 'N/A'}</td>
+                              <td className="email">{est.email || 'N/A'}</td>
                             </tr>
                           ))}
                         </tbody>

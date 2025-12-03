@@ -94,14 +94,14 @@ function createDatabaseAndTables($conn) {
     // Tabla de asignación de docentes a cursos
     $conn->query("CREATE TABLE IF NOT EXISTS asignacion_docentes (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        docente_id INT NOT NULL,
+        usuario_id INT NOT NULL,
         curso_id INT NOT NULL,
         semestre VARCHAR(20) NOT NULL,
         anio YEAR NOT NULL,
         fecha_asignacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (docente_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
         FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_asignacion (docente_id, curso_id, semestre, anio)
+        UNIQUE KEY unique_asignacion (usuario_id, curso_id, semestre, anio)
     )");
 
     // Tabla de horarios
@@ -192,15 +192,15 @@ function createDatabaseAndTables($conn) {
 
         // Insertar datos iniciales de asignación de docentes
 
-        $conn->query("INSERT INTO asignacion_docentes (docente_id, curso_id, semestre, anio) VALUES 
+        $conn->query("INSERT INTO asignacion_docentes (usuario_id, curso_id, semestre, anio) VALUES 
                      (1, 1, '2025-1', 2025),
                      (2, 2, '2025-1', 2025),
                      (3, 3, '2025-1', 2025),
                      (4, 4, '2025-1', 2025)");
 
         // Insertar asignaciones de docentes para 2025-2 (semestre actual)
-        $conn->query("INSERT INTO asignacion_docentes (docente_id, curso_id, semestre, anio)
-            SELECT docente_id, curso_id, '2025-2', 2025 FROM asignacion_docentes WHERE semestre = '2025-1' AND anio = 2025");
+        $conn->query("INSERT INTO asignacion_docentes (usuario_id, curso_id, semestre, anio)
+            SELECT usuario_id, curso_id, '2025-2', 2025 FROM asignacion_docentes WHERE semestre = '2025-1' AND anio = 2025");
 
         // Insertar estudiantes de ejemplo
         $password_hash_est = password_hash('estudiante123', PASSWORD_DEFAULT);

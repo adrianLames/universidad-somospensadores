@@ -159,15 +159,38 @@ function GestionSemestre({ user }) {
     };
 
     const activarCursos = async () => {
+        // Validar fechas
         if (!fechaInicio || !fechaFin) {
-            setMensaje({ tipo: 'error', texto: 'Debes configurar las fechas de matrícula' });
+            setMensaje({ 
+                tipo: 'error', 
+                texto: '⚠️ ERROR: Debes configurar las fechas de inicio y fin de matrícula antes de activar cursos' 
+            });
+            // Hacer scroll hacia arriba para mostrar el mensaje
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
 
-        if (cursosSeleccionados.size === 0) {
-            setMensaje({ tipo: 'error', texto: 'Debes seleccionar al menos un curso' });
+        // Validar que la fecha de fin sea posterior a la de inicio
+        if (new Date(fechaFin) <= new Date(fechaInicio)) {
+            setMensaje({ 
+                tipo: 'error', 
+                texto: '⚠️ ERROR: La fecha de fin debe ser posterior a la fecha de inicio' 
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
+
+        // Validar selección de cursos
+        if (cursosSeleccionados.size === 0) {
+            setMensaje({ 
+                tipo: 'error', 
+                texto: '⚠️ ERROR: Debes seleccionar al menos un curso para activar' 
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        setMensaje({ tipo: 'info', texto: `⏳ Activando ${cursosSeleccionados.size} cursos para el semestre ${semestre}...` });
 
         try {
             const response = await fetch(`${API_BASE}/semestres_activos.php`, {
@@ -189,20 +212,33 @@ function GestionSemestre({ user }) {
             if (data.success) {
                 setMensaje({ 
                     tipo: 'success', 
-                    texto: `${data.count} cursos activados para el semestre ${semestre}` 
+                    texto: `✅ ${data.count} cursos activados exitosamente para el semestre ${semestre}` 
                 });
                 limpiarSeleccion();
                 fetchSemestresDisponibles();
                 
-                // Cambiar a vista de cursos activos
-                setSemestreActual(semestre);
-                setVistaActual('activos');
+                // Limpiar fechas y cupos
+                setFechaInicio('');
+                setFechaFin('');
+                setCuposDisponibles('');
+                
+                // Cambiar a vista de cursos activos después de 1.5 segundos
+                setTimeout(() => {
+                    setSemestreActual(semestre);
+                    setVistaActual('activos');
+                }, 1500);
             } else {
-                setMensaje({ tipo: 'error', texto: data.message });
+                setMensaje({ 
+                    tipo: 'error', 
+                    texto: `❌ ERROR: ${data.message || 'No se pudieron activar los cursos'}` 
+                });
             }
         } catch (error) {
-            setMensaje({ tipo: 'error', texto: 'Error al activar cursos' });
-            console.error(error);
+            setMensaje({ 
+                tipo: 'error', 
+                texto: `❌ ERROR: Error al comunicarse con el servidor. ${error.message}` 
+            });
+            console.error('Error completo:', error);
         }
     };
 
@@ -282,21 +318,44 @@ function GestionSemestre({ user }) {
                         </div>
 
                         <div className="form-group">
-                            <label>Fecha Inicio Matrícula</label>
+                            <label>
+                                Fecha Inicio Matrícula <span style={{color: '#ff4444'}}>*</span>
+                            </label>
                             <input 
                                 type="date" 
                                 value={fechaInicio}
                                 onChange={(e) => setFechaInicio(e.target.value)}
+                                required
+                                style={{
+                                    borderColor: !fechaInicio ? '#ff4444' : undefined
+                                }}
                             />
+                            {!fechaInicio && (
+                                <small style={{color: '#ff4444', display: 'block', marginTop: '5px'}}>
+                                    Campo requerido
+                                </small>
+                            )}
                         </div>
 
                         <div className="form-group">
-                            <label>Fecha Fin Matrícula</label>
+                            <label>
+                                Fecha Fin Matrícula <span style={{color: '#ff4444'}}>*</span>
+                            </label>
                             <input 
                                 type="date" 
                                 value={fechaFin}
                                 onChange={(e) => setFechaFin(e.target.value)}
+                                required
+                                min={fechaInicio}
+                                style={{
+                                    borderColor: !fechaFin ? '#ff4444' : undefined
+                                }}
                             />
+                            {!fechaFin && (
+                                <small style={{color: '#ff4444', display: 'block', marginTop: '5px'}}>
+                                    Campo requerido
+                                </small>
+                            )}
                         </div>
 
                         <div className="form-group">
@@ -368,9 +427,25 @@ function GestionSemestre({ user }) {
                         <button 
                             onClick={activarCursos} 
                             className="btn-activar"
-                            disabled={cursosSeleccionados.size === 0}
+                            disabled={cursosSeleccionados.size === 0 || !fechaInicio || !fechaFin}
+                            title={
+                                !fechaInicio || !fechaFin 
+                                    ? 'Debes configurar las fechas de matrícula primero' 
+                                    : cursosSeleccionados.size === 0 
+                                        ? 'Debes seleccionar al menos un curso' 
+                                        : 'Activar cursos seleccionados'
+                            }
                         >
                             🚀 Activar Cursos para {semestre}
+                            {(!fechaInicio || !fechaFin) && (
+                                <span style={{
+                                    marginLeft: '8px', 
+                                    color: '#ff4444',
+                                    fontSize: '0.9em'
+                                }}>
+                                    (Configura fechas primero)
+                                </span>
+                            )}
                         </button>
                     </div>
 

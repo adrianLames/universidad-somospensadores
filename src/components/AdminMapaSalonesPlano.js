@@ -81,14 +81,7 @@ const AdminMapaSalonesPlano = ({ user }) => {
     }
   };
 
-  const guardarPosicionMarcador = (salonId, x, y) => {
-    const nuevasPosiciones = {
-      ...posicionesGuardadas,
-      [salonId]: { x, y }
-    };
-    setPosicionesGuardadas(nuevasPosiciones);
-    localStorage.setItem('admin-mapa-posiciones', JSON.stringify(nuevasPosiciones));
-  };
+
 
   // Obtener horarios de un salón específico filtrados por día y usuario
   const obtenerHorariosSalon = (salonId) => {

@@ -39,14 +39,18 @@ switch ($method) {
         } else {
             // Obtener todas las vinculaciones docente-materia con datos completos y nombres normalizados
             $query = "SELECT ad.id, ad.usuario_id, ad.curso_id, ad.anio, ad.semestre, 
-                             u.nombres, u.apellidos, c.nombre AS materia, c.codigo AS codigo_materia, 
-                             p.nombre AS programa_nombre, f.nombre AS facultad_nombre
+                             u.nombres, u.apellidos, 
+                             CONCAT(u.nombres, ' ', u.apellidos) AS docente_nombre,
+                             c.nombre AS curso_nombre, 
+                             c.codigo AS codigo_materia, 
+                             p.nombre AS programa_nombre, 
+                             f.nombre AS facultad_nombre
                       FROM asignacion_docentes ad
-                      JOIN docentes d ON ad.usuario_id = d.usuario_id
-                      JOIN usuarios u ON d.usuario_id = u.id
-                      JOIN cursos c ON ad.curso_id = c.id
+                      INNER JOIN usuarios u ON ad.usuario_id = u.id
+                      INNER JOIN cursos c ON ad.curso_id = c.id
                       LEFT JOIN programas p ON c.programa_id = p.id
                       LEFT JOIN facultades f ON p.facultad_id = f.id
+                      WHERE u.tipo = 'docente'
                       ORDER BY u.nombres, u.apellidos, c.nombre";
             $result = $conn->query($query);
             $rows = [];

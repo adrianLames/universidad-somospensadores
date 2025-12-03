@@ -29,7 +29,10 @@ function VincularProfesorMateria() {
   const [facultadId, setFacultadId] = useState('');
   const [facultadBloqueada, setFacultadBloqueada] = useState(false);
   const [programaId, setProgramaId] = useState('');
+  const [anio, setAnio] = useState(new Date().getFullYear());
+  const [semestre, setSemestre] = useState('1');
   const [mensaje, setMensaje] = useState('');
+  const [tipoMensaje, setTipoMensaje] = useState(''); // 'success' o 'error'
   const [vinculaciones, setVinculaciones] = useState([]);
   const [cargandoVinculaciones, setCargandoVinculaciones] = useState(false);
   // cargar datos iniciales: profesores, facultades y materias
@@ -67,7 +70,9 @@ function VincularProfesorMateria() {
 
       try {
         const mats = await apiRequest('cursos.php');
-        setMaterias(Array.isArray(mats) ? mats : []);
+        // Manejar tanto formato nuevo {success, data} como array directo
+        const materiasArray = mats.success ? mats.data : (Array.isArray(mats) ? mats : []);
+        setMaterias(materiasArray);
       } catch (e) {
         setMaterias([]);
       }
@@ -116,7 +121,9 @@ function VincularProfesorMateria() {
         // si no hay programa seleccionado, dejar materias generales
         try {
           const mats = await apiRequest('cursos.php');
-          setMaterias(Array.isArray(mats) ? mats : []);
+          // Manejar tanto formato nuevo {success, data} como array directo
+          const materiasArray = mats.success ? mats.data : (Array.isArray(mats) ? mats : []);
+          setMaterias(materiasArray);
         } catch (e) {
           setMaterias([]);
         }
@@ -135,19 +142,34 @@ function VincularProfesorMateria() {
   const handleVincular = async (e) => {
     e.preventDefault();
     setMensaje('');
+    setTipoMensaje('');
     if (!profesorId || !materiaId) {
       setMensaje('Selecciona profesor y materia.');
+      setTipoMensaje('error');
       return;
     }
     try {
       await apiRequest('vinculaciones.php', {
         method: 'POST',
-        body: JSON.stringify({ usuario_id: profesorId, curso_id: materiaId })
+        body: JSON.stringify({ 
+          usuario_id: profesorId, 
+          curso_id: materiaId,
+          anio: anio,
+          semestre: semestre
+        })
       });
       setMensaje('¡Vinculación exitosa!');
+      setTipoMensaje('success');
+      // Limpiar formulario
+      setProfesorId('');
+      setMateriaId('');
+      setFacultadId('');
+      setProgramaId('');
       cargarVinculaciones();
     } catch (err) {
-      setMensaje(err?.message || 'Error de red o servidor.');
+      const errorMsg = err?.message || 'Error de red o servidor.';
+      setMensaje(errorMsg);
+      setTipoMensaje('error');
     }
   };
 
@@ -192,11 +214,46 @@ function VincularProfesorMateria() {
               <select value={materiaId} onChange={e => setMateriaId(e.target.value)} required>
                 <option value="">Selecciona una materia</option>
                 {materias.map(mat => (
-                  <option key={mat.id} value={mat.id}>{mat.nombre}</option>
+                  <option key={mat.id} value={mat.id}>
+                    {mat.nombre} {mat.jornada === 'diurna' ? '☀️' : '🌙'} ({mat.jornada})
+                  </option>
                 ))}
               </select>
             </div>
           </div>
+          <div className="form-row" style={{display: 'flex', gap: '2rem', flexWrap: 'wrap', marginTop: '1rem'}}>
+            <div className="form-group" style={{flex: 1}}>
+              <label>Año</label>
+              <input 
+                type="number" 
+                value={anio} 
+                onChange={e => setAnio(e.target.value)} 
+                min="2020" 
+                max="2030"
+                required 
+              />
+            </div>
+            <div className="form-group" style={{flex: 1}}>
+              <label>Semestre</label>
+              <select value={semestre} onChange={e => setSemestre(e.target.value)} required>
+                <option value="1">Primer Semestre (1)</option>
+                <option value="2">Segundo Semestre (2)</option>
+              </select>
+            </div>
+          </div>
+          {mensaje && (
+            <div style={{
+              padding: '12px',
+              marginTop: '1rem',
+              borderRadius: '8px',
+              background: tipoMensaje === 'success' ? '#d4edda' : '#f8d7da',
+              color: tipoMensaje === 'success' ? '#155724' : '#721c24',
+              border: `1px solid ${tipoMensaje === 'success' ? '#c3e6cb' : '#f5c6cb'}`,
+              fontWeight: '500'
+            }}>
+              {tipoMensaje === 'success' ? '✅' : '❌'} {mensaje}
+            </div>
+          )}
           <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1.2rem'}}>
             <button type="submit" className="btn-primary"><span role="img" aria-label="vincular">🔗</span> Vincular Profesor</button>
           </div>
@@ -209,6 +266,7 @@ function VincularProfesorMateria() {
               <tr>
                 <th>Profesor</th>
                 <th>Materia</th>
+                <th>Jornada</th>
                 <th>Programa</th>
                 <th>Facultad</th>
                 <th>Año</th>
@@ -221,6 +279,18 @@ function VincularProfesorMateria() {
                 <tr key={v.id}>
                   <td>{v.nombres} {v.apellidos}</td>
                   <td>{v.materia}</td>
+                  <td>
+                    <span style={{
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '0.85em',
+                      fontWeight: '600',
+                      background: v.jornada === 'diurna' ? '#fff3cd' : '#d1ecf1',
+                      color: v.jornada === 'diurna' ? '#856404' : '#0c5460'
+                    }}>
+                      {v.jornada === 'diurna' ? '☀️ Diurna' : '🌙 Nocturna'}
+                    </span>
+                  </td>
                   <td><span className="tag">{v.programa_nombre}</span></td>
                   <td><span className="tag">{v.facultad_nombre}</span></td>
                   <td>{v.anio}</td>

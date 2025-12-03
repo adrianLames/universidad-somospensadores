@@ -172,6 +172,7 @@ switch ($method) {
 
     case 'GET':
         $estudiante_id = isset($_GET['estudiante_id']) ? intval($_GET['estudiante_id']) : null;
+        $curso_id = isset($_GET['curso_id']) ? intval($_GET['curso_id']) : null;
         $programa_id = isset($_GET['programa_id']) ? intval($_GET['programa_id']) : null;
         $jornada = isset($_GET['jornada']) ? $_GET['jornada'] : null;
         
@@ -180,7 +181,8 @@ switch ($method) {
                              c.nombre as curso_nombre, 
                              c.codigo as curso_codigo,
                              c.creditos as curso_creditos,
-                             c.programa_id
+                             c.programa_id,
+                             c.jornada
                       FROM matriculas m 
                       INNER JOIN cursos c ON m.curso_id = c.id 
                       WHERE m.estudiante_id = ? AND m.estado = 'activa'
@@ -194,8 +196,34 @@ switch ($method) {
                 $matriculas[] = $row;
             }
             echo json_encode($matriculas);
+        } elseif ($curso_id) {
+            // Obtener estudiantes matriculados en un curso específico
+            $query = "SELECT m.*, 
+                             c.nombre as curso_nombre, 
+                             c.codigo as curso_codigo,
+                             c.creditos as curso_creditos,
+                             c.programa_id,
+                             c.jornada,
+                             u.nombres, 
+                             u.apellidos,
+                             u.identificacion,
+                             u.email
+                      FROM matriculas m 
+                      INNER JOIN cursos c ON m.curso_id = c.id 
+                      INNER JOIN usuarios u ON m.estudiante_id = u.id
+                      WHERE m.curso_id = ? AND m.estado = 'activa'
+                      ORDER BY u.apellidos, u.nombres";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("i", $curso_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $matriculas = [];
+            while ($row = $result->fetch_assoc()) {
+                $matriculas[] = $row;
+            }
+            echo json_encode($matriculas);
         } else {
-            // Si no se pasa estudiante_id, devolver todas las matrículas activas con filtros opcionales
+            // Si no se pasa estudiante_id ni curso_id, devolver todas las matrículas activas con filtros opcionales
             $query = "SELECT m.*, 
                              c.nombre as curso_nombre, 
                              c.codigo as curso_codigo,

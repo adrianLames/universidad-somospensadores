@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-12-2025 a las 18:42:27
+-- Tiempo de generación: 03-12-2025 a las 04:40:22
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -69,7 +69,27 @@ INSERT INTO `asignacion_docentes` (`id`, `usuario_id`, `curso_id`, `programa_id`
 (39, 2, 29, 8, 1, 2025, 1),
 (40, 2, 30, 8, 1, 2025, 1),
 (41, 2, 31, 8, 1, 2025, 1),
-(42, 2, 32, 8, 1, 2025, 1);
+(42, 2, 32, 8, 1, 2025, 1),
+(43, 2, 11, 5, 1, 2025, 2),
+(44, 2, 17, 8, 1, 2025, 2),
+(45, 2, 18, 8, 1, 2025, 2),
+(46, 2, 19, 8, 1, 2025, 2),
+(47, 2, 20, 8, 1, 2025, 2),
+(48, 2, 21, 8, 1, 2025, 2),
+(49, 2, 22, 8, 1, 2025, 2),
+(50, 2, 23, 8, 1, 2025, 2),
+(51, 2, 24, 8, 1, 2025, 2),
+(52, 2, 25, 8, 1, 2025, 2),
+(53, 2, 26, 8, 1, 2025, 2),
+(54, 2, 27, 8, 1, 2025, 2),
+(55, 2, 28, 8, 1, 2025, 2),
+(56, 2, 29, 8, 1, 2025, 2),
+(57, 2, 30, 8, 1, 2025, 2),
+(58, 2, 31, 8, 1, 2025, 2),
+(59, 2, 32, 8, 1, 2025, 2),
+(74, 2, 90, 8, NULL, 2025, 1),
+(75, 2, 64, 8, NULL, 2025, 1),
+(76, 2, 90, 8, NULL, 2025, 2);
 
 --
 -- Disparadores `asignacion_docentes`
@@ -108,6 +128,14 @@ CREATE TABLE `asistencias` (
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `asistencias`
+--
+
+INSERT INTO `asistencias` (`id`, `estudiante_id`, `curso_id`, `fecha`, `estado`, `observaciones`, `fecha_registro`) VALUES
+(1, 12, 90, '2025-12-03', 'presente', '', '2025-12-03 02:58:12'),
+(2, 12, 90, '2025-12-02', 'presente', '', '2025-12-03 03:00:03');
+
 -- --------------------------------------------------------
 
 --
@@ -128,6 +156,13 @@ CREATE TABLE `calificaciones` (
   `fecha_calificacion` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `calificaciones`
+--
+
+INSERT INTO `calificaciones` (`id`, `estudiante_id`, `curso_id`, `tarea_id`, `semestre`, `anio`, `nota_final`, `estado`, `fecha_registro`, `comentarios`, `fecha_calificacion`) VALUES
+(3, 12, 90, NULL, '2025-1', '2025', 4.5, 'aprobado', '2025-12-03 03:13:48', NULL, '2025-12-02 22:13:48');
+
 -- --------------------------------------------------------
 
 --
@@ -146,83 +181,85 @@ CREATE TABLE `cursos` (
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
   `facultad_id` int(11) DEFAULT NULL,
   `jornada` enum('diurna','nocturna') NOT NULL DEFAULT 'diurna',
-  `es_prerequisito` tinyint(1) DEFAULT 1 COMMENT '1=puede ser prerequisito, 0=no puede'
+  `es_prerequisito` tinyint(1) DEFAULT 1 COMMENT '1=puede ser prerequisito, 0=no puede',
+  `es_publico` tinyint(1) DEFAULT 0 COMMENT 'Indica si el curso es p??blico (visible para usuarios no autenticados)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `cursos`
 --
 
-INSERT INTO `cursos` (`id`, `codigo`, `nombre`, `descripcion`, `creditos`, `programa_id`, `prerequisito_id`, `activo`, `fecha_creacion`, `facultad_id`, `jornada`, `es_prerequisito`) VALUES
-(11, '111023C_AL', 'Algebra Lineal', NULL, 3, 5, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(17, '750090C', 'Matemáticas Discretas II', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(18, '750088C', 'Análisis y Diseño de Algoritmos', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(19, '204130C_ED', 'Estructuras de Datos', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(20, '750042C', 'Bases de Datos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(21, '750092C', 'Desarrollo de Software I', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(22, '750091C', 'Desarrollo de Software II', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(23, '750090C_IE', 'Ingeniería Estructurada', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(24, '750089C', 'Sistemas Operacionales', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(25, '750086C', 'Desarrollo en Arquitectura Empresarial', NULL, 2, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(26, '750087C', 'Proyección Integrada', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(27, '750084C', 'Desarrollo Avanzado de Interfaces', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(28, '750081C', 'Electiva Profesional I', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(29, '750082C', 'Electiva Profesional II', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(30, '750083C', 'Electiva Profesional III', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(31, '204829C', 'Inglés con Fines Específicos y Académicos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(32, '204830C', 'Inglés con Fines Generales y Académicos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1),
-(64, '111023C', 'Matemática Básica', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(65, '711016C', 'Introducción a las Tecnologías', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(66, '711008C', 'Taller Tecnológico I', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(67, '111021C', 'Cálculo', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(68, '111038C', 'Álgebra Lineal', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(69, '711009C', 'Taller Tecnológico II', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(70, '70100C', 'Programación de Textos Arquitectónicos', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(71, '111021C_PROG1', 'Fundamentos de Programación I', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(72, '761001C', 'Probabilidad y Estadística', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(73, '750004C', 'Matemáticas Discretas I', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(74, '711010C', 'Taller Tecnológico III', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(75, '70101C', 'Programación Orientada a Objetos', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(76, '750005C', 'Matemáticas Discretas II', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(77, '711011C', 'Taller Tecnológico IV', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(78, '70102C', 'Estructura de Datos', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(79, '70103C', 'Base de Datos I', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(80, '711012C', 'Taller Tecnológico V', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(81, '70104C', 'Algoritmos', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(82, '70105C', 'Base de Datos II', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(83, '70106C', 'Ingeniería de Software I', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(84, '711013C', 'Taller Tecnológico VI', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(85, '70107C', 'Arquitectura de Software', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(86, '70108C', 'Ingeniería de Software II', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(87, '70109C', 'Redes de Computadores', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(88, '204130C', 'Fundamentos de Textos Asignaciones', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(89, '40409C', 'Deporte y Salud', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1),
-(90, '111023C', 'Matemática Básica', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(91, '711016C', 'Introducción a las Tecnologías', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(92, '711008C', 'Taller Tecnológico I', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(93, '111021C', 'Cálculo', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(94, '111038C', 'Álgebra Lineal', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(95, '711009C', 'Taller Tecnológico II', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(96, '70100C', 'Programación de Textos Arquitectónicos', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(97, '111021C_PROG1', 'Fundamentos de Programación I', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(98, '761001C', 'Probabilidad y Estadística', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(99, '750004C', 'Matemáticas Discretas I', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(100, '711010C', 'Taller Tecnológico III', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(101, '70101C', 'Programación Orientada a Objetos', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(102, '750005C', 'Matemáticas Discretas II', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(103, '711011C', 'Taller Tecnológico IV', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(104, '70102C', 'Estructura de Datos', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(105, '70103C', 'Base de Datos I', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(106, '711012C', 'Taller Tecnológico V', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(107, '70104C', 'Algoritmos', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(108, '70105C', 'Base de Datos II', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(109, '70106C', 'Ingeniería de Software I', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(110, '711013C', 'Taller Tecnológico VI', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(111, '70107C', 'Arquitectura de Software', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(112, '70108C', 'Ingeniería de Software II', NULL, 4, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(113, '70109C', 'Redes de Computadores', NULL, 3, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(114, '204130C', 'Fundamentos de Textos Asignaciones', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1),
-(115, '40409C', 'Deporte y Salud', NULL, 2, NULL, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1);
+INSERT INTO `cursos` (`id`, `codigo`, `nombre`, `descripcion`, `creditos`, `programa_id`, `prerequisito_id`, `activo`, `fecha_creacion`, `facultad_id`, `jornada`, `es_prerequisito`, `es_publico`) VALUES
+(11, '111023C_AL', 'Algebra Lineal', NULL, 3, 5, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(17, '750090C', 'Matemáticas Discretas II', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(18, '750088C', 'Análisis y Diseño de Algoritmos', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(19, '204130C_ED', 'Estructuras de Datos', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(20, '750042C', 'Bases de Datos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(21, '750092C', 'Desarrollo de Software I', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(22, '750091C', 'Desarrollo de Software II', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(23, '750090C_IE', 'Ingeniería Estructurada', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(24, '750089C', 'Sistemas Operacionales', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(25, '750086C', 'Desarrollo en Arquitectura Empresarial', NULL, 2, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(26, '750087C', 'Proyección Integrada', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(27, '750084C', 'Desarrollo Avanzado de Interfaces', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(28, '750081C', 'Electiva Profesional I', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(29, '750082C', 'Electiva Profesional II', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(30, '750083C', 'Electiva Profesional III', NULL, 3, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(31, '204829C', 'Inglés con Fines Específicos y Académicos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(32, '204830C', 'Inglés con Fines Generales y Académicos', NULL, 4, 8, NULL, 1, '2025-11-25 22:52:40', 1, 'nocturna', 1, 0),
+(64, '111023C_D', 'Matemática Básica', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(65, '711016C_D', 'Introducción a las Tecnologías', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(66, '711008C_D', 'Taller Tecnológico I', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(67, '111021C_D', 'Cálculo', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(68, '111038C_D', 'Álgebra Lineal', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(69, '711009C_D', 'Taller Tecnológico II', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(70, '70100C_D', 'Programación de Textos Arquitectónicos', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(71, '111021C_PROG1_D', 'Fundamentos de Programación I', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(72, '761001C_D', 'Probabilidad y Estadística', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(73, '750004C_D', 'Matemáticas Discretas I', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(74, '711010C_D', 'Taller Tecnológico III', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(75, '70101C_D', 'Programación Orientada a Objetos', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(76, '750005C_D', 'Matemáticas Discretas II', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(77, '711011C_D', 'Taller Tecnológico IV', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(78, '70102C_D', 'Estructura de Datos', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(79, '70103C_D', 'Base de Datos I', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(80, '711012C_D', 'Taller Tecnológico V', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(81, '70104C_D', 'Algoritmos', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(82, '70105C_D', 'Base de Datos II', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(83, '70106C_D', 'Ingeniería de Software I', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(84, '711013C_D', 'Taller Tecnológico VI', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(85, '70107C_D', 'Arquitectura de Software', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(86, '70108C_D', 'Ingeniería de Software II', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(87, '70109C_D', 'Redes de Computadores', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(88, '204130C_D', 'Fundamentos de Textos Asignaciones', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(89, '40409C_D', 'Deporte y Salud', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'diurna', 1, 0),
+(90, '111023C_N', 'Matemática Básica', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(91, '711016C_N', 'Introducción a las Tecnologías', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(92, '711008C_N', 'Taller Tecnológico I', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(93, '111021C_N', 'Cálculo', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(94, '111038C_N', 'Álgebra Lineal', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(95, '711009C_N', 'Taller Tecnológico II', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(96, '70100C_N', 'Programación de Textos Arquitectónicos', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(97, '111021C_PROG1_N', 'Fundamentos de Programación I', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(98, '761001C_N', 'Probabilidad y Estadística', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(99, '750004C_N', 'Matemáticas Discretas I', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(100, '711010C_N', 'Taller Tecnológico III', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(101, '70101C_N', 'Programación Orientada a Objetos', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(102, '750005C_N', 'Matemáticas Discretas II', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(103, '711011C_N', 'Taller Tecnológico IV', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(104, '70102C_N', 'Estructura de Datos', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(105, '70103C_N', 'Base de Datos I', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(106, '711012C_N', 'Taller Tecnológico V', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(107, '70104C_N', 'Algoritmos', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(108, '70105C_N', 'Base de Datos II', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(109, '70106C_N', 'Ingeniería de Software I', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(110, '711013C_N', 'Taller Tecnológico VI', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(111, '70107C_N', 'Arquitectura de Software', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(112, '70108C_N', 'Ingeniería de Software II', NULL, 4, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(113, '70109C_N', 'Redes de Computadores', NULL, 3, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(114, '204130C_N', 'Fundamentos de Textos Asignaciones', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(115, '40409C_N', 'Deporte y Salud', NULL, 2, 8, NULL, 1, '2025-11-26 03:40:31', NULL, 'nocturna', 1, 0),
+(116, 'PUB01', 'matematica', '', 2, 8, NULL, 1, '2025-12-03 03:26:38', 1, 'diurna', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -350,7 +387,9 @@ INSERT INTO `matriculas` (`id`, `estudiante_id`, `curso_id`, `semestre`, `anio`,
 (17, 13, 11, '1', '2025', '2025-11-25 23:04:31', 'activa'),
 (18, 14, 11, '1', '2025', '2025-11-25 23:04:31', 'activa'),
 (19, 15, 11, '1', '2025', '2025-11-25 23:04:31', 'activa'),
-(52, 12, 11, '1', '2025', '2025-12-02 17:06:40', 'activa');
+(52, 12, 11, '1', '2025', '2025-12-02 17:06:40', 'activa'),
+(53, 12, 90, '2', '2025', '2025-12-03 01:42:52', 'cancelada'),
+(54, 12, 90, '1', '2025', '2025-12-03 02:37:13', 'activa');
 
 -- --------------------------------------------------------
 
@@ -386,7 +425,8 @@ INSERT INTO `pendientes` (`id`, `tipo`, `identificacion`, `nombres`, `apellidos`
 (5, 'docente', '78987', 'Andres David', 'Villa Romero', 'andresd8888@gmail.com', '999888', '2025-10-16', 1, 4, '$2y$10$gr0sS5vBcC8.8toC6.4GLeq1YD.IcKx9/e4C8/C20AdGHNbtLMczu', 'calle 0', 'aprobado', '2025-11-18 22:31:14'),
 (6, 'docente', '9999', 'jaider', 'lames', 'lames@gmail.com', '87896', '2025-11-14', 2, 5, '$2y$10$ftTJ0nEoBkpZ5XkREHjMh.cIgzcSYVX9iVLQICsMGMVHWQeSvQfby', 'calle 8', 'aprobado', '2025-11-18 22:35:37'),
 (7, 'estudiante', '7894516', 'jaide', 'lames ', 'jaider@gmail.com', '59874568', '2025-11-12', 2, 5, '$2y$10$pNWjOzrYSBjRIf6Cl9FpBOWIYZXzTkV3V5X.Ij296WpVPzfzDmQKC', 'calle', 'aprobado', '2025-11-22 00:51:34'),
-(8, '', '465488', 'prueba', 'mart', 'prueba@gmail.com', '', NULL, NULL, NULL, '$2y$10$A9BFuBWJ80/ZpfR0Nxtncu2yzcuGIZzcFwetPcAmB/oNpJ5paqbMe', NULL, 'aprobado', '2025-11-26 19:29:18');
+(8, '', '465488', 'prueba', 'mart', 'prueba@gmail.com', '', NULL, NULL, NULL, '$2y$10$A9BFuBWJ80/ZpfR0Nxtncu2yzcuGIZzcFwetPcAmB/oNpJ5paqbMe', NULL, 'aprobado', '2025-11-26 19:29:18'),
+(9, '', '987435', 'an', 'lo', 'an@correo.com', '123443123', NULL, NULL, NULL, '$2y$10$YZGidC4k.V66f3OY3bz1NeuEAi8b5npcrtaXc40ykB2.6cTgKERgi', NULL, 'pendiente', '2025-12-03 03:23:13');
 
 -- --------------------------------------------------------
 
@@ -509,6 +549,37 @@ CREATE TABLE `semestres_activos` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `semestres_activos`
+--
+
+INSERT INTO `semestres_activos` (`id`, `curso_id`, `semestre_academico`, `anio`, `periodo`, `fecha_inicio_matricula`, `fecha_fin_matricula`, `cupos_disponibles`, `activo`, `created_at`, `updated_at`) VALUES
+(1, 11, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(2, 17, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(3, 18, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(4, 19, '2025-2', 2025, '2', '2025-12-02', '2025-12-04', NULL, 1, '2025-12-03 01:28:31', '2025-12-03 01:42:12'),
+(5, 20, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(6, 21, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(7, 22, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(8, 23, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(9, 24, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(10, 25, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(11, 26, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(12, 27, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(13, 28, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(14, 29, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(15, 30, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(16, 31, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(17, 32, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(18, 90, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 0, '2025-12-03 01:28:31', '2025-12-03 02:27:24'),
+(19, 91, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(20, 92, '2025-2', 2025, '2', '2025-12-01', '2025-12-15', 30, 1, '2025-12-03 01:28:31', '2025-12-03 01:28:31'),
+(32, 67, '2025-1', 2025, '1', '2025-01-02', '2025-05-05', NULL, 0, '2025-12-03 01:39:55', '2025-12-03 01:40:21'),
+(33, 71, '2025-1', 2025, '1', '2025-02-02', '2025-05-06', NULL, 1, '2025-12-03 01:39:55', '2025-12-03 01:41:00'),
+(35, 64, '2025-1', 2025, '1', '2025-02-02', '2025-05-06', NULL, 1, '2025-12-03 01:41:00', '2025-12-03 01:41:00'),
+(37, 114, '2025-2', 2025, '2', '2025-12-02', '2025-12-04', NULL, 1, '2025-12-03 01:42:12', '2025-12-03 01:42:12'),
+(38, 90, '2025-1', 2025, '1', '2025-12-02', '2025-12-10', NULL, 1, '2025-12-03 02:25:26', '2025-12-03 02:36:49');
+
 -- --------------------------------------------------------
 
 --
@@ -526,6 +597,13 @@ CREATE TABLE `tareas` (
   `fecha_creacion` datetime DEFAULT current_timestamp(),
   `fecha_actualizacion` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tareas`
+--
+
+INSERT INTO `tareas` (`id`, `curso_id`, `docente_id`, `titulo`, `descripcion`, `fecha_entrega`, `puntos_maximos`, `fecha_creacion`, `fecha_actualizacion`) VALUES
+(1, 90, 2, 'tarea 1', '', '2025-12-05', 5.00, '2025-12-02 21:43:10', '2025-12-02 21:43:10');
 
 -- --------------------------------------------------------
 
@@ -742,25 +820,25 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de la tabla `asignacion_docentes`
 --
 ALTER TABLE `asignacion_docentes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT de la tabla `asistencias`
 --
 ALTER TABLE `asistencias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `calificaciones`
 --
 ALTER TABLE `calificaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- AUTO_INCREMENT de la tabla `docentes`
@@ -772,7 +850,7 @@ ALTER TABLE `docentes`
 -- AUTO_INCREMENT de la tabla `entregas`
 --
 ALTER TABLE `entregas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `estudiantes`
@@ -796,13 +874,13 @@ ALTER TABLE `horarios`
 -- AUTO_INCREMENT de la tabla `matriculas`
 --
 ALTER TABLE `matriculas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT de la tabla `pendientes`
 --
 ALTER TABLE `pendientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `prerequisitos`
@@ -826,13 +904,13 @@ ALTER TABLE `salones`
 -- AUTO_INCREMENT de la tabla `semestres_activos`
 --
 ALTER TABLE `semestres_activos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT de la tabla `tareas`
 --
 ALTER TABLE `tareas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

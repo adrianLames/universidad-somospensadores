@@ -32,7 +32,9 @@ const AsignacionProfesores = () => {
     const fetchCursos = async () => {
         try {
             const data = await apiRequest('cursos.php');
-            setCursos(Array.isArray(data) ? data : []);
+            // Manejar tanto formato nuevo {success, data} como array directo
+            const cursosArray = data.success ? data.data : (Array.isArray(data) ? data : []);
+            setCursos(cursosArray);
         } catch (error) {
             console.error('Error fetching cursos:', error);
             setCursos([]);
@@ -42,7 +44,9 @@ const AsignacionProfesores = () => {
     const fetchAsignaciones = async () => {
         try {
             const data = await apiRequest('asignacion_docentes.php');
-            setAsignaciones(Array.isArray(data) ? data : []);
+            // Manejar tanto formato nuevo {success, data} como array directo
+            const asignacionesArray = data.success ? data.data : (Array.isArray(data) ? data : []);
+            setAsignaciones(asignacionesArray);
         } catch (error) {
             console.error('Error fetching asignaciones:', error);
             setAsignaciones([]);

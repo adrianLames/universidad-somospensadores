@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { API_BASE } from '../config/api';
 import { mostrarExito, mostrarError } from '../utils/notificaciones';
@@ -26,16 +26,9 @@ const DetalleCurso = ({ user }) => {
   });
   const [estudiantes, setEstudiantes] = useState([]);
   const [entregas, setEntregas] = useState([]);
+  const [activeTab, setActiveTab] = useState('tareas');
 
-  useEffect(() => {
-    fetchCursoDetalle();
-    fetchTareas();
-    if (user.tipo === 'docente') {
-      fetchEstudiantes();
-    }
-  }, [cursoId]);
-
-  const fetchCursoDetalle = async () => {
+  const fetchCursoDetalle = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE}/cursos.php?id=${cursoId}`);
       const data = await response.json();
@@ -45,9 +38,9 @@ const DetalleCurso = ({ user }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [cursoId]);
 
-  const fetchTareas = async () => {
+  const fetchTareas = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE}/tareas.php?curso_id=${cursoId}`);
       const data = await response.json();
@@ -56,9 +49,9 @@ const DetalleCurso = ({ user }) => {
       console.error('Error fetching tareas:', error);
       setTareas([]);
     }
-  };
+  }, [cursoId]);
 
-  const fetchEstudiantes = async () => {
+  const fetchEstudiantes = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE}/matriculas.php?curso_id=${cursoId}`);
       const data = await response.json();
@@ -66,7 +59,15 @@ const DetalleCurso = ({ user }) => {
     } catch (error) {
       console.error('Error fetching estudiantes:', error);
     }
-  };
+  }, [cursoId]);
+
+  useEffect(() => {
+    fetchCursoDetalle();
+    fetchTareas();
+    if (user.tipo === 'docente') {
+      fetchEstudiantes();
+    }
+  }, [cursoId, fetchCursoDetalle, fetchEstudiantes, fetchTareas, user.tipo]);
 
   const fetchEntregas = async (tareaId) => {
     try {
@@ -228,10 +229,27 @@ const DetalleCurso = ({ user }) => {
           <div className="sidebar-section">
             <h3>📋 Navegación</h3>
             <ul className="sidebar-menu">
-              <li className="active">📝 Tareas</li>
-              <li>📊 Calificaciones</li>
-              <li>👥 Participantes</li>
-              <li>ℹ️ Información</li>
+              <li 
+                className={activeTab === 'tareas' ? 'active' : ''}
+                onClick={() => setActiveTab('tareas')}
+                style={{cursor: 'pointer'}}
+              >
+                📝 Tareas
+              </li>
+              <li 
+                className={activeTab === 'participantes' ? 'active' : ''}
+                onClick={() => setActiveTab('participantes')}
+                style={{cursor: 'pointer'}}
+              >
+                👥 Participantes
+              </li>
+              <li 
+                className={activeTab === 'info' ? 'active' : ''}
+                onClick={() => setActiveTab('info')}
+                style={{cursor: 'pointer'}}
+              >
+                ℹ️ Información
+              </li>
             </ul>
           </div>
 
@@ -244,19 +262,21 @@ const DetalleCurso = ({ user }) => {
         </div>
 
         <div className="curso-main">
-          <div className="section-header">
-            <h2>📝 Tareas y Actividades</h2>
-            {user.tipo === 'docente' && (
-              <button 
-                className="btn-primary"
-                onClick={() => setShowModalTarea(true)}
-              >
-                ➕ Nueva Tarea
-              </button>
-            )}
-          </div>
+          {activeTab === 'tareas' && (
+            <>
+              <div className="section-header">
+                <h2>📝 Tareas y Actividades</h2>
+                {user.tipo === 'docente' && (
+                  <button 
+                    className="btn-primary"
+                    onClick={() => setShowModalTarea(true)}
+                  >
+                    ➕ Nueva Tarea
+                  </button>
+                )}
+              </div>
 
-          {tareas.length === 0 ? (
+              {tareas.length === 0 ? (
             <div className="empty-state">
               <div className="empty-icon">📭</div>
               <h3>No hay tareas</h3>
@@ -313,8 +333,117 @@ const DetalleCurso = ({ user }) => {
               ))}
             </div>
           )}
+            </>
+          )}
         </div>
       </div>
+
+      {activeTab === 'participantes' && (
+        <div className="curso-main">
+          <div className="section-header">
+            <h2>👥 Participantes</h2>
+          </div>
+          {estudiantes.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">👥</div>
+              <h3>No hay estudiantes matriculados</h3>
+              <p>Aún no hay estudiantes inscritos en este curso</p>
+            </div>
+          ) : (
+            <div className="estudiantes-grid" style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: '20px'
+            }}>
+              {estudiantes.map((estudiante, index) => (
+                <div key={estudiante.estudiante_id || index} className="estudiante-card" style={{
+                  background: 'white',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  display: 'flex',
+                  gap: '15px',
+                  alignItems: 'center'
+                }}>
+                  <div className="estudiante-avatar" style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    flexShrink: 0
+                  }}>
+                    {(estudiante.nombres?.[0] || '?').toUpperCase()}
+                  </div>
+                  <div className="estudiante-info">
+                    <h4 style={{margin: '0 0 8px 0', color: '#2c3e50'}}>{estudiante.nombres} {estudiante.apellidos}</h4>
+                    <p style={{margin: '4px 0', fontSize: '0.9em', color: '#7f8c8d'}}>
+                      🎫 ID: {estudiante.identificacion || estudiante.estudiante_id}
+                    </p>
+                    {estudiante.email && (
+                      <p style={{margin: '4px 0', fontSize: '0.9em', color: '#7f8c8d'}}>
+                        📧 {estudiante.email}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === 'info' && (
+        <div className="curso-main">
+          <div className="section-header">
+            <h2>ℹ️ Información del Curso</h2>
+          </div>
+          <div className="info-section">
+            <div className="info-card" style={{
+              background: 'white',
+              borderRadius: '12px',
+              padding: '30px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
+              <h3 style={{marginTop: 0}}>📚 Detalles</h3>
+              <div className="info-grid" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '20px',
+                marginBottom: '20px'
+              }}>
+                <div className="info-item">
+                  <span style={{display: 'block', fontWeight: 'bold', color: '#7f8c8d', marginBottom: '5px'}}>Código:</span>
+                  <span style={{fontSize: '1.1em', color: '#2c3e50'}}>{curso.codigo}</span>
+                </div>
+                <div className="info-item">
+                  <span style={{display: 'block', fontWeight: 'bold', color: '#7f8c8d', marginBottom: '5px'}}>Créditos:</span>
+                  <span style={{fontSize: '1.1em', color: '#2c3e50'}}>{curso.creditos}</span>
+                </div>
+                <div className="info-item">
+                  <span style={{display: 'block', fontWeight: 'bold', color: '#7f8c8d', marginBottom: '5px'}}>Programa:</span>
+                  <span style={{fontSize: '1.1em', color: '#2c3e50'}}>{curso.programa_nombre || 'N/A'}</span>
+                </div>
+                <div className="info-item">
+                  <span style={{display: 'block', fontWeight: 'bold', color: '#7f8c8d', marginBottom: '5px'}}>Jornada:</span>
+                  <span style={{fontSize: '1.1em', color: '#2c3e50'}}>{curso.jornada || 'N/A'}</span>
+                </div>
+              </div>
+              {curso.descripcion && (
+                <div style={{marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #ecf0f1'}}>
+                  <h4 style={{marginTop: 0}}>Descripción</h4>
+                  <p style={{lineHeight: '1.6', color: '#34495e'}}>{curso.descripcion}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal Nueva Tarea */}
       {showModalTarea && (

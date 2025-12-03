@@ -106,7 +106,9 @@ export const getCursosByPrograma = async (programaId) => {
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
-    return await response.json();
+    const result = await response.json();
+    // Manejar tanto formato nuevo {success, data} como array directo
+    return result.success ? result.data : (Array.isArray(result) ? result : []);
   } catch (error) {
     console.error('Error fetching cursos by programa:', error);
     return [];

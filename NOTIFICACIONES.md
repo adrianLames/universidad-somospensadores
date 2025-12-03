@@ -1,3 +1,33 @@
+# Sistema de Notificaciones y Cambios Importantes
+
+## 🔔 Cambios Recientes (2 de diciembre de 2025)
+
+### ✅ Diferenciación de Cursos por Jornada
+
+Se implementó un sistema para diferenciar cursos duplicados que se ofrecen en diferentes jornadas:
+
+**Problema resuelto:**
+- 26 códigos de cursos estaban duplicados (misma materia en jornada diurna y nocturna)
+- Causaba confusión en interfaces y reportes
+
+**Solución:**
+- Se agregaron sufijos distintivos a los códigos:
+  - `_D` para cursos de jornada **diurna**
+  - `_N` para cursos de jornada **nocturna**
+
+**Ejemplos:**
+- `111021C` → `111021C_D` (diurna) y `111021C_N` (nocturna)
+- `111023C` → `111023C_D` (diurna) y `111023C_N` (nocturna)
+
+**Resultado:**
+- ✅ 69 códigos únicos (antes: 43 únicos, 26 duplicados)
+- ✅ Sin impacto en tablas relacionadas (usan FK por ID)
+- ✅ Mejor experiencia de usuario
+
+Ver detalles en: `migraciones/README_migracion_jornadas.md`
+
+---
+
 # Sistema de Notificaciones Personalizado
 
 Se ha implementado un sistema de notificaciones personalizado y elegante para toda la aplicación.

@@ -10,10 +10,10 @@ try {
             // Obtener una tarea específica
             $stmt = $pdo->prepare("
                 SELECT t.*, c.nombre as curso_nombre, c.codigo as curso_codigo,
-                       CONCAT(d.nombres, ' ', d.apellidos) as docente_nombre
+                       CONCAT(u.nombres, ' ', u.apellidos) as docente_nombre
                 FROM tareas t
                 LEFT JOIN cursos c ON t.curso_id = c.id
-                LEFT JOIN docentes d ON t.docente_id = d.id
+                LEFT JOIN usuarios u ON t.docente_id = u.id
                 WHERE t.id = ?
             ");
             $stmt->execute([$_GET['id']]);
@@ -22,9 +22,9 @@ try {
         } elseif (isset($_GET['curso_id'])) {
             // Obtener todas las tareas de un curso
             $stmt = $pdo->prepare("
-                SELECT t.*, CONCAT(d.nombres, ' ', d.apellidos) as docente_nombre
+                SELECT t.*, CONCAT(u.nombres, ' ', u.apellidos) as docente_nombre
                 FROM tareas t
-                LEFT JOIN docentes d ON t.docente_id = d.id
+                LEFT JOIN usuarios u ON t.docente_id = u.id
                 WHERE t.curso_id = ?
                 ORDER BY t.fecha_entrega DESC
             ");
@@ -35,10 +35,10 @@ try {
             // Obtener todas las tareas
             $stmt = $pdo->query("
                 SELECT t.*, c.nombre as curso_nombre, c.codigo as curso_codigo,
-                       CONCAT(d.nombres, ' ', d.apellidos) as docente_nombre
+                       CONCAT(u.nombres, ' ', u.apellidos) as docente_nombre
                 FROM tareas t
                 LEFT JOIN cursos c ON t.curso_id = c.id
-                LEFT JOIN docentes d ON t.docente_id = d.id
+                LEFT JOIN usuarios u ON t.docente_id = u.id
                 ORDER BY t.fecha_creacion DESC
             ");
             $tareas = $stmt->fetchAll(PDO::FETCH_ASSOC);

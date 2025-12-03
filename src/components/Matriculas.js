@@ -17,15 +17,7 @@ const Matriculas = ({ user }) => {
   const [semestreActual, setSemestreActual] = useState('');
   const [periodoMatricula, setPeriodoMatricula] = useState({ abierto: false, mensaje: '' });
 
-  useEffect(() => {
-    calcularSemestreActual();
-    fetchMatriculas();
-    fetchCursosActivos();
-    fetchNoAprobadas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Calcular semestre actual
+  // Calcular semestre actual (hacerlo antes del useEffect)
   const calcularSemestreActual = () => {
     const fecha = new Date();
     const mes = fecha.getMonth() + 1;
@@ -33,9 +25,25 @@ const Matriculas = ({ user }) => {
     // Semestre 1: Enero-Junio, Semestre 2: Julio-Diciembre
     const periodo = mes <= 6 ? '1' : '2';
     const semestre = `${anio}-${periodo}`;
+    return semestre;
+  };
+
+  useEffect(() => {
+    const semestre = calcularSemestreActual();
     setSemestreActual(semestre);
     setCurrentMatricula(prev => ({ ...prev, semestre }));
-  };
+    fetchMatriculas();
+    fetchNoAprobadas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Cargar cursos cuando cambie el semestre seleccionado
+  useEffect(() => {
+    if (currentMatricula.semestre) {
+      fetchCursosActivos(currentMatricula.semestre);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentMatricula.semestre]);
 
   // Obtener materias matriculadas sin aprobar
   const fetchNoAprobadas = async () => {
@@ -76,15 +84,10 @@ const Matriculas = ({ user }) => {
     }
   };
 
-  const fetchCursosActivos = async () => {
+  const fetchCursosActivos = async (semestre) => {
     try {
-      if (!semestreActual) {
-        calcularSemestreActual();
-        return;
-      }
-
-      // Obtener cursos activos del semestre actual
-      const response = await fetch(`${API_BASE}/semestres_activos.php?semestre=${semestreActual}&activo=1`);
+      // Obtener cursos activos del semestre seleccionado
+      const response = await fetch(`${API_BASE}/semestres_activos.php?semestre=${semestre}&activo=1`);
       const data = await response.json();
 
       if (!data.success) {
@@ -125,23 +128,23 @@ const Matriculas = ({ user }) => {
 
       setPeriodoMatricula({ abierto: true, mensaje: '' });
 
-      // Obtener información completa de los cursos y profesores
+      // El endpoint semestres_activos ya devuelve toda la información del curso
+      // Solo necesitamos obtener el profesor asignado para cada curso
       const cursosConDetalles = await Promise.all(
         cursosDisponibles.map(async (semestreActivo) => {
           try {
-            // Obtener información del curso
-            const cursoResponse = await fetch(`${API_BASE}/cursos.php?id=${semestreActivo.curso_id}`);
-            const cursoData = await cursoResponse.json();
-            const curso = cursoData.success ? cursoData.data[0] : null;
-
-            if (!curso) return null;
-
             // Obtener profesor asignado
-            const profesorResponse = await fetch(`${API_BASE}/asignacion_docentes.php?curso_id=${curso.id}`);
+            const profesorResponse = await fetch(`${API_BASE}/asignacion_docentes.php?curso_id=${semestreActivo.curso_id}`);
             const profesorData = await profesorResponse.json();
 
             return {
-              ...curso,
+              id: semestreActivo.curso_id,
+              codigo: semestreActivo.codigo,
+              nombre: semestreActivo.nombre,
+              creditos: semestreActivo.creditos,
+              jornada: semestreActivo.jornada,
+              programa_nombre: semestreActivo.programa_nombre,
+              facultad_nombre: semestreActivo.facultad_nombre,
               semestre_activo_id: semestreActivo.id,
               cupos_disponibles: semestreActivo.cupos_disponibles,
               fecha_inicio_matricula: semestreActivo.fecha_inicio_matricula,
@@ -256,18 +259,7 @@ const Matriculas = ({ user }) => {
     }
   };
 
-  const getSemestres = () => {
-    const currentYear = new Date().getFullYear();
-    const semestres = [];
-    
-    for (let i = 0; i < 4; i++) {
-      const year = currentYear + Math.floor(i / 2);
-      const semester = (i % 2) + 1;
-      semestres.push(`${year}-${semester}`);
-    }
-    
-    return semestres;
-  };
+
 
   const handleCursoSelect = (cursoId) => {
     setSelectedCurso(cursoId);
@@ -348,7 +340,7 @@ const Matriculas = ({ user }) => {
                   </option>
                   {cursos.map(curso => (
                     <option key={curso.id} value={curso.id}>
-                      {curso.codigo} - {curso.nombre} ({curso.creditos} créditos)
+                      {curso.codigo} - {curso.nombre} ({curso.creditos} créditos) {curso.jornada === 'diurna' ? '☀️' : '🌙'}
                       {curso.profesor ? ` - Prof. ${curso.profesor.docente_nombre}` : ''}
                     </option>
                   ))}
@@ -396,18 +388,31 @@ const Matriculas = ({ user }) => {
               
               <div className="form-group">
                 <label>Periodo (Año-Semestre):</label>
-                <input 
-                  type="text" 
-                  value={currentMatricula.semestre.replace('-1', ' - Primer Semestre').replace('-2', ' - Segundo Semestre')}
-                  disabled
-                  style={{
-                    background: '#e9ecef',
-                    color: '#495057',
-                    fontWeight: '500'
+                <select
+                  value={currentMatricula.semestre}
+                  onChange={(e) => {
+                    const nuevoSemestre = e.target.value;
+                    setCurrentMatricula({...currentMatricula, semestre: nuevoSemestre, curso_id: ''});
+                    setPrerequisitos([]);
                   }}
-                />
+                  required
+                  style={{
+                    background: '#fff',
+                    color: '#495057',
+                    fontWeight: '500',
+                    padding: '10px',
+                    borderRadius: '4px',
+                    border: '1px solid #ced4da'
+                  }}
+                >
+                  <option value="">Selecciona el periodo</option>
+                  <option value="2025-1">2025 - Primer Semestre</option>
+                  <option value="2025-2">2025 - Segundo Semestre</option>
+                  <option value="2026-1">2026 - Primer Semestre</option>
+                  <option value="2026-2">2026 - Segundo Semestre</option>
+                </select>
                 <small style={{color: '#6c757d', marginTop: '5px'}}>
-                  El periodo se asigna automáticamente al semestre actual
+                  Selecciona el periodo académico para la matrícula
                 </small>
               </div>
               <div className="form-actions">
@@ -446,6 +451,7 @@ const Matriculas = ({ user }) => {
               <tr>
                 <th>Código</th>
                 <th>Curso</th>
+                <th>Jornada</th>
                 <th>Periodo</th>
                 <th>Fecha Matrícula</th>
                 <th>Estado</th>
@@ -457,6 +463,18 @@ const Matriculas = ({ user }) => {
                 <tr key={matricula.id}>
                   <td><strong>{matricula.curso_codigo}</strong></td>
                   <td>{matricula.curso_nombre}</td>
+                  <td>
+                    <span style={{
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '0.85em',
+                      fontWeight: '600',
+                      background: matricula.jornada === 'diurna' ? '#fff3cd' : '#d1ecf1',
+                      color: matricula.jornada === 'diurna' ? '#856404' : '#0c5460'
+                    }}>
+                      {matricula.jornada === 'diurna' ? '☀️ Diurna' : '🌙 Nocturna'}
+                    </span>
+                  </td>
                   <td>{matricula.anio}-{matricula.semestre}</td>
                   <td>{new Date(matricula.fecha_matricula).toLocaleDateString('es-CO')}</td>
                   <td>

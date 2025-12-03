@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { API_BASE } from '../config/api';
 import './Asistencias.css';
 
@@ -16,16 +16,7 @@ const Asistencias = ({ user }) => {
   });
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (user.tipo === 'docente') {
-      fetchAsistenciasDocente();
-      fetchCursosDocente();
-    } else {
-      fetchAsistenciasEstudiante();
-    }
-  }, [user]);
-
-  const fetchAsistenciasDocente = async () => {
+  const fetchAsistenciasDocente = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE}/asistencias.php?docente_id=${user.id}`);
       if (!response.ok) {
@@ -40,9 +31,9 @@ const Asistencias = ({ user }) => {
       console.error('Error fetching asistencias:', error);
       setAsistencias([]);
     }
-  };
+  }, [user.id]);
 
-  const fetchAsistenciasEstudiante = async () => {
+  const fetchAsistenciasEstudiante = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE}/asistencias.php?estudiante_id=${user.id}`);
       if (!response.ok) {
@@ -57,30 +48,47 @@ const Asistencias = ({ user }) => {
       console.error('Error fetching asistencias:', error);
       setAsistencias([]);
     }
-  };
+  }, [user.id]);
 
-  const fetchCursosDocente = async () => {
+  const fetchCursosDocente = useCallback(async () => {
     try {
-      const response = await fetch(`${API_BASE}/cursos.php?docente_id=${user.id}`);
-      const result = await response.json();
-      const data = result.success ? result.data : (Array.isArray(result) ? result : []);
-      setCursos(data);
+      const response = await fetch(`${API_BASE}/vinculaciones.php?docente_id=${user.id}`);
+      const data = await response.json();
+      setCursos(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching cursos:', error);
+      setCursos([]);
     }
-  };
+  }, [user.id]);
+
+  useEffect(() => {
+    if (user.tipo === 'docente') {
+      fetchAsistenciasDocente();
+      fetchCursosDocente();
+    } else {
+      fetchAsistenciasEstudiante();
+    }
+  }, [user.tipo, fetchAsistenciasDocente, fetchCursosDocente, fetchAsistenciasEstudiante]);
 
   const fetchEstudiantesPorCurso = async (cursoId) => {
     try {
-      const response = await fetch(`${API_BASE}/usuarios.php?tipo=estudiante&curso_id=${cursoId}`);
+      const response = await fetch(`${API_BASE}/matriculas.php?curso_id=${cursoId}`);
       if (!response.ok) {
         console.error('API response not ok:', response.status);
         setEstudiantes([]);
         return;
       }
       const data = await response.json();
-      // Asegurar que siempre sea un array
-      setEstudiantes(Array.isArray(data) ? data : []);
+      // Asegurar que siempre sea un array y mapear los campos correctos
+      const estudiantesFormateados = Array.isArray(data) 
+        ? data.map(est => ({
+            id: est.estudiante_id,
+            nombres: est.nombres,
+            apellidos: est.apellidos,
+            identificacion: est.identificacion
+          }))
+        : [];
+      setEstudiantes(estudiantesFormateados);
     } catch (error) {
       console.error('Error fetching estudiantes:', error);
       setEstudiantes([]);
@@ -148,18 +156,17 @@ const Asistencias = ({ user }) => {
 
   return (
     <div className="asistencias">
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem'}}>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem'}}>
         <h2>✅ {user.tipo === 'docente' ? 'Control de Asistencias' : 'Mis Asistencias'}</h2>
+        {user.tipo === 'docente' && (
+          <button 
+            className="btn-primary"
+            onClick={() => setShowForm(true)}
+          >
+            ➕ Registrar Asistencia
+          </button>
+        )}
       </div>
-      
-      {user.tipo === 'docente' && (
-        <button 
-          className="btn-primary"
-          onClick={() => setShowForm(true)}
-        >
-          ➕ Registrar Asistencia
-        </button>
-      )}
 
       {showForm && (
         <div className="modal">
@@ -176,8 +183,8 @@ const Asistencias = ({ user }) => {
                 >
                   <option value="">Seleccionar curso</option>
                   {cursos.map(curso => (
-                    <option key={curso.id} value={curso.id}>
-                      {curso.codigo} - {curso.nombre}
+                    <option key={curso.curso_id} value={curso.curso_id}>
+                      {curso.curso_codigo} - {curso.curso_nombre}
                     </option>
                   ))}
                 </select>
